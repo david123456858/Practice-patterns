@@ -1,7 +1,7 @@
 class LOAN 
-String id
-String idUSer -> se obtiene de la clase user 
-String idVehicle -> se obtiene de la clase vehicle 
+String id -> se genera automaticamente
+String idUSer -> (select) se obtiene de la clase user 
+String idVehicle -> (select) se obtiene de la clase vehicle 
 String idStationOrigin -> (select) se obtiene de la clase Station 
 String idStationDestine -> (select) "" "" ""
 int duration 
@@ -15,7 +15,7 @@ double latitude
 Date timestap
 
 class STATION
-String id
+String id -> se genera automaticamente
 String address
 GeoLocation geolocation -> se obtiene de la clase GeoLocation
 
@@ -30,10 +30,10 @@ String name
 double costForDuration
 
 class VEHICLE -> hereda TypeVehicle 
-String id
+String id -> generada automaticamente
 String idStation -> (select) se obtiene de la clase STATION
 GeoLocation currentLoca -> se obtiene de la clase GeoLocation
-StatusVehicle status -> se btiene de ENUMS StatusVehicle 
+StatusVehicle status -> se obtiene de ENUMS StatusVehicle 
 
 
 
