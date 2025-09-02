@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import { UserRepositoryCreate } from '../../../domain/dtos/User/createDto'
+import { UserDtoCreate } from '../../../domain/dtos/User/createDto'
 import { User } from '../../../domain/entities/User/User'
 import { ICrudOperations } from '../../../domain/interfaces/common/ICrud'
 import { IFailureProcess, ISuccessProcess } from '../../../domain/interfaces/common/IResults'
@@ -11,7 +11,7 @@ export class ServiceUser {
     this.userRepository = userRepository
   }
 
-  async create (userDto: UserRepositoryCreate): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
+  async create (userDto: UserDtoCreate): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
     try {
       const findUser = this.userRepository.findById(userDto.cc)
       if (findUser) {
@@ -25,9 +25,9 @@ export class ServiceUser {
     }
   }
 
-  async getById (id: string): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
+  async getById (cc: string): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
     try {
-      const user = this.userRepository.findById(id)
+      const user = this.userRepository.findById(cc)
       if (!user) {
         return FailureProcess('User not found', 404)
       }

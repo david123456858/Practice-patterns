@@ -4,8 +4,8 @@ import { Router } from 'express'
 
 config()
 
+export const route = Router()
 export default {
   port: process.env.PORT ?? '3000',
-  routeBase: '/api/v1',
-  route: Router()
+  routeBase: '/api/v1'
 }

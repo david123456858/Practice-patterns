@@ -1,6 +1,6 @@
-import { IsNotEmpty, IsString } from 'class-validator'
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator'
 
-export class UserRepositoryCreate {
+export class UserDtoCreate {
   @IsString()
   @IsNotEmpty()
     cc!: string
@@ -10,6 +10,7 @@ export class UserRepositoryCreate {
     name!: string
 
   @IsString()
+  @IsEmail()
   @IsNotEmpty()
     email!: string
 

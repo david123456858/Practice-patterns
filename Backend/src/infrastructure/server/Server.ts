@@ -2,6 +2,7 @@ import express, { Application, Request, Response } from 'express'
 import cors from 'cors'
 import config from '../config/config'
 import { routerUser } from '../../presentation/routes/User/User'
+import morgan from 'morgan'
 
 export class Server {
   private readonly app: Application
@@ -22,6 +23,7 @@ export class Server {
     this.app.use(cors())
     this.app.use(express.json())
     this.app.use(express.urlencoded({ extended: true }))
+    this.app.use(morgan('dev'))
   }
 
   private routes (): void {
