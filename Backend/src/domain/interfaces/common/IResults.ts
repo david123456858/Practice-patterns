@@ -1,4 +1,4 @@
-export interface ISuccesProcess<T> {
+export interface ISuccessProcess<T> {
   value: T
   statusCode: number
   success: true

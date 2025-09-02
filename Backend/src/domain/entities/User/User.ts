@@ -4,13 +4,13 @@ export class User {
   private cc: string
   private name: string
   private email: string
-  private suscription: Suscription
+  private suscription: Suscription | any
 
-  constructor (cc: string, name: string, email: string, suscription: Suscription) {
+  constructor (cc: string, name: string, email: string, suscription?: Suscription) {
     this.cc = cc
     this.email = email
     this.name = name
-    this.suscription = suscription
+    this.suscription = suscription ?? null
   }
 
   setCC (cc: string): void {

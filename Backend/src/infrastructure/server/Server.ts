@@ -1,6 +1,7 @@
 import express, { Application, Request, Response } from 'express'
 import cors from 'cors'
-import port from '../config/config'
+import config from '../config/config'
+import { routerUser } from '../../presentation/routes/User/User'
 
 export class Server {
   private readonly app: Application
@@ -8,7 +9,7 @@ export class Server {
 
   constructor () {
     this.app = express()
-    this.port = port.port
+    this.port = config.port
 
     // Middlewares
     this.middlewares()
@@ -24,11 +25,11 @@ export class Server {
   }
 
   private routes (): void {
-    // Aquí importarás y usarás tus rutas
-    // ejemplo: this.app.use('/api/users', UserRoutes);
     this.app.get('/health', (_req: Request, res: Response) => {
       res.status(200).json({ message: 'I life' })
     })
+
+    this.app.use(config.routeBase, routerUser('/users'))
   }
 
   public listen (): void {
