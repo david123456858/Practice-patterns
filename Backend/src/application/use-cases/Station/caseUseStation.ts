@@ -42,7 +42,7 @@ export class ServiceStation {
     }
   }
 
-  async getAll (): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
+  async findAll (): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
     try {
       const users = this.userRepository.findAll()
       return SuccessProcess(users, 200)

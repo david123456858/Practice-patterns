@@ -3,6 +3,7 @@ import cors from 'cors'
 import config from '../config/config'
 import { routerUser } from '../../presentation/routes/User/User'
 import morgan from 'morgan'
+import { routeStation } from '../../presentation/routes/Station/Station'
 
 export class Server {
   private readonly app: Application
@@ -31,7 +32,8 @@ export class Server {
       res.status(200).json({ message: 'I life' })
     })
 
-    this.app.use(config.routeBase, routerUser('/users'))
+    this.app.use(config.routeBase, routerUser('/user'))
+    this.app.use(config.port, routeStation('/station'))
   }
 
   public listen (): void {

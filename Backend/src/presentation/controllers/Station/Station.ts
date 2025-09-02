@@ -6,6 +6,10 @@ export class ControllerStation {
 
   constructor (service: ServiceStation) {
     this.serviceStation = service
+
+    this.createStation = this.createStation.bind(this)
+    this.getStation = this.getStation.bind(this)
+    this.getStationId = this.getStationId.bind(this)
   }
 
   async createStation (req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -22,7 +26,7 @@ export class ControllerStation {
   }
 
   async getStation (_req: Request, res: Response, next: NextFunction): Promise<void> {
-    const result = await this.serviceStation.getAll()
+    const result = await this.serviceStation.findAll()
     if (!result.success) {
       const error = {
         error: result.error,
