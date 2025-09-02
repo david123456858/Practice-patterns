@@ -1,0 +1,57 @@
+class LOAN 
+String id
+String idUSer -> se obtiene de la clase user 
+String idVehicle -> se obtiene de la clase vehicle 
+String idStationOrigin -> (select) se obtiene de la clase Station 
+String idStationDestine -> (select) "" "" ""
+int duration 
+
+
+
+
+class GeoLocation
+dobule longitude
+double latitude
+Date timestap
+
+class STATION
+String id
+String address
+GeoLocation geolocation -> se obtiene de la clase GeoLocation
+
+ENUMS StatusVehicle
+"AVAILABLE"
+"IN_USE"
+"OUT-OF-SERVICE"
+"MAINTENANCE"
+
+TYPE-VEHICLE -> no puede existir si no existe una Station (composition)
+String name
+double costForDuration
+
+class VEHICLE -> hereda TypeVehicle 
+String id
+String idStation -> (select) se obtiene de la clase STATION
+GeoLocation currentLoca -> se obtiene de la clase GeoLocation
+StatusVehicle status -> se btiene de ENUMS StatusVehicle 
+
+
+
+
+ENUMS TypesPricePeriods
+"ANNUAL"
+"MONTH"
+"SEMUANNUAL"
+
+class PREMIUM -> hereda SUSCRIPTION
+
+class SUSCRIPTION
+String id
+double pricing
+TypesPricePeriods period -> se obtiene de ENUMS TypesPricePeriods
+
+class USER
+String cc
+String name
+String email
+Suscription suscription -> se obtiene de la clase SUSCRIPTION
