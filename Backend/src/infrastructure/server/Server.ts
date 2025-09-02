@@ -1,5 +1,6 @@
-import express, { Application } from 'express'
+import express, { Application, Request, Response } from 'express'
 import cors from 'cors'
+import port from '../config/config'
 
 export class Server {
   private readonly app: Application
@@ -7,7 +8,7 @@ export class Server {
 
   constructor () {
     this.app = express()
-    this.port = process.env.PORT || '3000'
+    this.port = port.port
 
     // Middlewares
     this.middlewares()
@@ -25,11 +26,14 @@ export class Server {
   private routes (): void {
     // Aquí importarás y usarás tus rutas
     // ejemplo: this.app.use('/api/users', UserRoutes);
+    this.app.get('/health', (_req: Request, res: Response) => {
+      res.status(200).json({ message: 'I life' })
+    })
   }
 
   public listen (): void {
     this.app.listen(this.port, () => {
-      console.log(`Servidor corriendo en puerto ${this.port}`)
+      console.log(`Servidor corriendo en puerto http://localhost:${this.port}`)
     })
   }
 }
