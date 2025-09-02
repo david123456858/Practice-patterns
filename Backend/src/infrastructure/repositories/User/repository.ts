@@ -3,6 +3,10 @@ import { ICrudOperations } from '../../../domain/interfaces/common/ICrud'
 
 export class UserRepository implements ICrudOperations<User> {
   private readonly UserList: User[] = []
+  findAll (): User[] {
+    return this.UserList
+  }
+
   save (data: User): void {
     this.UserList.push(data)
   }

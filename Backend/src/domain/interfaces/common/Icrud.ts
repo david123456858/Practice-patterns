@@ -3,4 +3,5 @@ export interface ICrudOperations <T> {
   delete: (id: string) => void
   update: (data: T) => void
   findById: (id: string) => T | undefined
+  findAll: () => T[]
 }
