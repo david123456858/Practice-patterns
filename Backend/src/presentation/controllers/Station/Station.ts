@@ -8,7 +8,7 @@ export class ControllerStation {
     this.serviceStation = service
   }
 
-  async createUser (req: Request, res: Response, next: NextFunction): Promise<void> {
+  async createStation (req: Request, res: Response, next: NextFunction): Promise<void> {
     const { body } = req
     const result = await this.serviceStation.create(body)
     if (!result.success) {
@@ -21,7 +21,7 @@ export class ControllerStation {
     res.status(result.statusCode).json({ message: result.value })
   }
 
-  async getUsers (_req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getStation (_req: Request, res: Response, next: NextFunction): Promise<void> {
     const result = await this.serviceStation.getAll()
     if (!result.success) {
       const error = {
@@ -33,7 +33,7 @@ export class ControllerStation {
     res.status(result.statusCode).json({ message: result.value })
   }
 
-  async getUsersId (req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getStationId (req: Request, res: Response, next: NextFunction): Promise<void> {
     const { id } = req.params
     const result = await this.serviceStation.getById(id)
     if (!result.success) {
