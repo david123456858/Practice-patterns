@@ -77,7 +77,7 @@ function MainDashboard() {
                 {/* Main Content */}
                 <div className="flex-1 flex flex-col">
                     {/* Content Area */}
-                    <main className="flex-1 p-6 bg-gray-50">
+                    <main className="flex-1 p-6 bg-gray-50 overflow-y-auto">
                         <div className="bg-white rounded-xl shadow-lg border border-gray-200">
 
                             {/* Welcome Content */}

@@ -3,7 +3,7 @@ import { Users, Car, MapPin } from "lucide-react"
 function WelcomeToEcomove() {
     return (
         <>
-            <div className="text-center">
+            <div className="text-center mt-31 mb-31">
                 <div className="mx-auto w-24 h-24 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center mb-6 shadow-lg">
                     <Car className="w-12 h-12 text-green-700" />
                 </div>
