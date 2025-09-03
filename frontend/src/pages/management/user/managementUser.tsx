@@ -35,37 +35,33 @@ function ManagementUser() {
         }
     }
 
-    const handleRegister = async (newUserData: {
+    const handleRegister = async (userData: {
         cc: string;
         name: string;
         email: string;
-        subscription: string
+        suscriptionId: string;
     }) => {
         try {
-            // Convertir los datos del formulario al formato esperado por la API
-            const subscriptionData = {
-                id: `sub-${Date.now()}`,
-                pricing: newUserData.subscription === "Premium" ? 29.99 :
-                    newUserData.subscription === "Standard" ? 19.99 : 9.99,
-                period: TypesPricePeriods.MONTH
-            }
+            // En una implementación real, usarías el servicio createUser:
+            // const newUser = await createUser(userData);
 
-            // En una implementación real, esto se haría a través del servicio createUser
             // Por ahora simulamos la creación localmente
             const newUser: UserType = {
-                id: `user-${Date.now()}`,
-                cc: newUserData.cc,
-                name: newUserData.name,
-                email: newUserData.email,
-                subscription: subscriptionData
+                cc: userData.cc,
+                name: userData.name,
+                email: userData.email,
+                subscription: userData.suscriptionId // CORRECCIÓN: usar "suscription" en lugar de "subscription"
             }
 
-            setUsers(prev => [...prev, newUser])
+            setUsers(prev => [...prev, newUser]);
+
+            // Mostrar mensaje de éxito
+            console.log("User created successfully:", newUser);
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Error al crear el usuario')
-            console.error(err)
+            setError(err instanceof Error ? err.message : 'Error creating user');
+            console.error(err);
         }
-    }
+    };
 
     const filteredUsers = users.filter((user) => {
         const matchesSearch =
