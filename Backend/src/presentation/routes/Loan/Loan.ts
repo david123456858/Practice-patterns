@@ -9,7 +9,7 @@ import { RepositoryTypeVehicule } from '../../../infrastructure/repositories/Typ
 import { repositoryStation } from '../../../infrastructure/repositories/Station/station'
 import { ServiceLoan } from '../../../application/use-cases/Loan/caseUseLoan'
 import { ServicePayment } from '../../../application/use-cases/Payment/payment'
-import { ControllerLoan } from '../../controllers/Loan/Loan'
+import { LoanController } from '../../controllers/Loan/Loan'
 import { payLoadDto } from '../../../domain/dtos/Loan/payLoan'
 
 export const routeLoan = (prefix: string): Router => {
@@ -22,7 +22,7 @@ export const routeLoan = (prefix: string): Router => {
   const servicePay = new ServicePayment()
   const serviceLoan = new ServiceLoan(repositoryLoan, repositoryVehicle, serviceVehicle, servicePay)
 
-  const controller = new ControllerLoan(serviceLoan)
+  const controller = new LoanController(serviceLoan)
 
   route.post(`${prefix}`, validateDto(createLoanDto), controller.createLoan)
   route.get(`${prefix}`, controller.getLoan)

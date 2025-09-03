@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { ServiceLoan } from '../../../application/use-cases/Loan/caseUseLoan'
 
-export class ControllerLoan {
+export class LoanController {
   private readonly serviceLoan: ServiceLoan
 
   constructor (service: ServiceLoan) {

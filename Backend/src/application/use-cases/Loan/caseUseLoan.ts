@@ -97,7 +97,7 @@ export class ServiceLoan implements IServicesOperations {
     }
   }
 
-  calcucalateLoan (id: string): number | undefined {
+  calculateLoan (id: string): number | undefined {
     const loan = this.loanRepository.findById(id)
 
     if (!loan) {
@@ -125,7 +125,7 @@ export class ServiceLoan implements IServicesOperations {
       updateStatus.id = loan.getIdVehicle()
       updateStatus.status = StatusVehicule.AVAILABLE
 
-      const costTotal = this.calcucalateLoan(id)
+      const costTotal = this.calculateLoan(id)
 
       if (!costTotal) return FailureProccess('Unable to calculate cost. Please try again later.', 400)
       return SuccessProcess(`The total cost is: ${costTotal}`, 200)

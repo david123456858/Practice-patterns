@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from 'express'
 import { IServicesOperations } from '../../../domain/interfaces/common/IServices'
 import { ServiceTypeVehicle } from '../../../application/use-cases/TypeVehicle/caseUseTypeVehicle'
 
-export class ControllerTypeVehicle {
+export class TypeVehicleController {
   private readonly ServiceTypeVehicle: IServicesOperations
 
   constructor (service: ServiceTypeVehicle) {
