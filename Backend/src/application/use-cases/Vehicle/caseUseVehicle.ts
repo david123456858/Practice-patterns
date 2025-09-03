@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { createVehicleDto } from '../../../domain/dtos/Vehicle/create'
+import { updateStatusDto } from '../../../domain/dtos/Vehicle/updateStatus'
 import { Station } from '../../../domain/entities/Station/Station'
 import { TypeVehicule } from '../../../domain/entities/TypeVehicule/TypeVehicule'
 import { Vehicle } from '../../../domain/entities/Vehicule/Vehicule'
@@ -60,7 +61,7 @@ export class ServiceVehicle implements IServicesOperations {
     try {
       const station = this.VehicleRepository.findById(id)
       if (!station) {
-        return FailureProccess('User not found', 404)
+        return FailureProccess('Vehicle not found', 404)
       }
       return SuccessProcess(station, 200)
     } catch (error) {
@@ -73,23 +74,38 @@ export class ServiceVehicle implements IServicesOperations {
       const users = this.VehicleRepository.findAll()
       return SuccessProcess(users, 200)
     } catch (error) {
-      return FailureProccess('Error fetching users', 500)
+      return FailureProccess('Error fetching vehicle', 500)
     }
   }
 
   async delete (id: string): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
     try {
-      return SuccessProcess('', 200)
+      return SuccessProcess('Vehicle deleted successfully', 200)
     } catch (error) {
       return FailureProccess('', 500)
     }
   }
 
-  async update (id: string, data: any): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
+  async update (data: any): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
     try {
-      return SuccessProcess('', 200)
+      this.VehicleRepository.update(data)
+      return SuccessProcess('Vehicle updated successfully', 200)
     } catch (error) {
-      return FailureProccess('', 500)
+      return FailureProccess('Error updating Vehicle', 500)
+    }
+  }
+
+  async updateStatus (dtoUpadteStatus: updateStatusDto): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
+    try {
+      const findVehiculeByUpdate = this.VehicleRepository.findById(dtoUpadteStatus.id)
+      if (!findVehiculeByUpdate) return FailureProccess('Not Found Vehicule', 404)
+
+      findVehiculeByUpdate.setStatus(dtoUpadteStatus.status)
+
+      this.VehicleRepository.update(findVehiculeByUpdate)
+      return SuccessProcess('Status updated successfully', 200)
+    } catch (error) {
+      return FailureProccess('Error updating Vehicle', 500)
     }
   }
 }
