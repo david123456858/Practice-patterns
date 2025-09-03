@@ -5,6 +5,8 @@ export class TypeVehicule {
   constructor (name: string, costForDuration: number) {
     this.name = name
     this.costForDuration = costForDuration
+
+    this.getName = this.getName.bind(this)
   }
 
   setName (name: string): void {

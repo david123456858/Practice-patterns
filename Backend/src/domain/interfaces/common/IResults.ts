@@ -1,11 +1,10 @@
-export interface ISuccessProcess<T> {
-  value: T
-  statusCode: number
-  success: true
-}
-
 export interface IFailureProcess<T> {
   error: T
-  statusCode: number
   success: false
+  status: number
+}
+export interface ISuccessProcess<T> {
+  value: T
+  success: true
+  status: number
 }

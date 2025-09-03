@@ -17,37 +17,28 @@ export class ControllerStation {
     const { body } = req
     const result = await this.serviceStation.create(body)
     if (!result.success) {
-      const error = {
-        error: result.error,
-        status: result.statusCode
-      }
-      return next(error)
+      res.status(result.status).json({ error: result.error })
+      return
     }
-    res.status(result.statusCode).json({ message: result.value })
+    res.status(result.status).json({ message: result.value })
   }
 
   async getStation (_req: Request, res: Response, next: NextFunction): Promise<void> {
     const result = await this.serviceStation.getAll()
     if (!result.success) {
-      const error = {
-        error: result.error,
-        status: result.statusCode
-      }
-      return next(error)
+      res.status(result.status).json({ error: result.error })
+      return
     }
-    res.status(result.statusCode).json({ message: result.value })
+    res.status(result.status).json({ message: result.value })
   }
 
   async getStationId (req: Request, res: Response, next: NextFunction): Promise<void> {
     const { id } = req.params
     const result = await this.serviceStation.getById(id)
     if (!result.success) {
-      const error = {
-        error: result.error,
-        status: result.statusCode
-      }
-      return next(error)
+      res.status(result.status).json({ error: result.error })
+      return
     }
-    res.status(result.statusCode).json({ message: result.value })
+    res.status(result.status).json({ message: result.value })
   }
 }

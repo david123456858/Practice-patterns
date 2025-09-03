@@ -5,6 +5,7 @@ import { routerUser } from '../../presentation/routes/User/User'
 import morgan from 'morgan'
 import { routeStation } from '../../presentation/routes/Station/Station'
 import { routeTypeVehicle } from '../../presentation/routes/TypeVehicle/TypeVehicle'
+import { routeVehicle } from '../../presentation/routes/Vehicle/Vehicle'
 
 export class Server {
   private readonly app: Application
@@ -26,6 +27,7 @@ export class Server {
     this.app.use(express.json())
     this.app.use(express.urlencoded({ extended: true }))
     this.app.use(morgan('dev'))
+    this.app.disable('x-powered-by')
   }
 
   private routes (): void {
@@ -36,6 +38,7 @@ export class Server {
     this.app.use(config.routeBase, routerUser('/user'))
     this.app.use(config.port, routeStation('/station'))
     this.app.use(config.port, routeTypeVehicle('/typeVehicle'))
+    this.app.use(config.port, routeVehicle('/vehicle'))
   }
 
   public listen (): void {

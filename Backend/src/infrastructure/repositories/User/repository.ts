@@ -1,20 +1,26 @@
 import { User } from '../../../domain/entities/User/User'
 import { ICrudOperations } from '../../../domain/interfaces/common/ICrud'
+let UserList: User[] = []
 
 export class UserRepository implements ICrudOperations<User> {
-  private readonly UserList: User[] = []
   findAll (): User[] {
-    return this.UserList
+    return UserList
   }
 
   save (data: User): void {
-    this.UserList.push(data)
+    UserList.push(data)
   }
 
-  delete (id: string): void {}
-  update (data: User): void {}
+  delete (id: string): void {
+    UserList = UserList.filter(user => user.getCC() !== id)
+  }
+
+  update (data: User): void {
+    const index = UserList.findIndex(user => user.getCC() === data.getCC())
+    UserList[index] = data
+  }
 
   findById (id: string): User | undefined {
-    return this.UserList.find(user => user.getCC() === id)
+    return UserList.find(user => user.getCC() === id)
   }
 }

@@ -1,54 +1,79 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import { createStationDto } from '../../../domain/dtos/Station/create'
+import { createVehicleDto } from '../../../domain/dtos/Vehicle/create'
 import { Station } from '../../../domain/entities/Station/Station'
+import { TypeVehicule } from '../../../domain/entities/TypeVehicule/TypeVehicule'
+import { Vehicle } from '../../../domain/entities/Vehicule/Vehicule'
 import { ICrudOperations } from '../../../domain/interfaces/common/ICrud'
 import { IFailureProcess, ISuccessProcess } from '../../../domain/interfaces/common/IResults'
 import { IServicesOperations } from '../../../domain/interfaces/common/IServices'
-import { FailureProcess, SuccessProcess } from '../../../presentation/utils/result/result'
+import { StatusVehicule } from '../../../domain/types/Vehicule/VehiculeEnum'
+import { FailureProccess, SuccessProcess } from '../../../presentation/utils/result/result'
 
 export class ServiceVehicle implements IServicesOperations {
-  private readonly userRepository: ICrudOperations<Station>
-  constructor (userRepository: ICrudOperations<Station>) {
-    this.userRepository = userRepository
+  private readonly VehicleRepository: ICrudOperations<Vehicle>
+  private readonly TypeVehicleRepostitory: ICrudOperations<TypeVehicule>
+  private readonly StationRepository: ICrudOperations<Station>
+  constructor (
+    VehicleRepository: ICrudOperations<Vehicle>,
+    TypeVehicleRepostitory: ICrudOperations<TypeVehicule>,
+    StationRepository: ICrudOperations<Station>) {
+    this.VehicleRepository = VehicleRepository
+    this.TypeVehicleRepostitory = TypeVehicleRepostitory
+    this.StationRepository = StationRepository
   }
 
-  async create (stationDto: createStationDto): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
+  async create (VehicleDto: createVehicleDto): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
     try {
-      const findStation = this.userRepository.findById(stationDto.id)
-      if (findStation) {
-        return FailureProcess('User already exists', 400)
-      }
-      const station = new Station(
-        stationDto.id,
-        stationDto.name,
-        stationDto.adress,
-        stationDto.geoLocation
+      const findVehicle = this.VehicleRepository.findById(VehicleDto.id)
+      if (findVehicle) return FailureProccess('Vehicle Exist Alredy', 400)
+      // eslint-disable-next-line @typescript-eslint/dot-notation
+      const type = new TypeVehicule(VehicleDto.typeVehicule['name'], VehicleDto.typeVehicule['costForDuration'])
+
+      const findTypeVehicle = this.TypeVehicleRepostitory.findById(type.getName())
+
+      if (!findTypeVehicle) return FailureProccess('Not found type of Vehicle', 400)
+      console.log(VehicleDto.idStation)
+
+      const findStationCurrent = this.StationRepository.findById(VehicleDto.idStation)
+      console.log(findStationCurrent)
+      console.log(this.StationRepository.findAll())
+
+      if (!findStationCurrent) return FailureProccess('Not found station', 400)
+
+      const vehicle = new Vehicle(
+        VehicleDto.id,
+        VehicleDto.idStation,
+        findStationCurrent.getGeoLocation(),
+        StatusVehicule.AVAILABLE,
+        type
       )
-      this.userRepository.save(station)
-      return SuccessProcess('User created successfully', 201)
+      this.VehicleRepository.save(vehicle)
+      return SuccessProcess('Vehicle created successfully', 201)
     } catch (error) {
-      return FailureProcess('Error creating user', 500)
+      console.log(error)
+
+      return FailureProccess('Error creating Vehicle', 500)
     }
   }
 
   async getById (id: string): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
     try {
-      const station = this.userRepository.findById(id)
+      const station = this.VehicleRepository.findById(id)
       if (!station) {
-        return FailureProcess('User not found', 404)
+        return FailureProccess('User not found', 404)
       }
       return SuccessProcess(station, 200)
     } catch (error) {
-      return FailureProcess('Error fetching user', 500)
+      return FailureProccess('Error fetching user', 500)
     }
   }
 
   async getAll (): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
     try {
-      const users = this.userRepository.findAll()
+      const users = this.VehicleRepository.findAll()
       return SuccessProcess(users, 200)
     } catch (error) {
-      return FailureProcess('Error fetching users', 500)
+      return FailureProccess('Error fetching users', 500)
     }
   }
 
@@ -56,7 +81,7 @@ export class ServiceVehicle implements IServicesOperations {
     try {
       return SuccessProcess('', 200)
     } catch (error) {
-      return FailureProcess('', 500)
+      return FailureProccess('', 500)
     }
   }
 
@@ -64,7 +89,7 @@ export class ServiceVehicle implements IServicesOperations {
     try {
       return SuccessProcess('', 200)
     } catch (error) {
-      return FailureProcess('', 500)
+      return FailureProccess('', 500)
     }
   }
 }

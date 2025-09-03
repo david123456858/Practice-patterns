@@ -4,7 +4,7 @@ import { User } from '../../../domain/entities/User/User'
 import { ICrudOperations } from '../../../domain/interfaces/common/ICrud'
 import { IFailureProcess, ISuccessProcess } from '../../../domain/interfaces/common/IResults'
 import { IServicesOperations } from '../../../domain/interfaces/common/IServices'
-import { FailureProcess, SuccessProcess } from '../../../presentation/utils/result/result'
+import { FailureProccess, SuccessProcess } from '../../../presentation/utils/result/result'
 
 export class ServiceUser implements IServicesOperations {
   private readonly userRepository: ICrudOperations<User>
@@ -16,13 +16,13 @@ export class ServiceUser implements IServicesOperations {
     try {
       const findUser = this.userRepository.findById(userDto.cc)
       if (findUser) {
-        return FailureProcess('User already exists', 400)
+        return FailureProccess('User already exists', 400)
       }
       const user = new User(userDto.cc, userDto.name, userDto.email)
       this.userRepository.save(user)
       return SuccessProcess('User created successfully', 201)
     } catch (error) {
-      return FailureProcess('Error creating user', 500)
+      return FailureProccess('Error creating user', 500)
     }
   }
 
@@ -30,11 +30,11 @@ export class ServiceUser implements IServicesOperations {
     try {
       const user = this.userRepository.findById(cc)
       if (!user) {
-        return FailureProcess('User not found', 404)
+        return FailureProccess('User not found', 404)
       }
       return SuccessProcess(user, 200)
     } catch (error) {
-      return FailureProcess('Error fetching user', 500)
+      return FailureProccess('Error fetching user', 500)
     }
   }
 
@@ -42,7 +42,7 @@ export class ServiceUser implements IServicesOperations {
     try {
       return SuccessProcess('Users fetched successfully', 200)
     } catch (error) {
-      return FailureProcess('Error fetching users', 500)
+      return FailureProccess('Error fetching users', 500)
     }
   }
 
@@ -50,7 +50,7 @@ export class ServiceUser implements IServicesOperations {
     try {
       return SuccessProcess('', 200)
     } catch (error) {
-      return FailureProcess('', 500)
+      return FailureProccess('', 500)
     }
   }
 
@@ -58,7 +58,7 @@ export class ServiceUser implements IServicesOperations {
     try {
       return SuccessProcess('', 200)
     } catch (error) {
-      return FailureProcess('', 500)
+      return FailureProccess('', 500)
     }
   }
 }

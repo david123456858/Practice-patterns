@@ -1,17 +1,19 @@
 import { IFailureProcess, ISuccessProcess } from '../../../domain/interfaces/common/IResults'
 
-export const FailureProcess = <T>(
+export const FailureProccess = <T>(
   error: T,
-  statusCode: number): IFailureProcess<T> => ({
-    statusCode,
+  status: number
+): IFailureProcess<T> => ({
     error,
-    success: false
+    success: false,
+    status
   })
 
 export const SuccessProcess = <T>(
   value: T,
-  statusCode: number): ISuccessProcess<T> => ({
-    statusCode,
+  status: number
+): ISuccessProcess<T> => ({
     value,
-    success: true
+    success: true,
+    status
   })

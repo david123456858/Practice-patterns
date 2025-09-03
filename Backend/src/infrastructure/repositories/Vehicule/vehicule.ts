@@ -21,4 +21,8 @@ export class RepositoryVehicule implements ICrudOperations<Vehicle> {
   findById (id: string): Vehicle | undefined {
     return this.vehiculeList.find(vehicule => vehicule.getId() === id)
   }
+
+  findAll (): Vehicle[] {
+    return this.vehiculeList
+  }
 }

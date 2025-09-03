@@ -4,7 +4,7 @@ import { Station } from '../../../domain/entities/Station/Station'
 import { ICrudOperations } from '../../../domain/interfaces/common/ICrud'
 import { IFailureProcess, ISuccessProcess } from '../../../domain/interfaces/common/IResults'
 import { IServicesOperations } from '../../../domain/interfaces/common/IServices'
-import { FailureProcess, SuccessProcess } from '../../../presentation/utils/result/result'
+import { FailureProccess, SuccessProcess } from '../../../presentation/utils/result/result'
 
 export class ServiceStation implements IServicesOperations {
   private readonly userRepository: ICrudOperations<Station>
@@ -16,7 +16,7 @@ export class ServiceStation implements IServicesOperations {
     try {
       const findStation = this.userRepository.findById(stationDto.id)
       if (findStation) {
-        return FailureProcess('User already exists', 400)
+        return FailureProccess('User already exists', 400)
       }
       const station = new Station(
         stationDto.id,
@@ -27,7 +27,7 @@ export class ServiceStation implements IServicesOperations {
       this.userRepository.save(station)
       return SuccessProcess('User created successfully', 201)
     } catch (error) {
-      return FailureProcess('Error creating user', 500)
+      return FailureProccess('Error creating user', 500)
     }
   }
 
@@ -35,11 +35,11 @@ export class ServiceStation implements IServicesOperations {
     try {
       const station = this.userRepository.findById(id)
       if (!station) {
-        return FailureProcess('User not found', 404)
+        return FailureProccess('User not found', 404)
       }
       return SuccessProcess(station, 200)
     } catch (error) {
-      return FailureProcess('Error fetching user', 500)
+      return FailureProccess('Error fetching user', 500)
     }
   }
 
@@ -48,7 +48,7 @@ export class ServiceStation implements IServicesOperations {
       const users = this.userRepository.findAll()
       return SuccessProcess(users, 200)
     } catch (error) {
-      return FailureProcess('Error fetching users', 500)
+      return FailureProccess('Error fetching users', 500)
     }
   }
 
@@ -56,7 +56,7 @@ export class ServiceStation implements IServicesOperations {
     try {
       return SuccessProcess('', 200)
     } catch (error) {
-      return FailureProcess('', 500)
+      return FailureProccess('', 500)
     }
   }
 
@@ -64,7 +64,7 @@ export class ServiceStation implements IServicesOperations {
     try {
       return SuccessProcess('', 200)
     } catch (error) {
-      return FailureProcess('', 500)
+      return FailureProccess('', 500)
     }
   }
 }
