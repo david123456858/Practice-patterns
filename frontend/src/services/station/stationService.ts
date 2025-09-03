@@ -1,4 +1,4 @@
-// src/services/stationService.ts
+import { API_BASE_URL } from "../../config/api";
 
 export interface geoLocation {
     latitude: number;
@@ -14,13 +14,9 @@ export interface Station {
     geoLocation: geoLocation;
 }
 
-// URL base de la API
-const API_BASE_URL = "https://lq3p60dt-3000.use2.devtunnels.ms/";
-
-// Función para crear una nueva estación
 export const createStation = async (stationData: Station): Promise<Station> => {
     try {
-        const response = await fetch(`${API_BASE_URL}api/v1/station`, {
+        const response = await fetch(`${API_BASE_URL}station`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
