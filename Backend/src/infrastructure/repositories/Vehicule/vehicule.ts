@@ -1,5 +1,6 @@
 import { ICrudOperations } from './../../../domain/interfaces/common/ICrud'
 import { Vehicle } from '../../../domain/entities/Vehicule/Vehicule'
+import { StatusVehicule } from '../../../domain/types/Vehicule/VehiculeEnum'
 
 let vehiculeList: Vehicle[] = []
 
@@ -25,5 +26,13 @@ export class RepositoryVehicule implements ICrudOperations<Vehicle> {
 
   findAll (): Vehicle[] {
     return vehiculeList
+  }
+
+  findByAvailable (): Vehicle[] {
+    return vehiculeList.filter(Vehicle => Vehicle.getStatus() === StatusVehicule.AVAILABLE)
+  }
+
+  findByStationAvailable (idStation: string): Vehicle[] {
+    return vehiculeList.filter(vehicules => vehicules.getIdStation() === idStation)
   }
 }

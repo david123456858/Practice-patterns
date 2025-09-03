@@ -8,14 +8,15 @@ import { ICrudOperations } from '../../../domain/interfaces/common/ICrud'
 import { IFailureProcess, ISuccessProcess } from '../../../domain/interfaces/common/IResults'
 import { IServicesOperations } from '../../../domain/interfaces/common/IServices'
 import { StatusVehicule } from '../../../domain/types/Vehicule/VehiculeEnum'
+import { RepositoryVehicule } from '../../../infrastructure/repositories/Vehicule/vehicule'
 import { FailureProccess, SuccessProcess } from '../../../presentation/utils/result/result'
 
 export class ServiceVehicle implements IServicesOperations {
-  private readonly VehicleRepository: ICrudOperations<Vehicle>
+  private readonly VehicleRepository: RepositoryVehicule
   private readonly TypeVehicleRepostitory: ICrudOperations<TypeVehicule>
   private readonly StationRepository: ICrudOperations<Station>
   constructor (
-    VehicleRepository: ICrudOperations<Vehicle>,
+    VehicleRepository: RepositoryVehicule,
     TypeVehicleRepostitory: ICrudOperations<TypeVehicule>,
     StationRepository: ICrudOperations<Station>) {
     this.VehicleRepository = VehicleRepository
@@ -106,6 +107,24 @@ export class ServiceVehicle implements IServicesOperations {
       return SuccessProcess('Status updated successfully', 200)
     } catch (error) {
       return FailureProccess('Error updating Vehicle', 500)
+    }
+  }
+
+  async availabilityForStation (idStation: string): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
+    try {
+      const result = this.VehicleRepository.findByStationAvailable(idStation)
+      return SuccessProcess(result, 200)
+    } catch (error) {
+      return FailureProccess('', 500)
+    }
+  }
+
+  async availableVehicule (): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
+    try {
+      const result = this.VehicleRepository.findByAvailable()
+      return SuccessProcess(result, 200)
+    } catch (error) {
+      return FailureProccess('', 500)
     }
   }
 }

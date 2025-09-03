@@ -1,9 +1,8 @@
 import { NextFunction, Request, Response } from 'express'
-import { IServicesOperations } from '../../../domain/interfaces/common/IServices'
 import { ServiceVehicle } from '../../../application/use-cases/Vehicle/caseUseVehicle'
 
 export class VehicleController {
-  private readonly Service: IServicesOperations
+  private readonly Service: ServiceVehicle
 
   constructor (Service: ServiceVehicle) {
     this.Service = Service
@@ -48,7 +47,7 @@ export class VehicleController {
 
   async getVehicleAvaibleByStation (req: Request, res: Response, Next: NextFunction): Promise<void> {
     const { id } = req.params
-    const result = await this.Service.getById(id)
+    const result = await this.Service.availabilityForStation(id)
     if (!result.success) {
       res.status(result.status).json({ error: result.error })
       return
@@ -57,8 +56,7 @@ export class VehicleController {
   }
 
   async getVehicleAvaible (req: Request, res: Response, Next: NextFunction): Promise<void> {
-    const { id } = req.params
-    const result = await this.Service.getById(id)
+    const result = await this.Service.availableVehicule()
     if (!result.success) {
       res.status(result.status).json({ error: result.error })
       return

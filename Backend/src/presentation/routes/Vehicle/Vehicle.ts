@@ -21,5 +21,8 @@ export const routeVehicle = (prefix: string): Router => {
   route.get(`${prefix}`, controller.getVehicle)
   route.get(`${prefix}/:id`, controller.getVehicle)
 
+  route.get(`${prefix}/available`, controller.getVehicleAvaible)
+  route.get(`${prefix}/station/:id/available`, controller.getVehicleAvaibleByStation)
+
   return route
 }
