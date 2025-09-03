@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import ModalRegisterLoan from "./modalRegisterLoan"
 
 interface Loan {
     id: string
@@ -50,10 +51,11 @@ const mockLoans: Loan[] = [
 ]
 
 function ManagementLoan() {
-    const [loans] = useState<Loan[]>(mockLoans)
+    const [loans, setLoans] = useState<Loan[]>(mockLoans)
     const [searchTerm, setSearchTerm] = useState("")
     const [statusFilter, setStatusFilter] = useState<string>("all")
     const [currentPage, setCurrentPage] = useState(1)
+    const [isModalOpen, setIsModalOpen] = useState(false)
     const itemsPerPage = 10
 
     const filteredLoans = loans.filter((loan) => {
@@ -67,6 +69,25 @@ function ManagementLoan() {
 
         return matchesSearch && matchesStatus
     })
+
+    const handleRegisterLoan = (newLoan: {
+        userId: string
+        vehicleId: string
+        stationOrigin: string
+        stationDestine: string
+    }) => {
+        const loanToAdd: Loan = {
+            id: String(loans.length + 1),
+            nameUser: `User ${newLoan.userId}`, // 🔹 luego puedes mapear con tus usuarios reales
+            nameVehicle: `Vehicle ${newLoan.vehicleId}`, // 🔹 idem con vehículos
+            stationOrigin: newLoan.stationOrigin,
+            stationDestine: newLoan.stationDestine,
+            duration: "0h 00m", // 🔹 podrías calcularlo después
+            status: "pending",
+            startDate: new Date().toISOString().split("T")[0],
+        }
+        setLoans([...loans, loanToAdd])
+    }
 
     const totalPages = Math.ceil(filteredLoans.length / itemsPerPage)
     const startIndex = (currentPage - 1) * itemsPerPage
@@ -161,9 +182,9 @@ function ManagementLoan() {
                         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                             <CardTitle className="text-2xl font-bold text-green-800">Loan Management</CardTitle>{" "}
                             {/* Changed from "Gestión de Préstamos" to "Loan Management" */}
-                            <Button className="bg-green-600 hover:bg-green-700 text-white">
+                            <Button className="bg-green-600 hover:bg-green-700 text-white" onClick={() => setIsModalOpen(true)}>
                                 <Plus className="w-4 h-4 mr-2" />
-                                New Loan {/* Changed from "Nuevo Préstamo" to "New Loan" */}
+                                New Loan
                             </Button>
                         </div>
                     </CardHeader>
@@ -333,6 +354,13 @@ function ManagementLoan() {
                     </CardContent>
                 </Card>
             </div>
+
+            {/* Modal de Registro */}
+            <ModalRegisterLoan
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onSubmit={handleRegisterLoan}
+            />
         </>
     )
 }
