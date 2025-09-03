@@ -1,7 +1,10 @@
 import { Loan } from '../../../domain/entities/Loan/Loan'
 import { ICrudOperations } from '../../../domain/interfaces/common/ICrud'
 
-let LoanList: Loan[] = [new Loan('1', '1067592444', '1', '1', '1', new Date())]
+let LoanList: Loan[] = [
+  new Loan('1', '1067592444', '1', '1', '1', new Date()),
+  new Loan('2', '1067593914', '1', '1', '2', new Date())
+]
 
 export class RepositotyLoan implements ICrudOperations<Loan> {
   save (data: Loan): void {
