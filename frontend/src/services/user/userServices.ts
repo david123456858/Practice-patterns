@@ -1,4 +1,5 @@
 import type { User } from "@/types/classes/user";
+import { API_BASE_URL } from "../../config/api";
 
 export interface ApiResponse {
   message: User[];
@@ -18,8 +19,6 @@ export const subscriptionOptions = [
   { id: "3", label: "SEMIANNUAL", displayName: "Semi-Annual Subscription" }
 ];
 
-const API_BASE_URL = "https://lq3p60dt-3000.use2.devtunnels.ms/"
-
 // Función para crear un nuevo usuario
 export const createUser = async (userData: {
   cc: string;
@@ -28,7 +27,7 @@ export const createUser = async (userData: {
   suscriptionId: string;
 }): Promise<User> => {
   try {
-    const response = await fetch(`${API_BASE_URL}api/v1/user`, {
+    const response = await fetch(`${API_BASE_URL}user`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -52,7 +51,7 @@ export const createUser = async (userData: {
 // Función para obtener todos los usuarios
 export const getUsers = async (): Promise<User[]> => {
   try {
-    const response = await fetch(`${API_BASE_URL}api/v1/user`);
+    const response = await fetch(`${API_BASE_URL}user`);
     
     if (!response.ok) {
       throw new Error(`Error ${response.status}: ${response.statusText}`);
