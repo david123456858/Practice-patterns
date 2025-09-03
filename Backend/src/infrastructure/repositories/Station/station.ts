@@ -1,7 +1,10 @@
+import { GeoLocation } from '../../../domain/entities/GeoLocation/GeoLocation'
 import { Station } from '../../../domain/entities/Station/Station'
 import { ICrudOperations } from '../../../domain/interfaces/common/ICrud'
 
-let stationList: Station[] = []
+let stationList: Station[] = [
+  new Station('1', 'Sede Don carmelo', 'Calle 14 45-5', new GeoLocation(1.2151, 244.5423232)),
+  new Station('2', 'Universidad Popular', 'Diagonal 21 n.º 29-56', new GeoLocation(10.47412, -73.25129))]
 
 export class repositoryStation implements ICrudOperations<Station> {
   save (data: Station): void {

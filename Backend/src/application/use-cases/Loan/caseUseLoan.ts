@@ -128,7 +128,7 @@ export class ServiceLoan implements IServicesOperations {
       const costTotal = this.calculateLoan(id)
 
       if (!costTotal) return FailureProccess('Unable to calculate cost. Please try again later.', 400)
-      return SuccessProcess(`The total cost is: ${costTotal}`, 200)
+      return SuccessProcess(costTotal, 200)
     } catch (error) {
       return FailureProccess('', 500)
     }
