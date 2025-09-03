@@ -12,7 +12,7 @@ export class createStationDto {
 
   @IsString()
   @IsNotEmpty()
-    adress!: string
+    address!: string
 
   @IsNotEmpty()
     geoLocation!: GeoLocation

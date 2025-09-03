@@ -21,7 +21,7 @@ export class ServiceStation implements IServicesOperations {
       const station = new Station(
         stationDto.id,
         stationDto.name,
-        stationDto.adress,
+        stationDto.address,
         stationDto.geoLocation
       )
       this.userRepository.save(station)
