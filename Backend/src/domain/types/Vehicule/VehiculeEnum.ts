@@ -1,0 +1,6 @@
+export enum StatusVehicule {
+  AVAILABLE = 'AVAILABLE',
+  IN_USE = 'IN_USE',
+  OUT_OF_SERVICE = 'OUT-OF-SERVICE',
+  MAINTENANCE = 'MAINTENANCE',
+}
