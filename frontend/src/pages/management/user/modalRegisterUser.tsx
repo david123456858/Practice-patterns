@@ -11,7 +11,7 @@ interface RegisterUserModalProps {
         cc: string
         name: string
         email: string
-        subscription: string
+        subscription: any
     }) => void
 }
 
