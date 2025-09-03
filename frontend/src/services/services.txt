@@ -1,0 +1,1 @@
+# Conexiones a APIs o lógica externa
