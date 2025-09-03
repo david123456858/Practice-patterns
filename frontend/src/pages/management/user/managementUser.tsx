@@ -3,6 +3,7 @@ import { User, Search, Plus, Edit, Trash2, Filter } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
+import ModalRegisterUser from "./modalRegisterUser"
 
 interface UserData {
     id: string
@@ -60,14 +61,27 @@ const mockUsers: UserData[] = [
 function ManagementUser() {
     const [searchTerm, setSearchTerm] = useState("")
     const [filterSubscription, setFilterSubscription] = useState("all")
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    const [users, setUsers] = useState<UserData[]>(mockUsers)
 
-    const filteredUsers = mockUsers.filter((user) => {
+    const filteredUsers = users.filter((user) => {
         const matchesSearch =
             user.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
             user.email.toLowerCase().includes(searchTerm.toLowerCase())
         const matchesFilter = filterSubscription === "all" || user.subscription === filterSubscription
         return matchesSearch && matchesFilter
     })
+
+    const handleRegister = (newUser: { cc: string; name: string; email: string; subscription: string }) => {
+        const userToAdd: UserData = {
+            id: String(users.length + 1),
+            fullName: newUser.name,
+            subscription: newUser.subscription,
+            email: newUser.email,
+            cc: newUser.cc,
+        }
+        setUsers([...users, userToAdd])
+    }
 
     const handleEdit = (userId: string) => {
         console.log("Edit user:", userId)
@@ -98,7 +112,7 @@ function ManagementUser() {
                     <h1 className="text-2xl font-bold text-green-800">User Management</h1>
                     <p className="text-gray-600">Manage and view all registered users</p>
                 </div>
-                <Button className="bg-green-600 hover:bg-green-700 text-white">
+                <Button className="bg-green-600 hover:bg-green-700 text-white" onClick={() => setIsModalOpen(true)}>
                     <Plus className="w-4 h-4 mr-2" />
                     Add New User
                 </Button>
@@ -270,7 +284,15 @@ function ManagementUser() {
                     </Button>
                 </div>
             )}
-        </div></>
+        </div>
+
+            {/* Modal de Registro */}
+            <ModalRegisterUser
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onRegister={handleRegister}
+            />
+        </>
     )
 }
 

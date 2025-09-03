@@ -7,6 +7,7 @@ import ManagementVehicle from "../pages/management/vehicle/managementVehicle";
 import RegisterStation from "@/pages/register/station/registerStation";
 import RegisterPayment from "../pages/register/payment/registerPayment";
 import WelcomeToEcomove from "../pages/dashboard/welcomeToEcoMove";
+import ModalRegisterUser from "@/pages/management/user/modalRegisterUser";
 
 export default function AppRouter() {
     return (
