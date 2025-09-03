@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { ServiceStation } from '../../../application/use-cases/Station/caseUseStation'
 import { IServicesOperations } from '../../../domain/interfaces/common/IServices'
 
-export class ControllerStation {
+export class StationController {
   private readonly serviceStation: IServicesOperations
 
   constructor (service: ServiceStation) {

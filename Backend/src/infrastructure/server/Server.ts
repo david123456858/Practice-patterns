@@ -6,6 +6,7 @@ import morgan from 'morgan'
 import { routeStation } from '../../presentation/routes/Station/Station'
 import { routeTypeVehicle } from '../../presentation/routes/TypeVehicle/TypeVehicle'
 import { routeVehicle } from '../../presentation/routes/Vehicle/Vehicle'
+import { routeLoan } from '../../presentation/routes/Loan/Loan'
 
 export class Server {
   private readonly app: Application
@@ -31,14 +32,15 @@ export class Server {
   }
 
   private routes (): void {
-    this.app.get('/health', (_req: Request, res: Response) => {
+    this.app.get('/', (_req: Request, res: Response) => {
       res.status(200).json({ message: 'I life' })
     })
 
     this.app.use(config.routeBase, routerUser('/user'))
-    this.app.use(config.port, routeStation('/station'))
-    this.app.use(config.port, routeTypeVehicle('/typeVehicle'))
-    this.app.use(config.port, routeVehicle('/vehicle'))
+    this.app.use(config.routeBase, routeStation('/station'))
+    this.app.use(config.routeBase, routeTypeVehicle('/typeVehicle'))
+    this.app.use(config.routeBase, routeVehicle('/vehicle'))
+    this.app.use(config.routeBase, routeLoan('/loan'))
   }
 
   public listen (): void {

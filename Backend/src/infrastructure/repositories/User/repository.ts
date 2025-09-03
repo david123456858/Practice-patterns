@@ -1,6 +1,6 @@
 import { User } from '../../../domain/entities/User/User'
 import { ICrudOperations } from '../../../domain/interfaces/common/ICrud'
-let UserList: User[] = []
+let UserList: User[] = [new User('1067593914', 'Laura altahona', 'laura@unicesar.edu.co'), new User('1067592444', 'Juan Peralta', 'jdavid@unicesar.edu.co')]
 
 export class UserRepository implements ICrudOperations<User> {
   findAll (): User[] {

@@ -1,35 +1,58 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { createLoanDto } from '../../../domain/dtos/Loan/create'
+import { payLoadDto } from '../../../domain/dtos/Loan/payLoan'
+import { updateStatusDto } from '../../../domain/dtos/Vehicle/updateStatus'
 import { Loan } from '../../../domain/entities/Loan/Loan'
 import { Vehicle } from '../../../domain/entities/Vehicule/Vehicule'
 import { ICrudOperations } from '../../../domain/interfaces/common/ICrud'
 import { IFailureProcess, ISuccessProcess } from '../../../domain/interfaces/common/IResults'
 import { IServicesOperations } from '../../../domain/interfaces/common/IServices'
+import { StatusVehicule } from '../../../domain/types/Vehicule/VehiculeEnum'
 import { FailureProccess, SuccessProcess } from '../../../presentation/utils/result/result'
-import { diffDates } from '../../../presentation/utils/time/time'
+import { diffDatesInMinutes, simulateLoan } from '../../../presentation/utils/time/time'
+import { ServicePayment } from '../Payment/payment'
+import { ServiceVehicle } from '../Vehicle/caseUseVehicle'
 
 export class ServiceLoan implements IServicesOperations {
   private readonly loanRepository: ICrudOperations<Loan>
   private readonly vehicleReposito: ICrudOperations<Vehicle>
-  constructor (loanRepository: ICrudOperations<Loan>, vehicleRepo: ICrudOperations<Vehicle>) {
+  private readonly serviceVehicle: ServiceVehicle
+  private readonly servicePayment: ServicePayment
+  constructor (
+    loanRepository: ICrudOperations<Loan>,
+    vehicleRepo: ICrudOperations<Vehicle>,
+    serviceVehicle: ServiceVehicle,
+    servicePaymeny: ServicePayment
+  ) {
     this.loanRepository = loanRepository
     this.vehicleReposito = vehicleRepo
+    this.servicePayment = servicePaymeny
+    this.serviceVehicle = serviceVehicle
   }
 
   async create (LoanDto: createLoanDto): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
     try {
       const findLoan = this.loanRepository.findById(LoanDto.id)
-      if (!findLoan) {
+      if (findLoan) {
         return FailureProccess('loan already exists', 400)
+      }
+      const vehicle = this.vehicleReposito.findById(LoanDto.idVehicle)
+      if (!vehicle) {
+        return FailureProccess('Vehicle already exists', 400)
       }
       const loan = new Loan(
         LoanDto.id,
         LoanDto.idUser,
         LoanDto.idVehicle,
-        LoanDto.idStationOrigin,
+        vehicle.getIdStation(),
         LoanDto.idStationDestination,
         new Date()
       )
+      const updateStatus = new updateStatusDto()
+      updateStatus.id = LoanDto.idVehicle
+      updateStatus.status = StatusVehicule.IN_USE
+
+      await this.serviceVehicle.updateStatus(updateStatus)
       this.loanRepository.save(loan)
       return SuccessProcess('loan created successfully', 201)
     } catch (error) {
@@ -74,23 +97,48 @@ export class ServiceLoan implements IServicesOperations {
     }
   }
 
-  calcucalateLoan (id: string): number | undefined {
+  calculateLoan (id: string): number | undefined {
     const loan = this.loanRepository.findById(id)
+
     if (!loan) {
       return undefined
     }
-    const durationHours = diffDates(loan.getDateStart(), new Date())
+    const simulation = simulateLoan(loan.getDateStart(), 25) // necesario para simulacion
 
+    const durationHours = diffDatesInMinutes(loan.getDateStart(), simulation)
     const vehicle = this.vehicleReposito.findById(loan.getIdVehicle())
+
     if (!vehicle) return undefined
 
-    const cost = vehicle.getCostForDuration() * durationHours.totalHours
+    const cost = vehicle.getCostForDuration() * durationHours
+
     return cost
   }
 
-  async returnVehicleLoaned (idLoan: string): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
+  async returnVehicleLoaned (id: string): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
     try {
-      return SuccessProcess('', 200)
+      const loan = this.loanRepository.findById(id)
+
+      if (!loan) return FailureProccess('Loan not found', 404)
+
+      const updateStatus = new updateStatusDto()
+      updateStatus.id = loan.getIdVehicle()
+      updateStatus.status = StatusVehicule.AVAILABLE
+
+      const costTotal = this.calculateLoan(id)
+
+      if (!costTotal) return FailureProccess('Unable to calculate cost. Please try again later.', 400)
+      return SuccessProcess(costTotal, 200)
+    } catch (error) {
+      return FailureProccess('', 500)
+    }
+  }
+
+  async payOfLoan (dto: payLoadDto): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
+    try {
+      const result = await this.servicePayment.doPay(dto.amount, dto.amountForPay, dto.typePay)
+      if (!result) return FailureProccess('Please try again later.', 400)
+      return SuccessProcess('Payment successfully', 200)
     } catch (error) {
       return FailureProccess('', 500)
     }
