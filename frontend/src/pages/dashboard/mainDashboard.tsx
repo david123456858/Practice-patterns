@@ -1,7 +1,15 @@
 import { Home, Users, Car, MapPin, FileText, CreditCard } from "lucide-react"
 import { Link, Outlet } from "react-router-dom"
+import { useState } from "react"
+import RegisterStation from "../register/station/registerStation"
 
 function MainDashboard() {
+    const [isModalOpen, setIsModalOpen] = useState(false)
+
+    const handleRegisterStation = (stationData: { address: string }) => {
+        console.log("Nueva estación registrada:", stationData)
+    }
+
     return (
         <>
             <div className="flex h-screen bg-white">
@@ -50,25 +58,22 @@ function MainDashboard() {
                                 </a>
                             </Link>
 
-                            <Link to={"/stations"}>
-                                <a
-                                    href="#"
-                                    className="flex items-center px-4 py-3 text-green-100 hover:bg-green-700 hover:text-white rounded-lg transition-colors"
-                                >
-                                    <MapPin className="w-5 h-5 mr-3" />
-                                    <span>Register Stations</span>
-                                </a>
-                            </Link>
+                            <a
+                                onClick={() => setIsModalOpen(true)}
+                                href="#"
+                                className="flex items-center px-4 py-3 text-green-100 hover:bg-green-700 hover:text-white rounded-lg transition-colors"
+                            >
+                                <MapPin className="w-5 h-5 mr-3" />
+                                <span>Register Stations</span>
+                            </a>
 
-                            <Link to="/payment">
-                                <a
-                                    href="#"
-                                    className="flex items-center px-4 py-3 text-green-100 hover:bg-green-700 hover:text-white rounded-lg transition-colors"
-                                >
-                                    <CreditCard className="w-5 h-5 mr-3" />
-                                    <span>Register Payment</span>
-                                </a>
-                            </Link>
+                            <a
+                                href="#"
+                                className="flex items-center px-4 py-3 text-green-100 hover:bg-green-700 hover:text-white rounded-lg transition-colors"
+                            >
+                                <CreditCard className="w-5 h-5 mr-3" />
+                                <span>Register Payment</span>
+                            </a>
 
                         </div>
                     </nav>
@@ -87,6 +92,12 @@ function MainDashboard() {
                         </div>
                     </main>
                 </div>
+
+                <RegisterStation
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    onRegister={handleRegisterStation}
+                />
             </div>
         </>
     )
