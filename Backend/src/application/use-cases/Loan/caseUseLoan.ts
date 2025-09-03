@@ -18,13 +18,6 @@ export class ServiceLoan implements IServicesOperations {
       if (findStation) {
         return FailureProccess('User already exists', 400)
       }
-      const station = new Station(
-        stationDto.id,
-        stationDto.name,
-        stationDto.adress,
-        stationDto.geoLocation
-      )
-      this.userRepository.save(station)
       return SuccessProcess('User created successfully', 201)
     } catch (error) {
       return FailureProccess('Error creating user', 500)
