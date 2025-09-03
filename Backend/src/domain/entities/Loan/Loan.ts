@@ -1,12 +1,14 @@
 export class Loan {
   private id: string
   private idUser: string
+  private idVehicle: string
   private idStationOrigin: string
   private idStationDestination: string
   private dateStart: Date
-  constructor (id: string, idUser: string, idStationOrigin: string, idStationDestination: string, dateStart: Date) {
+  constructor (id: string, idUser: string, idVehicule: string, idStationOrigin: string, idStationDestination: string, dateStart: Date) {
     this.id = id
     this.idUser = idUser
+    this.idVehicle = idVehicule
     this.idStationOrigin = idStationOrigin
     this.idStationDestination = idStationDestination
     this.dateStart = dateStart
@@ -50,5 +52,13 @@ export class Loan {
 
   getIdStationDestination (): string {
     return this.idStationDestination
+  }
+
+  setIdVehicle (idVehicle: string): void {
+    this.idVehicle = idVehicle
+  }
+
+  getIdVehicle (): string {
+    return this.idVehicle
   }
 }
