@@ -3,9 +3,10 @@ import { createStationDto } from '../../../domain/dtos/Station/create'
 import { Station } from '../../../domain/entities/Station/Station'
 import { ICrudOperations } from '../../../domain/interfaces/common/ICrud'
 import { IFailureProcess, ISuccessProcess } from '../../../domain/interfaces/common/IResults'
+import { IServicesOperations } from '../../../domain/interfaces/common/IServices'
 import { FailureProcess, SuccessProcess } from '../../../presentation/utils/result/result'
 
-export class ServiceLoan {
+export class ServiceLoan implements IServicesOperations {
   private readonly userRepository: ICrudOperations<Station>
   constructor (userRepository: ICrudOperations<Station>) {
     this.userRepository = userRepository
@@ -48,6 +49,22 @@ export class ServiceLoan {
       return SuccessProcess(stations, 200)
     } catch (error) {
       return FailureProcess('Error fetching users', 500)
+    }
+  }
+
+  async delete (id: string): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
+    try {
+      return SuccessProcess('', 200)
+    } catch (error) {
+      return FailureProcess('', 500)
+    }
+  }
+
+  async update (id: string, data: any): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
+    try {
+      return SuccessProcess('', 200)
+    } catch (error) {
+      return FailureProcess('', 500)
     }
   }
 }

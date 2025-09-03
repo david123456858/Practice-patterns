@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from 'express'
 import { ServiceStation } from '../../../application/use-cases/Station/caseUseStation'
+import { IServicesOperations } from '../../../domain/interfaces/common/IServices'
 
 export class ControllerStation {
-  private readonly serviceStation: ServiceStation
+  private readonly serviceStation: IServicesOperations
 
   constructor (service: ServiceStation) {
     this.serviceStation = service
@@ -26,7 +27,7 @@ export class ControllerStation {
   }
 
   async getStation (_req: Request, res: Response, next: NextFunction): Promise<void> {
-    const result = await this.serviceStation.findAll()
+    const result = await this.serviceStation.getAll()
     if (!result.success) {
       const error = {
         error: result.error,

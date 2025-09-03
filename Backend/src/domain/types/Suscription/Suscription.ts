@@ -1,5 +1,5 @@
 export enum TypesPricePeriods {
-  ANNUAL = '',
-  SEMESTER = '',
-  MONTH = ''
+  ANNUAL = 12,
+  SEMESTER = 6,
+  MONTH = 1
 }

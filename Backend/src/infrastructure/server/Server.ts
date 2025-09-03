@@ -4,6 +4,7 @@ import config from '../config/config'
 import { routerUser } from '../../presentation/routes/User/User'
 import morgan from 'morgan'
 import { routeStation } from '../../presentation/routes/Station/Station'
+import { routeTypeVehicle } from '../../presentation/routes/TypeVehicle/TypeVehicle'
 
 export class Server {
   private readonly app: Application
@@ -34,6 +35,7 @@ export class Server {
 
     this.app.use(config.routeBase, routerUser('/user'))
     this.app.use(config.port, routeStation('/station'))
+    this.app.use(config.port, routeTypeVehicle('/typeVehicle'))
   }
 
   public listen (): void {

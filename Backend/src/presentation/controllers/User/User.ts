@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from 'express'
 import { ServiceUser } from '../../../application/use-cases/User/ServiceUser'
+import { IServicesOperations } from '../../../domain/interfaces/common/IServices'
 
 export class UserController {
-  private readonly userService: ServiceUser
+  private readonly userService: IServicesOperations
 
   constructor (userService: ServiceUser) {
     this.userService = userService

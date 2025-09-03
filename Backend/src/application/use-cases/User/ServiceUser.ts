@@ -3,9 +3,10 @@ import { UserDtoCreate } from '../../../domain/dtos/User/createDto'
 import { User } from '../../../domain/entities/User/User'
 import { ICrudOperations } from '../../../domain/interfaces/common/ICrud'
 import { IFailureProcess, ISuccessProcess } from '../../../domain/interfaces/common/IResults'
+import { IServicesOperations } from '../../../domain/interfaces/common/IServices'
 import { FailureProcess, SuccessProcess } from '../../../presentation/utils/result/result'
 
-export class ServiceUser {
+export class ServiceUser implements IServicesOperations {
   private readonly userRepository: ICrudOperations<User>
   constructor (userRepository: ICrudOperations<User>) {
     this.userRepository = userRepository
@@ -42,6 +43,22 @@ export class ServiceUser {
       return SuccessProcess('Users fetched successfully', 200)
     } catch (error) {
       return FailureProcess('Error fetching users', 500)
+    }
+  }
+
+  async delete (id: string): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
+    try {
+      return SuccessProcess('', 200)
+    } catch (error) {
+      return FailureProcess('', 500)
+    }
+  }
+
+  async update (id: string, data: any): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
+    try {
+      return SuccessProcess('', 200)
+    } catch (error) {
+      return FailureProcess('', 500)
     }
   }
 }
