@@ -1,61 +1,99 @@
 import { Car, MapPin, Clock, DollarSign, Plus, Search, Filter } from "lucide-react"
+import RegisterTypeVehicleModal from "@/pages/register/vehicle/registerTypeVehicle";
+import { getTypeVehicles, type TypeVehicle } from "@/services/vehicle/vehicleService";
+import { useState, useEffect } from "react";
 
 interface Vehicle {
-    id: string
-    station: string
-    nameVehicle: string
-    status: "Available" | "In Use" | "Maintenance" | "Reserved"
-    costForDuration: number
+    id: string;
+    station: string;
+    nameVehicle: string;
+    status: "Available" | "In Use" | "Maintenance" | "Reserved";
+    costForDuration: number;
 }
 
-// Sample data - replace with your actual data source
-const sampleVehicles: Vehicle[] = [
-    {
-        id: "1",
-        station: "Central Station",
-        nameVehicle: "EcoBike-001",
-        status: "Available",
-        costForDuration: 15.5,
-    },
-    {
-        id: "2",
-        station: "North Plaza",
-        nameVehicle: "EcoScooter-045",
-        status: "In Use",
-        costForDuration: 22.0,
-    },
-    {
-        id: "3",
-        station: "South Terminal",
-        nameVehicle: "EcoBike-078",
-        status: "Maintenance",
-        costForDuration: 0.0,
-    },
-    {
-        id: "4",
-        station: "East Hub",
-        nameVehicle: "EcoScooter-112",
-        status: "Reserved",
-        costForDuration: 18.75,
-    },
-]
-
-
 function ManagementVehicle() {
+    const [isTypeVehicleModalOpen, setIsTypeVehicleModalOpen] = useState(false);
+    const [typeVehicles, setTypeVehicles] = useState<TypeVehicle[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    // Sample data - replace with your actual data source
+    const sampleVehicles: Vehicle[] = [
+        {
+            id: "1",
+            station: "Central Station",
+            nameVehicle: "EcoBike-001",
+            status: "Available",
+            costForDuration: 15.5,
+        },
+        {
+            id: "2",
+            station: "North Plaza",
+            nameVehicle: "EcoScooter-045",
+            status: "In Use",
+            costForDuration: 22.0,
+        },
+        // ... otros vehículos
+    ];
+
+    // Cargar tipos de vehículos al montar el componente
+    useEffect(() => {
+        fetchTypeVehicles();
+    }, []);
+
+    const fetchTypeVehicles = async () => {
+        try {
+            setLoading(true);
+            const typeVehiclesData = await getTypeVehicles();
+            setTypeVehicles(typeVehiclesData);
+            setError(null);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Error al cargar tipos de vehículos');
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleRegisterTypeVehicle = async (typeVehicleData: any) => {
+        try {
+            // En una implementación real, usarías el servicio createTypeVehicle
+            // await createTypeVehicle({
+            //   name: typeVehicleData.name,
+            //   costForDuration: typeVehicleData.pricePerHour
+            // });
+
+            // Por ahora simulamos la creación
+            const newTypeVehicle: TypeVehicle = {
+                name: typeVehicleData.name,
+                costForDuration: typeVehicleData.pricePerHour
+            };
+
+            setTypeVehicles(prev => [...prev, newTypeVehicle]);
+            setIsTypeVehicleModalOpen(false);
+
+            console.log("Type vehicle created:", newTypeVehicle);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Error al crear tipo de vehículo');
+            console.error(err);
+        }
+    };
+
     const getStatusColor = (status: Vehicle["status"]) => {
         switch (status) {
             case "Available":
-                return "bg-green-100 text-green-800 border-green-200"
+                return "bg-green-100 text-green-800 border-green-200";
             case "In Use":
-                return "bg-yellow-100 text-yellow-800 border-yellow-200"
+                return "bg-yellow-100 text-yellow-800 border-yellow-200";
             case "Maintenance":
-                return "bg-red-100 text-red-800 border-red-200"
+                return "bg-red-100 text-red-800 border-red-200";
             case "Reserved":
-                return "bg-blue-100 text-blue-800 border-blue-200"
+                return "bg-blue-100 text-blue-800 border-blue-200";
             default:
-                return "bg-gray-100 text-gray-800 border-gray-200"
+                return "bg-gray-100 text-gray-800 border-gray-200";
         }
-    }
+    };
+
 
     return (
         <>
@@ -87,7 +125,10 @@ function ManagementVehicle() {
                             Add Vehicle
                         </button>
 
-                        <button className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                        <button
+                            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                            onClick={() => setIsTypeVehicleModalOpen(true)}
+                        >
                             <Plus className="h-4 w-4" />
                             Add Type Vehicle
                         </button>
@@ -145,7 +186,29 @@ function ManagementVehicle() {
                     </div>
                 </div>
 
-                {/* Table */}
+                {/* Type Vehicles Section
+                {typeVehicles.length > 0 && (
+                    <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+                        <div className="p-6 border-b border-gray-200">
+                            <h3 className="text-lg font-semibold text-gray-900">Vehicle Types</h3>
+                        </div>
+                        <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {typeVehicles.map((type, index) => (
+                                <div key={index} className="border border-gray-200 rounded-lg p-4">
+                                    <div className="flex items-center justify-between">
+                                        <h4 className="font-medium text-gray-900">{type.name}</h4>
+                                        <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                                            ${type.costForDuration.toFixed(2)}
+                                        </span>
+                                    </div>
+                                    <p className="text-sm text-gray-600 mt-2">Cost per duration</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )} */}
+
+                {/* Vehicles Table */}
                 <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
                     <div className="overflow-x-auto">
                         <table className="w-full">
@@ -218,8 +281,15 @@ function ManagementVehicle() {
                     </div>
                 </div>
             </div>
+
+            {/* Type Vehicle Modal */}
+            <RegisterTypeVehicleModal
+                isOpen={isTypeVehicleModalOpen}
+                onClose={() => setIsTypeVehicleModalOpen(false)}
+                onRegister={handleRegisterTypeVehicle}
+            />
         </>
-    )
+    );
 }
 
-export default ManagementVehicle
+export default ManagementVehicle;
