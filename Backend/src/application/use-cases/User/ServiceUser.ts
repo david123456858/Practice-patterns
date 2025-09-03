@@ -40,7 +40,8 @@ export class ServiceUser implements IServicesOperations {
 
   async getAll (): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
     try {
-      return SuccessProcess('Users fetched successfully', 200)
+      const users = this.userRepository.findAll()
+      return SuccessProcess(users, 200)
     } catch (error) {
       return FailureProccess('Error fetching users', 500)
     }

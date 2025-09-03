@@ -33,6 +33,6 @@ export class RepositoryVehicule implements ICrudOperations<Vehicle> {
   }
 
   findByStationAvailable (idStation: string): Vehicle[] {
-    return vehiculeList.filter(vehicules => vehicules.getIdStation() === idStation)
+    return vehiculeList.filter(vehicules => vehicules.getIdStation() === idStation && vehicules.getStatus() === StatusVehicule.AVAILABLE)
   }
 }

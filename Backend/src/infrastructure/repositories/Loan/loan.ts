@@ -20,7 +20,7 @@ export class RepositotyLoan implements ICrudOperations<Loan> {
   }
 
   findById (id: string): Loan | undefined {
-    return LoanList.find(station => station.getId() === id)
+    return LoanList.find(laon => laon.getId() === id)
   }
 
   findAll (): Loan[] {

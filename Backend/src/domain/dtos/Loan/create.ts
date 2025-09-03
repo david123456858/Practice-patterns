@@ -15,9 +15,5 @@ export class createLoanDto {
 
   @IsString()
   @IsNotEmpty()
-    idStationOrigin!: string
-
-  @IsString()
-  @IsNotEmpty()
     idStationDestination!: string
 }
