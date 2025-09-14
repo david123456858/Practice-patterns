@@ -7,16 +7,19 @@ import ManagementVehicle from "../pages/management/vehicle/managementVehicle";
 import RegisterStation from "@/pages/register/station/registerStation";
 import RegisterPayment from "../pages/register/payment/registerPayment";
 import WelcomeToEcomove from "../pages/dashboard/welcomeToEcoMove";
-import ModalRegisterUser from "@/pages/management/user/modalRegisterUser";
+
+import LoginPage from "@/pages/auth/login";
+import RegisterPage from "@/pages/auth/register";
+import HomePage from "@/pages/landing/home";
 
 export default function AppRouter() {
     return (
         <BrowserRouter>
             <Routes>
                 {/* Ruta padre */}
-                <Route path="/" element={<MainDashboard />}>
+                <Route path="/" element={<HomePage/>}>
                     {/* Ruta hija por defecto*/}
-                    <Route index element={<WelcomeToEcomove />} />
+                    {/* <Route index element={<WelcomeToEcomove />} /> */}
 
                     {/* Rutas hijas */}
                     <Route path="welcome" element={<WelcomeToEcomove />} />
