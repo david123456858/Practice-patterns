@@ -18,7 +18,6 @@ const mockUsers = [
         fullName: "Juan Carlos Pérez",
         email: "juan.perez@email.com",
         subscription: "Premium",
-        status: "Activo",
         role: "Usuario",
     },
     {
@@ -27,7 +26,6 @@ const mockUsers = [
         fullName: "María Elena González",
         email: "maria.gonzalez@email.com",
         subscription: "Básico",
-        status: "Activo",
         role: "Usuario",
     },
     {
@@ -36,7 +34,6 @@ const mockUsers = [
         fullName: "Carlos Alberto Rodríguez",
         email: "carlos.rodriguez@email.com",
         subscription: "Premium",
-        status: "Inactivo",
         role: "Administrador",
     },
     {
@@ -45,7 +42,6 @@ const mockUsers = [
         fullName: "Ana Sofía Martínez",
         email: "ana.martinez@email.com",
         subscription: "Estándar",
-        status: "Activo",
         role: "Usuario",
     },
     {
@@ -54,7 +50,6 @@ const mockUsers = [
         fullName: "Luis Fernando Torres",
         email: "luis.torres@email.com",
         subscription: "Básico",
-        status: "Suspendido",
         role: "Usuario",
     },
     {
@@ -63,7 +58,6 @@ const mockUsers = [
         fullName: "Isabella Ramírez",
         email: "isabella.ramirez@email.com",
         subscription: "Premium",
-        status: "Activo",
         role: "Moderador",
     },
 ]
@@ -204,7 +198,6 @@ function ManagementUser() {
                                         <TableHead className="text-green-700 font-semibold">Nombre Completo</TableHead>
                                         <TableHead className="text-green-700 font-semibold">Email</TableHead>
                                         <TableHead className="text-green-700 font-semibold">Suscripción</TableHead>
-                                        <TableHead className="text-green-700 font-semibold">Estado</TableHead>
                                         <TableHead className="text-green-700 font-semibold">Rol</TableHead>
                                         <TableHead className="text-green-700 font-semibold text-center">Acciones</TableHead>
                                     </TableRow>
@@ -218,11 +211,6 @@ function ManagementUser() {
                                             <TableCell>
                                                 <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
                                                     {user.subscription}
-                                                </Badge>
-                                            </TableCell>
-                                            <TableCell>
-                                                <Badge variant="outline" className={getStatusBadge(user.status)}>
-                                                    {user.status}
                                                 </Badge>
                                             </TableCell>
                                             <TableCell>
