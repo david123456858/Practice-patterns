@@ -3,15 +3,12 @@ import { User, Search, Plus, Edit, Trash2, Filter } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
-import ModalRegisterUser from "./modalRegisterUser"
 import { getUsers } from "@/services/user/userServices"
 import type { User as UserType } from "@/types/classes/user"
-import { TypesPricePeriods } from "@/types/enums/TypesPricePeriods"
 
 function ManagementUser() {
     const [searchTerm, setSearchTerm] = useState("")
     const [filterSubscription, setFilterSubscription] = useState("all")
-    const [isModalOpen, setIsModalOpen] = useState(false)
     const [users, setUsers] = useState<UserType[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
@@ -34,34 +31,6 @@ function ManagementUser() {
             setLoading(false)
         }
     }
-
-    const handleRegister = async (userData: {
-        cc: string;
-        name: string;
-        email: string;
-        suscriptionId: string;
-    }) => {
-        try {
-            // En una implementación real, usarías el servicio createUser:
-            // const newUser = await createUser(userData);
-
-            // Por ahora simulamos la creación localmente
-            const newUser: UserType = {
-                cc: userData.cc,
-                name: userData.name,
-                email: userData.email,
-                subscription: userData.suscriptionId // CORRECCIÓN: usar "suscription" en lugar de "subscription"
-            }
-
-            setUsers(prev => [...prev, newUser]);
-
-            // Mostrar mensaje de éxito
-            console.log("User created successfully:", newUser);
-        } catch (err) {
-            setError(err instanceof Error ? err.message : 'Error creating user');
-            console.error(err);
-        }
-    };
 
     const filteredUsers = users.filter((user) => {
         const matchesSearch =
@@ -137,7 +106,7 @@ function ManagementUser() {
                     <h1 className="text-2xl font-bold text-green-800">User Management</h1>
                     <p className="text-gray-600">Manage and view all registered users</p>
                 </div>
-                <Button className="bg-green-600 hover:bg-green-700 text-white" onClick={() => setIsModalOpen(true)}>
+                <Button className="bg-green-600 hover:bg-green-700 text-white">
                     <Plus className="w-4 h-4 mr-2" />
                     Add New User
                 </Button>
@@ -292,13 +261,6 @@ function ManagementUser() {
                 </div>
             )}
         </div>
-
-            {/* Modal de Registro */}
-            <ModalRegisterUser
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                onRegister={handleRegister}
-            />
         </>
     )
 }

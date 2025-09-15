@@ -192,7 +192,7 @@ export default function RegisterPage() {
 
                 {/* Footer */}
                 <div className="mt-8 text-center">
-                    <p className="text-xs text-muted-foreground">{"© 2024 EcoMove. Construyendo un futuro más verde."}</p>
+                    <p className="text-xs text-muted-foreground">{"© 2025 EcoMove. Construyendo un futuro más verde."}</p>
                 </div>
             </div>
         </div>
