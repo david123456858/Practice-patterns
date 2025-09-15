@@ -2,6 +2,7 @@ import { useState } from "react"
 import { EcoSidebar } from "@/components/eco-sidebar"
 import { WelcomeComponent } from "@/components/welcome"
 import { Outlet } from "react-router-dom"
+import ManagementUser from "../management/user/managementUser"
 
 export default function DashboardPage() {
     const [selectedMenu, setSelectedMenu] = useState("home")
@@ -17,10 +18,7 @@ export default function DashboardPage() {
                 return <WelcomeComponent />
             case "users":
                 return (
-                    <div className="flex-1 p-8">
-                        <h2 className="text-2xl font-bold text-green-800">Gestión de Usuarios</h2>
-                        <p className="text-green-600 mt-2">Funcionalidad en desarrollo...</p>
-                    </div>
+                    <ManagementUser />
                 )
             case "vehicles":
                 return (
