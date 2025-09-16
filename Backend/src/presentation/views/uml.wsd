@@ -39,7 +39,6 @@ class Station{
 
 class Battery {
     - int capacity
-    - int maxBatteryCapacity
     - int autonomyRange
     + getters()
     + setters()
@@ -87,41 +86,120 @@ class CarElectric {
 CarElectric --> Battery
 CarElectric --|> Vehicle
 
-' Payment <|.. PaymentEfective
-' PaymentFactory <|-- ConcretePaymentEffective
-' PaymentFactory ..> Payment
-' ServicePayment --> PaymentFactory : Use
-' ServicePayment --> paymentMethod
+' part User
+class User{
+    - String idUser
+    - String name
+    - String lastName
+    - String email
+    - String password
+    - UserStatus status
+    + getters()
+    + setters()
+}
 
-' ICrudOperations <|.. RepositoryLoan
-' ServiceLoan --> Loan : Use
-' ServiceLoan --> RepositoryUser : Use
-' ServiceLoan --> RepositoryLoan : Use
-' ServiceLoan ..|> ICrudOperations
-' ServiceLoan "1" *--  "1"ServicePayment 
-' Loan --o RepositoryLoan : Store
+class Admin {
+    - List<String> permissions
+    + getters()
+    + setters()
+}
 
-' Vehicle ..> StatusVehicle 
-' RepositoryUser ..|> ICrudOperations
-' ServiceUser --> RepositoryUser : Use
-' ServiceUser --> User : Use
-' User --> Suscription : Use
-' User --o RepositoryUser: Store
+class Client {
+    - List<Loan> loanHistory 
+    + getters()
+    + setters()
+}
+
+enum UserStatus {
+    ACTIVE
+    INACTIVE
+    SUSPENDED
+}
+
+User ..> UserStatus
+User "1" --> "Many" Loan : has
+Admin --|> User
+Client --|> User
+
+' part Loan
+class Loan {
+    - String loanId
+    - String userId
+    - String vehicleId
+    - Date startTime
+    - Date endTime
+    - String startStationId
+    - String endStationId
+    - LoanStatus status
+    - float cost
+    + getters()
+    + setters()
+}
+
+enum LoanStatus {
+    ACTIVE
+    COMPLETED
+    CANCELLED
+}
+
+Loan ..> LoanStatus
+Loan "1" --> "1" Vehicle : uses
+Loan "1" --> "1" Station : starts at
+Loan "1" --> "1" Station : ends at
+Loan "1" --> "1" Payment: has
+
+' Part pay
+class Payment{
+    - String paymentId
+    - String loanId
+    - float amount
+    - PaymentStatus status
+    - Date paymentDate
+    + getters()
+    + setters()
+}
+
+enum PaymentStatus {
+    PENDING
+    COMPLETED
+    FAILED
+    REFUNDED
+}
+
+enum PaymentMethod {
+    CASH
+    CREDIT_CARD
+}
+
+interface IPaymentProcessor{
+    + doPay(payment: Payment): PaymentStatus
+    + updatePay(payment: Payment): PaymentStatus
+}
+
+class PaymentProcessorFactory{
+    - Map<String, IPaymentProcessor>
+    + createPayMethod(method: PaymentMethod): IPaymentProcessor
+}
 
 
-' TypeVehicle "Many" --* "1" Station
-' GeoLocation --o Vehicle : Contain
-' ServiceVehicle --> Vehicle : Use
-' ServiceVehicle --> RepositoryVehicle : Use
-' Vehicle --o RepositoryVehicle : Store
-' Vehicle --|> TypeVehicle 
+class CashPaymentProcessor{
 
-' RepositoryVehicle ..|> ICrudOperations
+}
+class CreditCardPaymentProcessor{
 
-' GeoLocation "1" --o "1" Station
-' RepositoryStation ..|> ICrudOperations 
-' ServiceLoan --> RepositoryStation
+}
 
-' Suscription --> TypesPricePeriods
-' Premium --|> Suscription
+Payment ..> PaymentStatus
+Payment ..> PaymentMethod
+
+CashPaymentProcessor ..|> IPaymentProcessor
+CreditCardPaymentProcessor ..|> IPaymentProcessor
+PaymentProcessorFactory --> IPaymentProcessor
+
+note right of IPaymentProcessor
+  Capa de Servicio/Aplicación
+  No es parte del dominio
+  Se comunicará con Payment a través de DTOs
+end note
+
 @enduml
