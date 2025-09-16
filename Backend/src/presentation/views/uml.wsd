@@ -1,0 +1,127 @@
+@startuml EcoMove
+' Vehicle and relations
+class Vehicle{
+    - String idVehicle
+    - String color
+    - String model
+    - String idStation
+    - StatusVehicle state
+    - GeoLocation geoLocation
+    - int MaxUserWeight
+    - float velocityMax
+    - float costForMinute
+    + getters()
+    + setters()
+}
+
+enum StatusVehicle {
+    AVAILABLE
+    IN_USE
+    MAINTENANCE
+    OUT_OF_SERVICE
+}
+
+class GeoLocation{
+    - float latitude
+    - float longitude
+    - Date timestamp
+    + getters()
+    + setters()
+}
+
+class Station{
+    - String idStation
+    - String address      
+    - GeoLocation geoLocation
+    + getters()
+    + setters()
+}
+
+class Battery {
+    - int capacity
+    - int maxBatteryCapacity
+    - int autonomyRange
+    + getters()
+    + setters()
+}
+
+Vehicle "Many" --> "1" Station 
+Vehicle ..> StatusVehicle
+Vehicle --> GeoLocation
+
+' Bicycle 
+class Bicycle {
+    - int gears
+    - boolean hasBasket
+    + getters()
+    + setters()
+}
+
+Bicycle --|> Vehicle
+
+
+class ElectricScooter {
+    - boolean hasSeat
+    - Battery batteryInfo
+    + getters()
+    + setters()
+}
+
+ElectricScooter --|> Vehicle
+ElectricScooter --> Battery
+
+class Skateboard {
+    - int deckSize 
+
+}
+
+Skateboard --|> Vehicle
+
+class CarElectric {
+    - int doors
+    - String licensePlate
+    - Battery batteryInfo
+    - boolean hasAirConditioning
+}
+
+CarElectric --> Battery
+CarElectric --|> Vehicle
+
+' Payment <|.. PaymentEfective
+' PaymentFactory <|-- ConcretePaymentEffective
+' PaymentFactory ..> Payment
+' ServicePayment --> PaymentFactory : Use
+' ServicePayment --> paymentMethod
+
+' ICrudOperations <|.. RepositoryLoan
+' ServiceLoan --> Loan : Use
+' ServiceLoan --> RepositoryUser : Use
+' ServiceLoan --> RepositoryLoan : Use
+' ServiceLoan ..|> ICrudOperations
+' ServiceLoan "1" *--  "1"ServicePayment 
+' Loan --o RepositoryLoan : Store
+
+' Vehicle ..> StatusVehicle 
+' RepositoryUser ..|> ICrudOperations
+' ServiceUser --> RepositoryUser : Use
+' ServiceUser --> User : Use
+' User --> Suscription : Use
+' User --o RepositoryUser: Store
+
+
+' TypeVehicle "Many" --* "1" Station
+' GeoLocation --o Vehicle : Contain
+' ServiceVehicle --> Vehicle : Use
+' ServiceVehicle --> RepositoryVehicle : Use
+' Vehicle --o RepositoryVehicle : Store
+' Vehicle --|> TypeVehicle 
+
+' RepositoryVehicle ..|> ICrudOperations
+
+' GeoLocation "1" --o "1" Station
+' RepositoryStation ..|> ICrudOperations 
+' ServiceLoan --> RepositoryStation
+
+' Suscription --> TypesPricePeriods
+' Premium --|> Suscription
+@enduml
