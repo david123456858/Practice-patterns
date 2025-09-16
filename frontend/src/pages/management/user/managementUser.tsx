@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react"
-import { getUsers } from "@/services/user/userServices"
+import { getUsers } from "@/services/user/getUser"
 import type { User as UserType } from "@/types/classes/user"
 
 import { Search, Filter, Edit, Trash2 } from "lucide-react"

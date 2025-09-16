@@ -32,7 +32,9 @@ export default function HomePage() {
                         </CardHeader>
                         <CardContent>
                             <Link to={"/login"}>
-                                <Button className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-medium">
+                                <Button
+                                    variant={"outline"}
+                                    className="w-full h-12 border-primary text-primary hover:bg-primary hover:text-primary-foreground font-medium bg-transparent">
                                     Ingresar
                                     <ArrowRight className="w-4 h-4 ml-2" />
                                 </Button>
