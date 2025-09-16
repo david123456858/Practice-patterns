@@ -7,7 +7,7 @@ import { Vehicle } from '../../../domain/entities/Vehicule/Vehicule'
 import { ICrudOperations } from '../../../domain/interfaces/common/ICrud'
 import { IFailureProcess, ISuccessProcess } from '../../../domain/interfaces/common/IResults'
 import { IServicesOperations } from '../../../domain/interfaces/common/IServices'
-import { StatusVehicule } from '../../../domain/types/Vehicule/VehiculeEnum'
+import { StatusVehicle } from '../../../domain/types/Vehicule/VehiculeEnum'
 import { FailureProccess, SuccessProcess } from '../../../presentation/utils/result/result'
 import { diffDatesInMinutes, simulateLoan } from '../../../presentation/utils/time/time'
 import { ServicePayment } from '../Payment/payment'
@@ -50,7 +50,7 @@ export class ServiceLoan implements IServicesOperations {
       )
       const updateStatus = new updateStatusDto()
       updateStatus.id = LoanDto.idVehicle
-      updateStatus.status = StatusVehicule.IN_USE
+      updateStatus.status = StatusVehicle.IN_USE
 
       await this.serviceVehicle.updateStatus(updateStatus)
       this.loanRepository.save(loan)
@@ -123,7 +123,7 @@ export class ServiceLoan implements IServicesOperations {
 
       const updateStatus = new updateStatusDto()
       updateStatus.id = loan.getIdVehicle()
-      updateStatus.status = StatusVehicule.AVAILABLE
+      updateStatus.status = StatusVehicle.AVAILABLE
 
       const costTotal = this.calculateLoan(id)
 

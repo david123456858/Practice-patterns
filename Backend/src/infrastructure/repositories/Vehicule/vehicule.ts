@@ -1,12 +1,8 @@
 import { ICrudOperations } from './../../../domain/interfaces/common/ICrud'
 import { Vehicle } from '../../../domain/entities/Vehicule/Vehicule'
 import { StatusVehicle } from '../../../domain/types/Vehicule/VehiculeEnum'
-import { TypeVehicule } from '../../../domain/entities/TypeVehicule/TypeVehicule'
-import { GeoLocation } from '../../../domain/entities/GeoLocation/GeoLocation'
 
-let vehiculeList: Vehicle[] = [
-  new Vehicle('1', '1', new GeoLocation(1.2151, 244.5423232), StatusVehicle.AVAILABLE, new TypeVehicule('bicicletas', 100)),
-  new Vehicle('2', '1', new GeoLocation(1.2151, 244.5423232), StatusVehicle.AVAILABLE, new TypeVehicule('patinetas', 500))]
+let vehiculeList: Vehicle[] = []
 
 export class RepositoryVehicule implements ICrudOperations<Vehicle> {
   save (data: Vehicle): void {

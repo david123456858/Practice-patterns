@@ -3,11 +3,15 @@ import { IsEmail, IsNotEmpty, IsString } from 'class-validator'
 export class UserDtoCreate {
   @IsString()
   @IsNotEmpty()
-    cc!: string
+    idUser!: string
 
   @IsString()
   @IsNotEmpty()
     name!: string
+
+  @IsString()
+  @IsNotEmpty()
+    lastName!: string
 
   @IsString()
   @IsEmail()
@@ -16,5 +20,9 @@ export class UserDtoCreate {
 
   @IsString()
   @IsNotEmpty()
-    suscriptionId!: string
+    password!: string
+
+  @IsString()
+  @IsNotEmpty()
+    password2!: string
 }

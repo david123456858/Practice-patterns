@@ -4,9 +4,9 @@ import config from '../config/config'
 import { routerUser } from '../../presentation/routes/User/User'
 import morgan from 'morgan'
 import { routeStation } from '../../presentation/routes/Station/Station'
-import { routeTypeVehicle } from '../../presentation/routes/TypeVehicle/TypeVehicle'
 import { routeVehicle } from '../../presentation/routes/Vehicle/Vehicle'
 import { routeLoan } from '../../presentation/routes/Loan/Loan'
+import { routeAuth } from '../../presentation/routes/auth/auth'
 
 export class Server {
   private readonly app: Application
@@ -36,9 +36,9 @@ export class Server {
       res.status(200).json({ message: 'I life' })
     })
 
+    this.app.use(config.routeBase, routeAuth('/auth'))
     this.app.use(config.routeBase, routerUser('/user'))
     this.app.use(config.routeBase, routeStation('/station'))
-    this.app.use(config.routeBase, routeTypeVehicle('/typeVehicle'))
     this.app.use(config.routeBase, routeVehicle('/vehicle'))
     this.app.use(config.routeBase, routeLoan('/loan'))
   }

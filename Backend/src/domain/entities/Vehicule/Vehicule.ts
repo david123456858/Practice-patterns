@@ -1,20 +1,19 @@
-import { TypeVehicule } from './../TypeVehicule/TypeVehicule'
-import { StatusVehicule } from '../../types/Vehicule/VehiculeEnum'
+
+import { StatusVehicle } from '../../types/Vehicule/VehiculeEnum'
 import { GeoLocation } from '../GeoLocation/GeoLocation'
 
-export class Vehicle extends TypeVehicule {
+export class Vehicle {
   private id: string
   private idStation: string
   private readonly currentLoca: GeoLocation
-  private status: StatusVehicule
+  private status: StatusVehicle
 
   constructor (
     id: string,
     idStation: string,
     currentLoca: GeoLocation,
-    status: StatusVehicule,
-    typeVehicule: TypeVehicule) {
-    super(typeVehicule.getName(), typeVehicule.getCostForDuration())
+    status: StatusVehicle
+  ) {
     this.id = id
     this.idStation = idStation
     this.currentLoca = currentLoca
@@ -45,11 +44,11 @@ export class Vehicle extends TypeVehicule {
     this.currentLoca.setLocation(latitude, longitude)
   }
 
-  getStatus (): StatusVehicule {
+  getStatus (): StatusVehicle {
     return this.status
   }
 
-  setStatus (statusVehicule: StatusVehicule): void {
-    this.status = statusVehicule
+  setStatus (StatusVehicle: StatusVehicle): void {
+    this.status = StatusVehicle
   }
 }
