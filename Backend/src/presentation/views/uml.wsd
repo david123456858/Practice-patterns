@@ -93,33 +93,34 @@ class User{
     - String lastName
     - String email
     - String password
-    - UserStatus status
+    - List<Loan> loanHistory
+    - List<Role> roles
+    - subscriptionPlan: SubscriptionPlan 
     + getters()
     + setters()
 }
 
-class Admin {
-    - List<String> permissions
+
+class SubscriptionPlan{
+    - String idPlan
+    - String name
+    - monthlyFee
     + getters()
     + setters()
 }
 
-class Client {
-    - List<Loan> loanHistory 
-    + getters()
-    + setters()
-}
 
-enum UserStatus {
-    ACTIVE
-    INACTIVE
-    SUSPENDED
-}
-
-User ..> UserStatus
 User "1" --> "Many" Loan : has
-Admin --|> User
-Client --|> User
+User "1" --> "Many" Role : has
+User "1" --> "1" SubscriptionPlan : can has
+ 
+class Role{
+    - String idRole
+    - String name
+    - List<String> permissions 
+    + getters()
+    + setters()
+}
 
 ' part Loan
 class Loan {
@@ -171,35 +172,41 @@ enum PaymentMethod {
     CREDIT_CARD
 }
 
-interface IPaymentProcessor{
-    + doPay(payment: Payment): PaymentStatus
-    + updatePay(payment: Payment): PaymentStatus
-}
+' interface IPaymentProcessor{
+'     + doPay(payment: Payment): PaymentStatus
+'     + updatePay(payment: Payment): PaymentStatus
+' }
 
-class PaymentProcessorFactory{
-    - Map<String, IPaymentProcessor>
-    + createPayMethod(method: PaymentMethod): IPaymentProcessor
-}
+' class PaymentProcessorFactory{
+'     - Map<String, IPaymentProcessor>
+'     + createPayMethod(method: PaymentMethod): IPaymentProcessor
+' }
 
 
-class CashPaymentProcessor{
+' class CashPaymentProcessor{
 
-}
-class CreditCardPaymentProcessor{
+' }
+' class CreditCardPaymentProcessor{
 
-}
+' }
 
 Payment ..> PaymentStatus
 Payment ..> PaymentMethod
 
-CashPaymentProcessor ..|> IPaymentProcessor
-CreditCardPaymentProcessor ..|> IPaymentProcessor
-PaymentProcessorFactory --> IPaymentProcessor
-
-note right of IPaymentProcessor
-  Capa de Servicio/Aplicación
-  No es parte del dominio
-  Se comunicará con Payment a través de DTOs
+note top of Payment
+  Entidad de Dominio
+  Solo almacena estado y datos
+  No contiene lógica de procesamiento
 end note
+
+' CashPaymentProcessor ..|> IPaymentProcessor
+' CreditCardPaymentProcessor ..|> IPaymentProcessor
+' PaymentProcessorFactory --> IPaymentProcessor
+
+' note right of IPaymentProcessor
+'   Capa de Servicio/Aplicación
+'   No es parte del dominio
+'   Se comunicará con Payment a través de DTOs
+' end note
 
 @enduml

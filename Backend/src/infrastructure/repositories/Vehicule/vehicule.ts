@@ -1,12 +1,12 @@
 import { ICrudOperations } from './../../../domain/interfaces/common/ICrud'
 import { Vehicle } from '../../../domain/entities/Vehicule/Vehicule'
-import { StatusVehicule } from '../../../domain/types/Vehicule/VehiculeEnum'
+import { StatusVehicle } from '../../../domain/types/Vehicule/VehiculeEnum'
 import { TypeVehicule } from '../../../domain/entities/TypeVehicule/TypeVehicule'
 import { GeoLocation } from '../../../domain/entities/GeoLocation/GeoLocation'
 
 let vehiculeList: Vehicle[] = [
-  new Vehicle('1', '1', new GeoLocation(1.2151, 244.5423232), StatusVehicule.AVAILABLE, new TypeVehicule('bicicletas', 100)),
-  new Vehicle('2', '1', new GeoLocation(1.2151, 244.5423232), StatusVehicule.AVAILABLE, new TypeVehicule('patinetas', 500))]
+  new Vehicle('1', '1', new GeoLocation(1.2151, 244.5423232), StatusVehicle.AVAILABLE, new TypeVehicule('bicicletas', 100)),
+  new Vehicle('2', '1', new GeoLocation(1.2151, 244.5423232), StatusVehicle.AVAILABLE, new TypeVehicule('patinetas', 500))]
 
 export class RepositoryVehicule implements ICrudOperations<Vehicle> {
   save (data: Vehicle): void {
@@ -33,10 +33,10 @@ export class RepositoryVehicule implements ICrudOperations<Vehicle> {
   }
 
   findByAvailable (): Vehicle[] {
-    return vehiculeList.filter(Vehicle => Vehicle.getStatus() === StatusVehicule.AVAILABLE)
+    return vehiculeList.filter(Vehicle => Vehicle.getStatus() === StatusVehicle.AVAILABLE)
   }
 
   findByStationAvailable (idStation: string): Vehicle[] {
-    return vehiculeList.filter(vehicules => vehicules.getIdStation() === idStation && vehicules.getStatus() === StatusVehicule.AVAILABLE)
+    return vehiculeList.filter(vehicules => vehicules.getIdStation() === idStation && vehicules.getStatus() === StatusVehicle.AVAILABLE)
   }
 }

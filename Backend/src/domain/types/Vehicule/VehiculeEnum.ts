@@ -1,4 +1,4 @@
-export enum StatusVehicule {
+export enum StatusVehicle {
   AVAILABLE = 'AVAILABLE',
   IN_USE = 'IN_USE',
   OUT_OF_SERVICE = 'OUT-OF-SERVICE',
