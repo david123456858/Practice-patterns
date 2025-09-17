@@ -16,7 +16,6 @@ export class CarElectric extends Vehicle {
     velocityMax: number,
     costForMinute: number,
     private doors: number,
-    private licensePlate: string,
     private batteryInfo: Battery,
     private hasAirConditioning: boolean
   ) {
@@ -25,13 +24,11 @@ export class CarElectric extends Vehicle {
 
   // Getters específicos de CarElectric
   getDoors (): number { return this.doors }
-  getLicensePlate (): string { return this.licensePlate }
   getBatteryInfo (): Battery { return this.batteryInfo }
   getHasAirConditioning (): boolean { return this.hasAirConditioning }
 
   // Setters específicos de CarElectric
   setDoors (doors: number): void { this.doors = doors }
-  setLicensePlate (plate: string): void { this.licensePlate = plate }
   setBatteryInfo (battery: Battery): void { this.batteryInfo = battery }
   setHasAirConditioning (has: boolean): void { this.hasAirConditioning = has }
 }

@@ -2,7 +2,7 @@
 /* eslint-disable no-case-declarations */
 /* eslint-disable @typescript-eslint/no-extraneous-class */
 // src/domain/factories/Vehicle/VehicleFactory.ts
-import { VehicleType } from '../../types/Vehicule/VehiculeEnum'
+import { StatusVehicle, VehicleType } from '../../types/Vehicule/VehiculeEnum'
 import { Vehicle } from '../../entities/Vehicule/Vehicle'
 import { Bicycle } from '../../entities/Vehicule/Bicycle'
 import { ElectricScooter } from '../../entities/Vehicule/ElectricScooter'
@@ -17,7 +17,7 @@ import {
   CreateCarElectricDto,
   CreateVehicleDto
 } from '../../dtos/Vehicle/create'
-
+// T R A M U Y O
 export class VehicleFactory {
   static createVehicle (vehicleDto: CreateVehicleDto): Vehicle {
     const geoLocation = new GeoLocation(vehicleDto.latitude, vehicleDto.longitude)
@@ -30,7 +30,7 @@ export class VehicleFactory {
           bicycleDto.color,
           bicycleDto.model,
           bicycleDto.idStation,
-          bicycleDto.state,
+          StatusVehicle.AVAILABLE,
           geoLocation,
           vehicleDto.vehicleType,
           bicycleDto.maxUserWeight,
@@ -51,7 +51,7 @@ export class VehicleFactory {
           scooterDto.color,
           scooterDto.model,
           scooterDto.idStation,
-          scooterDto.state,
+          StatusVehicle.AVAILABLE,
           vehicleDto.vehicleType,
           geoLocation,
           scooterDto.maxUserWeight,
@@ -68,7 +68,7 @@ export class VehicleFactory {
           skateboardDto.color,
           skateboardDto.model,
           skateboardDto.idStation,
-          skateboardDto.state,
+          StatusVehicle.AVAILABLE,
           vehicleDto.vehicleType,
           geoLocation,
           skateboardDto.maxUserWeight,
@@ -88,14 +88,13 @@ export class VehicleFactory {
           carDto.color,
           carDto.model,
           carDto.idStation,
-          carDto.state,
+          StatusVehicle.AVAILABLE,
           vehicleDto.vehicleType,
           geoLocation,
           carDto.maxUserWeight,
           carDto.velocityMax,
           carDto.costForMinute,
           carDto.doors,
-          carDto.licensePlate,
           carBattery,
           carDto.hasAirConditioning
         )

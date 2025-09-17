@@ -6,8 +6,8 @@ export enum StatusVehicle {
 }
 
 export enum VehicleType {
-  BICYCLE = 'BICYCLE',
-  ELECTRIC_SCOOTER = 'ELECTRIC_SCOOTER',
-  SKATEBOARD = 'SKATEBOARD',
-  CAR_ELECTRIC = 'CAR_ELECTRIC'
+  BICYCLE = 'bicycle',
+  ELECTRIC_SCOOTER = 'electric_scooter',
+  SKATEBOARD = 'skateboard',
+  CAR_ELECTRIC = 'car_electric',
 }

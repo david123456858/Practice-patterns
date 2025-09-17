@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString, IsNumber, IsBoolean, ValidateNested, IsEnum } from 'class-validator'
 import { Type } from 'class-transformer'
-import { VehicleType, StatusVehicle } from '../../types/Vehicule/VehiculeEnum'
+import { VehicleType } from '../../types/Vehicule/VehiculeEnum'
 
 // DTO base para vehículos
 export class BaseVehicleDto {
@@ -19,9 +19,6 @@ export class BaseVehicleDto {
   @IsNotEmpty()
   @IsString()
     idStation!: string
-
-  @IsEnum(StatusVehicle)
-    state!: StatusVehicle
 
   @IsNotEmpty()
   @IsNumber()
@@ -92,10 +89,6 @@ export class CreateCarElectricDto extends BaseVehicleDto {
   @IsNotEmpty()
   @IsNumber()
     doors!: number
-
-  @IsNotEmpty()
-  @IsString()
-    licensePlate!: string
 
   @ValidateNested()
   @Type(() => BatteryDto)

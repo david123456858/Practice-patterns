@@ -87,7 +87,6 @@ Skateboard --|> Vehicle
 
 class CarElectric {
     - int doors
-    - String licensePlate
     - Battery batteryInfo
     - boolean hasAirConditioning
 }
