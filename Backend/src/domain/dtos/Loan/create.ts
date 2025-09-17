@@ -3,17 +3,17 @@ import { IsNotEmpty, IsString } from 'class-validator'
 export class createLoanDto {
   @IsString()
   @IsNotEmpty()
-    id!: string
+    loanId!: string
 
   @IsString()
   @IsNotEmpty()
-    idUser!: string
+    userId!: string
 
   @IsString()
   @IsNotEmpty()
-    idVehicle!: string
+    VehicleId!: string
 
   @IsString()
   @IsNotEmpty()
-    idStationDestination!: string
+    startStationId!: string
 }

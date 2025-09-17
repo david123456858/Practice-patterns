@@ -5,7 +5,7 @@ export class Loan {
   private readonly userId: string
   private readonly vehicleId: string
   private readonly startTime: Date
-  private endTime: Date | null
+  private endTime: Date
   private readonly startStationId: string
   private endStationId: string | null
   private status: LoanStatus
@@ -23,7 +23,7 @@ export class Loan {
     this.userId = userId
     this.vehicleId = vehicleId
     this.startTime = startTime
-    this.endTime = null
+    this.endTime = new Date()
     this.startStationId = startStationId
     this.endStationId = null
     this.status = status
@@ -47,7 +47,7 @@ export class Loan {
     return this.startTime
   }
 
-  getEndTime (): Date | null {
+  getEndTime (): Date {
     return this.endTime
   }
 

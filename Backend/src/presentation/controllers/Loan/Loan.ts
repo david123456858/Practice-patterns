@@ -11,7 +11,6 @@ export class LoanController {
     this.getLoan = this.getLoan.bind(this)
     this.getLoanId = this.getLoanId.bind(this)
     this.returnVehicleLoaned = this.returnVehicleLoaned.bind(this)
-    this.payLoan = this.payLoan.bind(this)
   }
 
   async createLoan (req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -44,20 +43,9 @@ export class LoanController {
   }
 
   async returnVehicleLoaned (req: Request, res: Response, next: NextFunction): Promise<void> {
-    const { id } = req.params
-    console.log('controlador', id)
+    const loanFinish = req.body
 
-    const result = await this.serviceLoan.returnVehicleLoaned(id)
-    if (!result.success) {
-      res.status(result.status).json({ error: result.error })
-      return
-    }
-    res.status(result.status).json({ message: result.value })
-  }
-
-  async payLoan (req: Request, res: Response, next: NextFunction): Promise<void> {
-    const { body } = req
-    const result = await this.serviceLoan.payOfLoan(body)
+    const result = await this.serviceLoan.returnVehicleLoaned(loanFinish)
     if (!result.success) {
       res.status(result.status).json({ error: result.error })
       return

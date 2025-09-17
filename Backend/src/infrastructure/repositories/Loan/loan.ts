@@ -1,10 +1,7 @@
 import { Loan } from '../../../domain/entities/Loan/Loan'
 import { ICrudOperations } from '../../../domain/interfaces/common/ICrud'
 
-let LoanList: Loan[] = [
-  new Loan('1', '1067592444', '1', '1', '1', new Date()),
-  new Loan('2', '1067593914', '1', '1', '2', new Date())
-]
+let LoanList: Loan[] = []
 
 export class RepositotyLoan implements ICrudOperations<Loan> {
   save (data: Loan): void {
@@ -12,18 +9,18 @@ export class RepositotyLoan implements ICrudOperations<Loan> {
   }
 
   delete (id: string): void {
-    LoanList = LoanList.filter(loan => loan.getId() !== id)
+    LoanList = LoanList.filter(loan => loan.getLoanId() !== id)
   }
 
   update (data: Loan): void {
-    const index = LoanList.findIndex(loan => loan.getId() === data.getId())
+    const index = LoanList.findIndex(loan => loan.getLoanId() === data.getLoanId())
     if (index !== -1) {
       LoanList[index] = data
     }
   }
 
   findById (id: string): Loan | undefined {
-    return LoanList.find(laon => laon.getId() === id)
+    return LoanList.find(laon => laon.getLoanId() === id)
   }
 
   findAll (): Loan[] {
