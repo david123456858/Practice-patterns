@@ -23,3 +23,6 @@ export class Role {
   setName (name: string): void { this.name = name }
   setPermissions (permissions: string[]): void { this.permissions = permissions }
 }
+
+export const roleAdmin = new Role('1', 'admin', ['create_user', 'delete_user', 'update_user', 'view_user'])
+export const roleClient = new Role('2', 'user', ['view_profile', 'edit_profile'])

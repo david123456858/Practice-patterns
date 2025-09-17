@@ -1,19 +1,26 @@
 @startuml EcoMove
 ' Vehicle and relations
 class Vehicle{
-    - String idVehicle
-    - String color
-    - String model
-    - String idStation
-    - StatusVehicle state
-    - GeoLocation geoLocation
-    - int MaxUserWeight
-    - float velocityMax
-    - float costForMinute
+    # String idVehicle
+    # String color
+    # String model
+    # String idStation
+    # StatusVehicle state
+    # TypeVehicle type
+    # GeoLocation geoLocation
+    # int MaxUserWeight
+    # float velocityMax
+    # float costForMinute
     + getters()
     + setters()
 }
 
+enum TypeVehicle{
+    BICYCLE 
+    ELECTRIC_SCOOTER 
+    SKATEBOARD 
+    CAR_ELECTRIC
+}
 enum StatusVehicle {
     AVAILABLE
     IN_USE
@@ -47,6 +54,7 @@ class Battery {
 
 Vehicle "Many" --> "1" Station 
 Vehicle ..> StatusVehicle
+Vehicle ..> TypeVehicle
 Vehicle --> GeoLocation
 
 ' Bicycle 
@@ -175,10 +183,10 @@ enum PaymentMethod {
 
 
 
-class PaymentProcessorFactory{
-    - Map<String, IPaymentProcessor>
-    + createPayMethod(method: PaymentMethod): IPaymentProcessor
-}
+' class PaymentProcessorFactory{
+'     - Map<String, IPaymentProcessor>
+'     + createPayMethod(method: PaymentMethod): IPaymentProcessor
+' }
 
 ' interface IPaymentProcessor{
 '     + doPay(payment: Payment): PaymentStatus

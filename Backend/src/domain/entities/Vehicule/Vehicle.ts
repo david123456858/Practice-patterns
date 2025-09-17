@@ -1,5 +1,5 @@
 import { GeoLocation } from '../GeoLocation/GeoLocation'
-import { StatusVehicle } from '../../types/Vehicule/VehiculeEnum'
+import { StatusVehicle, VehicleType } from '../../types/Vehicule/VehiculeEnum'
 
 export abstract class Vehicle {
   constructor (
@@ -8,6 +8,7 @@ export abstract class Vehicle {
     protected model: string,
     protected idStation: string,
     protected state: StatusVehicle,
+    protected type: VehicleType,
     protected geoLocation: GeoLocation,
     protected maxUserWeight: number,
     protected velocityMax: number,

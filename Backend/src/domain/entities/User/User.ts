@@ -27,6 +27,7 @@ export class User {
     this.name = name
     this.suscription = suscription ?? null
     this.password = password
+    this.role.push(role)
   }
 
   setCC (idUser: string): void { this.idUser = idUser }

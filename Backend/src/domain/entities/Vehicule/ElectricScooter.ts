@@ -1,6 +1,6 @@
 import { Vehicle } from './Vehicle'
 import { GeoLocation } from '../GeoLocation/GeoLocation'
-import { StatusVehicle } from '../../types/Vehicule/VehiculeEnum'
+import { StatusVehicle, VehicleType } from '../../types/Vehicule/VehiculeEnum'
 import { Battery } from '../Battery/Battery'
 
 export class ElectricScooter extends Vehicle {
@@ -10,6 +10,7 @@ export class ElectricScooter extends Vehicle {
     model: string,
     idStation: string,
     state: StatusVehicle,
+    type: VehicleType,
     geoLocation: GeoLocation,
     maxUserWeight: number,
     velocityMax: number,
@@ -17,7 +18,7 @@ export class ElectricScooter extends Vehicle {
     private hasSeat: boolean,
     private batteryInfo: Battery
   ) {
-    super(idVehicle, color, model, idStation, state, geoLocation, maxUserWeight, velocityMax, costForMinute)
+    super(idVehicle, color, model, idStation, state, type, geoLocation, maxUserWeight, velocityMax, costForMinute)
   }
 
   // Getters específicos de ElectricScooter
