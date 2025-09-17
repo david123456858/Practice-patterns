@@ -163,6 +163,7 @@ class Payment{
     - String loanId
     - float amount
     - PaymentStatus status
+    - PaymentMethod method
     - Date paymentDate
     + getters()
     + setters()
@@ -183,7 +184,7 @@ enum PaymentMethod {
 
 
 ' class PaymentProcessorFactory{
-'     - Map<String, IPaymentProcessor>
+'     - Map<String, IPaymentProcessor> methods
 '     + createPayMethod(method: PaymentMethod): IPaymentProcessor
 ' }
 

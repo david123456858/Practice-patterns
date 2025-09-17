@@ -1,8 +1,9 @@
 import { ICrudOperations } from './../../../domain/interfaces/common/ICrud'
 import { Vehicle } from '../../../domain/entities/Vehicule/Vehicle'
 import { StatusVehicle } from '../../../domain/types/Vehicule/VehiculeEnum'
+import { bici1, bici2, scooter1, scooter2 } from '../../database/data'
 
-let vehiculeList: Vehicle[] = []
+let vehiculeList: Vehicle[] = [bici1, bici2, scooter1, scooter2]
 
 export class RepositoryVehicule implements ICrudOperations<Vehicle> {
   save (data: Vehicle): void {

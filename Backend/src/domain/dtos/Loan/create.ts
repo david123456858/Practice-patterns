@@ -11,7 +11,7 @@ export class createLoanDto {
 
   @IsString()
   @IsNotEmpty()
-    VehicleId!: string
+    vehicleId!: string
 
   @IsString()
   @IsNotEmpty()

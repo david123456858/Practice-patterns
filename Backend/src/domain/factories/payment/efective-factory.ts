@@ -1,9 +1,15 @@
-// import { PaymentEfective } from '../../entities/Payment/payment'
-// import { Payment } from '../../interfaces/specific/Payment/payment'
-// import { PaymentFactory } from './factory_Payment'
+import { Payment } from '../../entities/Payment/payment'
+import { IPaymentProcessor } from '../../interfaces/specific/Payment/payment'
+import { PaymentStatus } from '../../types/Payment/PaymentStatus'
 
-// export class EfectivePayment extends PaymentFactory {
-//   public createProcessor (): Payment {
-//     return new PaymentEfective()
-//   }
-// }
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
+export class CashPaymentProcessor implements IPaymentProcessor {
+  doPay (payment: Payment): any {
+    setTimeout(() => {
+      console.log('Processing cash payment...')
+    }, 5000)
+    payment.setPaymentDate(new Date())
+    payment.setStatus(PaymentStatus.COMPLETED)
+    return payment
+  }
+}

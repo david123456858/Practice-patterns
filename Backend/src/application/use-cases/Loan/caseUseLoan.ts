@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { createLoanDto } from '../../../domain/dtos/Loan/create'
 import { finishLoanDto } from '../../../domain/dtos/Loan/FinishLoan'
+import { createPaymentDto } from '../../../domain/dtos/payment/create'
 import { Loan } from '../../../domain/entities/Loan/Loan'
 import { User } from '../../../domain/entities/User/User'
 import { Vehicle } from '../../../domain/entities/Vehicule/Vehicle'
@@ -8,15 +9,18 @@ import { ICrudOperations } from '../../../domain/interfaces/common/ICrud'
 import { IFailureProcess, ISuccessProcess } from '../../../domain/interfaces/common/IResults'
 import { IServicesOperations } from '../../../domain/interfaces/common/IServices'
 import { LoanStatus } from '../../../domain/types/Loan/LoanEnum'
+import { PaymentMethod } from '../../../domain/types/Payment/PaymentMethod'
 import { StatusVehicle } from '../../../domain/types/Vehicule/VehiculeEnum'
 import { FailureProccess, SuccessProcess } from '../../../presentation/utils/result/result'
 import { diffDatesInMinutes } from '../../../presentation/utils/time/time'
+import { ServicePayment } from '../Payment/payment'
 
 export class ServiceLoan implements IServicesOperations {
   constructor (
     private readonly loanRepository: ICrudOperations<Loan>,
     private readonly vehicleReposito: ICrudOperations<Vehicle>,
-    private readonly repositoryUser: ICrudOperations<User>
+    private readonly repositoryUser: ICrudOperations<User>,
+    private readonly servicePayment: ServicePayment
   ) {}
 
   async create (LoanDto: createLoanDto): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
@@ -25,18 +29,18 @@ export class ServiceLoan implements IServicesOperations {
       if (findLoan) {
         return FailureProccess('loan already exists', 400)
       }
-      const vehicle = this.vehicleReposito.findById(LoanDto.VehicleId)
+      const vehicle = this.vehicleReposito.findById(LoanDto.vehicleId)
       if (!vehicle) {
         return FailureProccess('Vehicle already exists', 400)
       }
       const loan = new Loan(
         LoanDto.loanId,
         LoanDto.userId,
-        LoanDto.VehicleId,
+        LoanDto.vehicleId,
         LoanDto.startStationId,
         new Date()
       )
-      const vehicleInUse = this.vehicleReposito.findById(LoanDto.VehicleId)
+      const vehicleInUse = this.vehicleReposito.findById(LoanDto.vehicleId)
       if (!vehicleInUse) {
         return FailureProccess('Vehicle not found', 404)
       }
@@ -45,7 +49,7 @@ export class ServiceLoan implements IServicesOperations {
       this.loanRepository.save(loan)
       console.log(loan)
 
-      return SuccessProcess('loan created successfully', 201)
+      return SuccessProcess(loan, 201)
     } catch (error) {
       return FailureProccess('Error creating loan', 500)
     }
@@ -90,8 +94,6 @@ export class ServiceLoan implements IServicesOperations {
 
   async returnVehicleLoaned (loanDto: finishLoanDto): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
     try {
-      console.log(loanDto.loanId)
-
       const loan = this.loanRepository.findById(loanDto.loanId)
       if (!loan) return FailureProccess('Loan not found', 404)
 
@@ -117,15 +119,23 @@ export class ServiceLoan implements IServicesOperations {
       if (verifiy.length === 0) {
         userHistory.setLoanHistory(loan)
       }
+
+      const dto = new createPaymentDto()
+      dto.amount = loan.getCost()
+      dto.loanId = loan.getLoanId()
+      dto.method = PaymentMethod.EFECTIVE
+
+      const resulty = await this.servicePayment.paymentCreate(dto)
+      if (!resulty.success) {
+        console.log()
+        return FailureProccess('', 444)
+      }
       this.vehicleReposito.update(vehicle)
       this.loanRepository.update(loan)
       this.repositoryUser.update(userHistory)
 
       console.log(loan)
-      console.log(userHistory)
-      console.log(vehicle)
-
-      return SuccessProcess(loan.getCost(), 200)
+      return SuccessProcess(resulty.value, 200)
     } catch (error) {
       return FailureProccess('', 500)
     }
