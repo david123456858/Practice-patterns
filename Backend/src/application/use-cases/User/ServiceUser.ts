@@ -26,7 +26,9 @@ export class ServiceUser {
     try {
       const users = this.userRepository.findAll()
 
-      return SuccessProcess(users, 200)
+      const usersClean = users.map(user => user.toJSON())
+
+      return SuccessProcess(usersClean, 200)
     } catch (error) {
       return FailureProccess('Error fetching users', 500)
     }

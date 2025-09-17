@@ -1,11 +1,14 @@
-import { roleAdmin } from '../../../domain/entities/Role/Role'
+import { roleAdmin, roleClient } from '../../../domain/entities/Role/Role'
 import { User } from '../../../domain/entities/User/User'
 import { ICrudOperations } from '../../../domain/interfaces/common/ICrud'
-let UserList: User[] = [new User('1', 'Admin', 'admin', 'admin@gmail.com', 'admin', roleAdmin)]
+let UserList: User[] = [
+  new User('1', 'Admin', 'admin', 'admin@gmail.com', 'admin', roleAdmin),
+  new User('2', 'Kadir', 'Quintero', 'kadir@gmail.com', '12345', roleClient)
+]
 
 export class UserRepository implements ICrudOperations<User> {
   findAll (): User[] {
-    return UserList.filter(user => user.getRole().find(role => role.getName() !== 'admin'))
+    return UserList
   }
 
   save (data: User): void {

@@ -8,13 +8,18 @@ import { LoanController } from '../../controllers/Loan/Loan'
 import { validateDto } from '../../middlewares/ValidateDto/validate'
 import { createLoanDto } from '../../../domain/dtos/Loan/create'
 import { finishLoanDto } from '../../../domain/dtos/Loan/FinishLoan'
+import { PaymentRepository } from '../../../infrastructure/repositories/payment/payment'
+import { ServicePayment } from '../../../application/use-cases/Payment/payment'
 
 export const routeLoan = (prefix: string): Router => {
   const repositoryLoan = new RepositotyLoan()
   const repositoryVehicle = new RepositoryVehicule()
   const respositoryUser = new UserRepository()
 
-  const serviceLoan = new ServiceLoan(repositoryLoan, repositoryVehicle, respositoryUser)
+  const repository = new PaymentRepository()
+  const service = new ServicePayment(repository)
+
+  const serviceLoan = new ServiceLoan(repositoryLoan, repositoryVehicle, respositoryUser, service)
 
   const controller = new LoanController(serviceLoan)
 

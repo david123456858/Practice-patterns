@@ -1,7 +1,5 @@
-export interface Payment {
-  doPay: (amount: number, amountForPay: number) => any
-}
+import { Payment } from '../../../entities/Payment/payment'
 
 export interface IPaymentProcessor {
-  doPay: (amount: number) => any
+  doPay: (payment: Payment) => any
 }
