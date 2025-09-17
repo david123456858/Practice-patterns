@@ -90,6 +90,8 @@ export class ServiceLoan implements IServicesOperations {
 
   async returnVehicleLoaned (loanDto: finishLoanDto): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
     try {
+      console.log(loanDto.loanId)
+
       const loan = this.loanRepository.findById(loanDto.loanId)
       if (!loan) return FailureProccess('Loan not found', 404)
 
@@ -107,14 +109,18 @@ export class ServiceLoan implements IServicesOperations {
       vehicle.setState(StatusVehicle.AVAILABLE)
 
       const userHistory = this.repositoryUser.findById(loan.getUserId())
-      console.log(userHistory)
 
       if (!userHistory) return FailureProccess('User not found', 404)
       userHistory.setLoanHistory(loan)
 
+      const verifiy = userHistory.getLoanHistory().filter(u => u.getLoanId() === loan.getLoanId())
+      if (verifiy.length === 0) {
+        userHistory.setLoanHistory(loan)
+      }
       this.vehicleReposito.update(vehicle)
       this.loanRepository.update(loan)
       this.repositoryUser.update(userHistory)
+
       console.log(loan)
       console.log(userHistory)
       console.log(vehicle)
