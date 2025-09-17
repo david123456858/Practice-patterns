@@ -11,8 +11,8 @@ export class VehicleController {
     this.create = this.create.bind(this)
     this.getVehicle = this.getVehicle.bind(this)
     this.getVehicleById = this.getVehicleById.bind(this)
-    // this.getVehicleAvaibleByStation = this.getVehicleAvaibleByStation.bind(this)
-    // this.getVehicleAvaible = this.getVehicleAvaible.bind(this)
+    this.getVehicleAvaibleByStation = this.getVehicleAvaibleByStation.bind(this)
+    this.getVehicleAvaible = this.getVehicleAvaible.bind(this)
   }
 
   async create (req: Request, res: Response, Next: NextFunction): Promise<void> {
