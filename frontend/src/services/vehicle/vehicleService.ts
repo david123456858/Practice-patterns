@@ -1,52 +1,55 @@
 import { API_BASE_URL } from "../../config/api";
+import { type BicycleData, type ScooterData, type SkateboardData } from "@/interface/vehicleInterface";
 
-export interface TypeVehicle {
-    id?: string;
-    name: string;
-    costForDuration: number;
-}
-
-export interface ApiResponse {
-    message: TypeVehicle[];
+export interface VehicleTypesResponse {
+    message: Record<string, string>;
 }
 
 
-// Función para obtener todos los tipos de vehículos
-export const getTypeVehicles = async (): Promise<TypeVehicle[]> => {
-    try {
-        const response = await fetch(`${API_BASE_URL}typeVehicle`);
+type VehiclePayload = BicycleData | ScooterData | SkateboardData
 
-        if (!response.ok) {
-            throw new Error(`Error ${response.status}: ${response.statusText}`);
+export const createVehicle = async (vehicle: VehiclePayload) => {
+    try {
+        let endpoint = ""
+
+        switch (vehicle.vehicleType) {
+            case "BICYCLE":
+                endpoint = "bicycle"
+                break
+            case "electric_scooter":
+                endpoint = "scooter"
+                break
+            case "skateboard":
+                endpoint = "skateboard"
+                break
+            default:
+                throw new Error("Tipo de vehículo no soportado")
         }
 
-        const data: ApiResponse = await response.json();
-        return data.message || [];
-    } catch (error) {
-        console.error('Error fetching type vehicles:', error);
-        throw new Error('Failed to fetch type vehicles');
-    }
-};
+        const response = await fetch(`${API_BASE_URL}vehicle/${endpoint}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(vehicle),
+        })
 
-// Función para crear un nuevo tipo de vehículo
-export const createTypeVehicle = async (typeVehicleData: Omit<TypeVehicle, 'id'>): Promise<TypeVehicle> => {
+        if (!response.ok) throw new Error(`Error ${response.status}: ${response.statusText}`)
+
+        return await response.json()
+    } catch (error) {
+        console.error("Error creando vehículo:", error)
+        throw error
+    }
+}
+
+// Traer tipos de vehículo
+export const getVehicleTypes = async (): Promise<Record<string, string>> => {
     try {
-        const response = await fetch(`${API_BASE_URL}typeVehicle`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(typeVehicleData),
-        });
-
-        if (!response.ok) {
-            throw new Error(`Error ${response.status}: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        return data;
+        const response = await fetch(`${API_BASE_URL}vehicle/types`)
+        if (!response.ok) throw new Error(`Error ${response.status}: ${response.statusText}`)
+        const data: VehicleTypesResponse = await response.json()
+        return data.message || {}
     } catch (error) {
-        console.error('Error creating type vehicle:', error);
-        throw new Error('Failed to create type vehicle');
+        console.error("Error fetching vehicle types:", error)
+        throw new Error("Failed to fetch vehicle types")
     }
-};
+}

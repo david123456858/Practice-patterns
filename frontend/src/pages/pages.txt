@@ -1,1 +1,0 @@
-# Páginas o vistas completas (cada ruta de tu app)
