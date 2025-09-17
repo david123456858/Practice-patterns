@@ -1,15 +1,8 @@
-import { VehicleFactory } from './../../../domain/factories/vehicle/VehicleFactory'
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
+import { VehicleFactory } from './../../../domain/factories/vehicle/VehicleFactory'
 import { IServicesOperations } from '../../../domain/interfaces/common/IServices'
-// import { Vehicle } from '../../../domain/entities/Vehicule/Vehicle'
 import { RepositoryVehicule } from '../../../infrastructure/repositories/Vehicule/vehicule'
-// import { CreateVehicleDto, CreateBicycleDto, CreateElectricScooterDto, CreateCarElectricDto } from '../../../domain/dtos/Vehicle/create'
 import { ISuccessProcess, IFailureProcess } from '../../../domain/interfaces/common/IResults'
-
-// import { Bicycle } from '../../../domain/entities/Vehicule/Bicycle'
-// import { ElectricScooter } from '../../../domain/entities/Vehicule/ElectricScooter'
-// import { CarElectric } from '../../../domain/entities/Vehicule/CarElectric'
-// import { Battery } from '../../../domain/entities/Battery/Battery'
 import { FailureProccess, SuccessProcess } from '../../../presentation/utils/result/result'
 import { repositoryStation } from '../../../infrastructure/repositories/Station/station'
 import { CreateVehicleDto } from '../../../domain/dtos/Vehicle/create'
@@ -54,7 +47,16 @@ export class VehicleService implements IServicesOperations {
   async getAll (): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
     try {
       const result = this.vehicleRepository.findAll()
-      return SuccessProcess(result, 200)
+      const stations = this.stationRepository.findAll()
+
+      const resultClean = result.map(vehicle => {
+        const station = stations.find(s => s.getId() === vehicle.getIdStation())
+        return {
+          ...vehicle,
+          nameStation: station?.getName()
+        }
+      })
+      return SuccessProcess(resultClean, 200)
     } catch (error) {
       return FailureProccess('Error internal server', 500)
     }

@@ -47,4 +47,9 @@ export class User {
   getPassword (): string { return this.password }
   getRole (): Role[] { return this.role }
   getLoanHistory (): Loan[] { return this.loanHistory }
+
+  toJSON (): any {
+    const { password, ...rest } = this
+    return rest
+  }
 }

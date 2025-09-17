@@ -8,7 +8,7 @@ let UserList: User[] = [
 
 export class UserRepository implements ICrudOperations<User> {
   findAll (): User[] {
-    return UserList.filter(user => user.getRole().find(role => role.getName() !== 'admin'))
+    return UserList
   }
 
   save (data: User): void {

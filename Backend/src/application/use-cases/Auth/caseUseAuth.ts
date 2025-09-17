@@ -18,10 +18,16 @@ export class AuthService {
       const user = this.userRepository.findByEmail(data.email)
 
       if (!user) return FailureProccess('User not found', 404)
-      console.log(user)
 
       if (user.getPassword() !== data.password) return FailureProccess('Invalid credentials', 401)
-      return SuccessProcess(user.getRole(), 200)
+
+      const userDtoResponse = {
+        userEmail: user.getEmail(),
+        userId: user.getCC(),
+        userName: user.getName(),
+        role: user.getRole()
+      }
+      return SuccessProcess(userDtoResponse, 200)
     } catch (error) {
       return FailureProccess('Error internal server', 500)
     }

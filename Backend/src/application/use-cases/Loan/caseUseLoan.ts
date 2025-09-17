@@ -49,7 +49,7 @@ export class ServiceLoan implements IServicesOperations {
       this.loanRepository.save(loan)
       console.log(loan)
 
-      return SuccessProcess('loan created successfully', 201)
+      return SuccessProcess(loan, 201)
     } catch (error) {
       return FailureProccess('Error creating loan', 500)
     }
