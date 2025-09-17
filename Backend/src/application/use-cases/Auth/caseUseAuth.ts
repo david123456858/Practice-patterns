@@ -21,7 +21,7 @@ export class AuthService {
       console.log(user)
 
       if (user.getPassword() !== data.password) return FailureProccess('Invalid credentials', 401)
-      return SuccessProcess('Login Successfully', 200)
+      return SuccessProcess(user.getRole(), 200)
     } catch (error) {
       return FailureProccess('Error internal server', 500)
     }

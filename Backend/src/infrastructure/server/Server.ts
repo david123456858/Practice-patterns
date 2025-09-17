@@ -7,6 +7,7 @@ import { routeStation } from '../../presentation/routes/Station/Station'
 import { routeVehicle } from '../../presentation/routes/Vehicle/Vehicle'
 import { routeLoan } from '../../presentation/routes/Loan/Loan'
 import { routeAuth } from '../../presentation/routes/auth/auth'
+import { paymentRoute } from '../../presentation/routes/payment/payment'
 
 export class Server {
   private readonly app: Application
@@ -41,6 +42,7 @@ export class Server {
     this.app.use(config.routeBase, routeStation('/station'))
     this.app.use(config.routeBase, routeVehicle('/vehicle'))
     this.app.use(config.routeBase, routeLoan('/loan'))
+    this.app.use(config.routeBase, paymentRoute('/payment'))
   }
 
   public listen (): void {

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { createLoanDto } from '../../../domain/dtos/Loan/create'
 import { finishLoanDto } from '../../../domain/dtos/Loan/FinishLoan'
+import { createPaymentDto } from '../../../domain/dtos/payment/create'
 import { Loan } from '../../../domain/entities/Loan/Loan'
 import { User } from '../../../domain/entities/User/User'
 import { Vehicle } from '../../../domain/entities/Vehicule/Vehicle'
@@ -8,15 +9,18 @@ import { ICrudOperations } from '../../../domain/interfaces/common/ICrud'
 import { IFailureProcess, ISuccessProcess } from '../../../domain/interfaces/common/IResults'
 import { IServicesOperations } from '../../../domain/interfaces/common/IServices'
 import { LoanStatus } from '../../../domain/types/Loan/LoanEnum'
+import { PaymentMethod } from '../../../domain/types/Payment/PaymentMethod'
 import { StatusVehicle } from '../../../domain/types/Vehicule/VehiculeEnum'
 import { FailureProccess, SuccessProcess } from '../../../presentation/utils/result/result'
 import { diffDatesInMinutes } from '../../../presentation/utils/time/time'
+import { ServicePayment } from '../Payment/payment'
 
 export class ServiceLoan implements IServicesOperations {
   constructor (
     private readonly loanRepository: ICrudOperations<Loan>,
     private readonly vehicleReposito: ICrudOperations<Vehicle>,
-    private readonly repositoryUser: ICrudOperations<User>
+    private readonly repositoryUser: ICrudOperations<User>,
+    private readonly servicePayment: ServicePayment
   ) {}
 
   async create (LoanDto: createLoanDto): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
@@ -90,8 +94,6 @@ export class ServiceLoan implements IServicesOperations {
 
   async returnVehicleLoaned (loanDto: finishLoanDto): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
     try {
-      console.log(loanDto.loanId)
-
       const loan = this.loanRepository.findById(loanDto.loanId)
       if (!loan) return FailureProccess('Loan not found', 404)
 
@@ -117,14 +119,18 @@ export class ServiceLoan implements IServicesOperations {
       if (verifiy.length === 0) {
         userHistory.setLoanHistory(loan)
       }
+
+      const dto = new createPaymentDto()
+      dto.amount = loan.getCost()
+      dto.loanId = loan.getLoanId()
+      dto.method = PaymentMethod.EFECTIVE
+
+      await this.servicePayment.paymentCreate(dto)
       this.vehicleReposito.update(vehicle)
       this.loanRepository.update(loan)
       this.repositoryUser.update(userHistory)
 
       console.log(loan)
-      console.log(userHistory)
-      console.log(vehicle)
-
       return SuccessProcess(loan.getCost(), 200)
     } catch (error) {
       return FailureProccess('', 500)
