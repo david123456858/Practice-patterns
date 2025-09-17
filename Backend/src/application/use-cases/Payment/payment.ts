@@ -47,7 +47,7 @@ export class ServicePayment {
       console.log(payment)
 
       this.repositoryPayment.save(payment)
-      return SuccessProcess('payment created successfully', 201)
+      return SuccessProcess(payment, 201)
     } catch (error) {
       return FailureProccess('Error creating payment', 500)
     }

@@ -29,18 +29,18 @@ export class ServiceLoan implements IServicesOperations {
       if (findLoan) {
         return FailureProccess('loan already exists', 400)
       }
-      const vehicle = this.vehicleReposito.findById(LoanDto.VehicleId)
+      const vehicle = this.vehicleReposito.findById(LoanDto.vehicleId)
       if (!vehicle) {
         return FailureProccess('Vehicle already exists', 400)
       }
       const loan = new Loan(
         LoanDto.loanId,
         LoanDto.userId,
-        LoanDto.VehicleId,
+        LoanDto.vehicleId,
         LoanDto.startStationId,
         new Date()
       )
-      const vehicleInUse = this.vehicleReposito.findById(LoanDto.VehicleId)
+      const vehicleInUse = this.vehicleReposito.findById(LoanDto.vehicleId)
       if (!vehicleInUse) {
         return FailureProccess('Vehicle not found', 404)
       }
@@ -125,13 +125,17 @@ export class ServiceLoan implements IServicesOperations {
       dto.loanId = loan.getLoanId()
       dto.method = PaymentMethod.EFECTIVE
 
-      await this.servicePayment.paymentCreate(dto)
+      const resulty = await this.servicePayment.paymentCreate(dto)
+      if (!resulty.success) {
+        console.log()
+        return FailureProccess('', 444)
+      }
       this.vehicleReposito.update(vehicle)
       this.loanRepository.update(loan)
       this.repositoryUser.update(userHistory)
 
       console.log(loan)
-      return SuccessProcess(loan.getCost(), 200)
+      return SuccessProcess(resulty.value, 200)
     } catch (error) {
       return FailureProccess('', 500)
     }

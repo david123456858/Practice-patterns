@@ -76,7 +76,16 @@ export class VehicleService implements IServicesOperations {
   async getAvailable (): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
     try {
       const result = this.vehicleRepository.findByAvailable()
-      return SuccessProcess(result, 200)
+      const stations = this.stationRepository.findAll()
+
+      const resultClean = result.map(vehicle => {
+        const station = stations.find(s => s.getId() === vehicle.getIdStation())
+        return {
+          ...vehicle,
+          nameStation: station?.getName()
+        }
+      })
+      return SuccessProcess(resultClean, 200)
     } catch (error) {
       return FailureProccess('Error internal server', 500)
     }

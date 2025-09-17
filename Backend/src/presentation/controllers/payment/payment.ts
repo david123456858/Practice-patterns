@@ -1,10 +1,12 @@
+import { Request, Response } from 'express'
 import { ServicePayment } from '../../../application/use-cases/Payment/payment'
+import { PaymentMethod } from '../../../domain/types/Payment/PaymentMethod'
 export class PaymentController {
   constructor (private readonly service: ServicePayment) {
     this.paymentCreate = this.paymentCreate.bind(this)
   }
 
-  async paymentCreate (req: any, res: any): Promise<void> {
+  async paymentCreate (req: Request, res: Response): Promise<void> {
     const payment = req.body
 
     const result = await this.service.PaymentStatus(payment)
@@ -13,5 +15,9 @@ export class PaymentController {
       return
     }
     res.status(result.status).json({ message: result.value })
+  }
+
+  async getPaymentType (req: Request, res: Response): Promise<void> {
+    res.status(200).json({ message: PaymentMethod })
   }
 }

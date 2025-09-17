@@ -11,7 +11,7 @@ export const paymentRoute = (prefix: string): Router => {
   const controller = new PaymentController(service)
 
   route.post(`${prefix}`, validateDto(createPaymentDto), controller.paymentCreate)
-  //   route.get(`${prefix}`)
+  route.get(`${prefix}`, controller.getPaymentType)
   //   route.get(`${prefix}/:id`)
 
   return route
