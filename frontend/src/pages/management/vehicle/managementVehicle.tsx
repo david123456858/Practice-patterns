@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useMemo } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -6,6 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Search, Edit, Trash2, Car, Filter, Plus } from "lucide-react"
+import { AddVehicleModal } from "@/components/modals/vehicle/modalCreateVehicle"
 
 // Datos de ejemplo para los vehículos
 const mockVehicles = [
@@ -70,6 +73,7 @@ const mockVehicles = [
 function ManagementVehicle() {
     const [searchTerm, setSearchTerm] = useState("")
     const [statusFilter, setStatusFilter] = useState("all")
+    const [isModalOpen, setIsModalOpen] = useState(false)
 
     // Filtrar vehículos basado en búsqueda y filtro de estado
     const filteredVehicles = useMemo(() => {
@@ -109,8 +113,8 @@ function ManagementVehicle() {
     }
 
     const handleAddVehicle = () => {
-        console.log("[v0] Agregando nuevo vehículo")
-        // Aquí iría la lógica para agregar un nuevo vehículo
+        console.log("[v0] Abriendo modal para agregar vehículo")
+        setIsModalOpen(true)
     }
 
     return (
@@ -177,6 +181,7 @@ function ManagementVehicle() {
                     </CardContent>
                 </Card>
 
+
                 {/* Tabla de vehículos */}
                 <Card className="border-green-200 shadow-sm">
                     <CardHeader className="pb-4">
@@ -241,6 +246,8 @@ function ManagementVehicle() {
                     </CardContent>
                 </Card>
             </div>
+            {/* AddVehicleModal component */}
+            <AddVehicleModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
         </div>
     );
 }

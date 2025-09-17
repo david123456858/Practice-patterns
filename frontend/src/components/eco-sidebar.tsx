@@ -12,7 +12,7 @@ const menuItems = [
     { id: "home", label: "Página principal", icon: Home },
     { id: "users", label: "Gestión de usuarios", icon: Users },
     { id: "vehicles", label: "Gestión de vehículos", icon: Car },
-    { id: "stations", label: "Gestión de estaciones", icon: MapPin },
+    { id: "stations", label: "Registrar estacion", icon: MapPin },
     { id: "loans", label: "Registrar préstamo", icon: FileText },
     { id: "payments", label: "Registrar pago", icon: CreditCard },
 ]

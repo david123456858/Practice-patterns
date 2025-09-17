@@ -1,17 +1,14 @@
 import { API_BASE_URL } from "../../config/api";
 
-export interface geoLocation {
-    latitude: number;
-    longitude: number;
-    altitude?: string;
-    timeStamp?: Date;
-}
-
 export interface Station {
-    id: string;
+    idStation: string;
     name: string;
+    geoLocation: {
+        latitude: number;
+        longitude: number;
+        timestamp: string;
+    };
     address: string;
-    geoLocation: geoLocation;
 }
 
 export const createStation = async (stationData: Station): Promise<Station> => {
@@ -42,4 +39,15 @@ export const generateRandomId = (): string => {
     const max = 999999999; // 9 dígitos (999,999,999)
     const randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
     return randomNum.toString();
+};
+
+export const getStations = async (): Promise<Station[]> => {
+    try {
+        const response = await fetch(`${API_BASE_URL}station`);
+        const data = await response.json();
+        return data.message as Station[];
+    } catch (error) {
+        console.error("Error fetching stations:", error);
+        return [];
+    }
 };

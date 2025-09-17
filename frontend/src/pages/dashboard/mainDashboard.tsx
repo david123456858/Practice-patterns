@@ -4,6 +4,7 @@ import { WelcomeComponent } from "@/components/welcome"
 import { Outlet } from "react-router-dom"
 import ManagementUser from "../management/user/managementUser"
 import ManagementVehicle from "../management/vehicle/managementVehicle"
+import { ManagementStation } from "../management/station/managementStation"
 
 export default function DashboardPage() {
     const [selectedMenu, setSelectedMenu] = useState("home")
@@ -27,10 +28,7 @@ export default function DashboardPage() {
                 )
             case "stations":
                 return (
-                    <div className="flex-1 p-8">
-                        <h2 className="text-2xl font-bold text-green-800">Gestión de Estaciones</h2>
-                        <p className="text-green-600 mt-2">Funcionalidad en desarrollo...</p>
-                    </div>
+                    <ManagementStation />
                 )
             case "loans":
                 return (

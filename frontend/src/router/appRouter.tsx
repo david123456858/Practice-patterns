@@ -8,9 +8,11 @@ import MainDashboard from "@/pages/dashboard/mainDashboard";
 import ManagementUser from "@/pages/management/user/managementUser";
 import ManagementLoan from "@/pages/management/loan/managementLoan";
 import ManagementVehicle from "@/pages/management/vehicle/managementVehicle";
-import RegisterStation from "@/pages/register/station/registerStation";
+import { ManagementStation } from "@/pages/management/station/managementStation";
 import RegisterPayment from "@/pages/register/payment/registerPayment";
 import { WelcomeComponent } from "@/components/welcome";
+
+import ClientPage from "@/pages/client/homeClientPage";
 
 export default function AppRouter() {
     return (
@@ -21,6 +23,8 @@ export default function AppRouter() {
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
 
+                <Route path="/homeClient" element={<ClientPage />} />
+
                 {/* Rutas privadas (Dashboard con sidebar) */}
                 <Route path="/dashboard" element={<MainDashboard />}>
                     {/* Ruta hija por defecto -> WelcomeComponent */}
@@ -28,7 +32,7 @@ export default function AppRouter() {
 
                     {/* Rutas hijas del Dashboard */}
                     <Route path="users" element={<ManagementUser />} />
-                    <Route path="stations" element={<RegisterStation />} />
+                    <Route path="stations" element={<ManagementStation />} />
                     <Route path="vehicles" element={<ManagementVehicle />} />
                     <Route path="loan" element={<ManagementLoan />} />
                     <Route path="payment" element={<RegisterPayment />} />
