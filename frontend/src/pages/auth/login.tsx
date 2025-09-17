@@ -7,32 +7,36 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Leaf, Zap } from "lucide-react"
+import { loginUser } from "@/services/auth/login"
 
 export default function LoginPage() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [isLoading, setIsLoading] = useState(false)
-    const router = useNavigate()
+    const [error, setError] = useState<string>("")
+    const navigate = useNavigate()
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        setIsLoading(true)
+        e.preventDefault();
+        setError("");
+        setIsLoading(true);
 
         try {
-            // Simulación de autenticación (aquí iría la lógica real)
-            console.log("Login attempt:", { email, password })
+            const userData = await loginUser({ email, password });
 
-            // Simular delay de autenticación
-            await new Promise((resolve) => setTimeout(resolve, 1000))
+            // ✅ Si llega aquí es porque el login fue exitoso
+            console.log("Login exitoso:", userData);
+            navigate("/dashboard");
 
-            // Redireccionar al dashboard después del login exitoso
-            router("/dashboard")
         } catch (error) {
-            console.error("Error en login:", error)
+            // ❌ Si el backend devolvió 404 o cualquier otro error
+            console.error("Error en login:", error);
+            setError(error instanceof Error ? error.message : "Error al iniciar sesión");
         } finally {
-            setIsLoading(false)
+            setIsLoading(false);
         }
-    }
+    };
+
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-background via-muted/30 to-secondary/20 flex items-center justify-center p-4">
@@ -69,6 +73,7 @@ export default function LoginPage() {
                                     onChange={(e) => setEmail(e.target.value)}
                                     required
                                     className="h-11"
+                                    disabled={isLoading}
                                 />
                             </div>
 
@@ -84,14 +89,16 @@ export default function LoginPage() {
                                     onChange={(e) => setPassword(e.target.value)}
                                     required
                                     className="h-11"
+                                    disabled={isLoading}
                                 />
                             </div>
 
-                            <div className="flex items-center justify-between text-sm">
-                                <Link to={"/forgot-password"} className="text-accent hover:text-accent/80 transition-colors">
-                                    ¿Olvidaste tu contraseña?
-                                </Link>
-                            </div>
+                            {/* Mostrar error si existe */}
+                            {error && (
+                                <div className="p-3 text-sm text-destructive bg-destructive/15 rounded-md">
+                                    {error}
+                                </div>
+                            )}
 
                             <Button
                                 type="submit"
@@ -105,7 +112,10 @@ export default function LoginPage() {
                         <div className="mt-6 text-center">
                             <p className="text-sm text-muted-foreground">
                                 {"¿No tienes una cuenta? "}
-                                <Link to={"/register"} className="text-accent hover:text-accent/80 font-medium transition-colors">
+                                <Link
+                                    to={"/register"}
+                                    className="text-accent hover:text-accent/80 font-medium transition-colors"
+                                >
                                     Regístrate aquí
                                 </Link>
                             </p>

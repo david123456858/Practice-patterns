@@ -1,6 +1,6 @@
 import type React from "react"
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -17,6 +17,8 @@ export default function RegisterPage() {
         password: "",
         password2: "",
     })
+
+    const navigate = useNavigate();
 
     const [errors, setErrors] = useState<Record<string, string>>({})
     const [isLoading, setIsLoading] = useState(false)
@@ -65,9 +67,10 @@ export default function RegisterPage() {
 
                 alert(`El usuario: ${userData.name} ${userData.lastName} ha sido creado exitosamente.`);
 
+                navigate("/login");
+
             } catch (error) {
                 console.error("Error al registrar usuario:", error)
-                // Mostrar mensaje de error al usuario
                 setErrors({ submit: "Error al registrar el usuario. Inténtalo de nuevo." })
             } finally {
                 setIsLoading(false)

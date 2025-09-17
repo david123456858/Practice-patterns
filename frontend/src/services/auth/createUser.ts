@@ -11,7 +11,7 @@ export const createUser = async (userData: {
     password2: string;
 }): Promise<User> => {
     try {
-        const response = await fetch(`${API_BASE_URL}user`, {
+        const response = await fetch(`${API_BASE_URL}auth/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
