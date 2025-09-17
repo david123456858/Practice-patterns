@@ -25,4 +25,4 @@ export class Role {
 }
 
 export const roleAdmin = new Role('1', 'admin', ['create_user', 'delete_user', 'update_user', 'view_user'])
-export const roleClient = new Role('2', 'user', ['view_profile', 'edit_profile'])
+export const roleClient = new Role('2', 'client', ['view_profile', 'edit_profile'])
