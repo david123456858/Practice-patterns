@@ -1,24 +1,27 @@
 import type React from "react"
-
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Leaf, Zap, CheckCircle } from "lucide-react"
+import { createUser } from "@/services/auth/createUser" // Asegúrate de importar correctamente
 
 export default function RegisterPage() {
     const [formData, setFormData] = useState({
-        cc: "",
+        idUser: "",
         email: "",
         name: "",
         lastName: "",
         password: "",
-        confirmPassword: "",
+        password2: "",
     })
 
+    const navigate = useNavigate();
+
     const [errors, setErrors] = useState<Record<string, string>>({})
+    const [isLoading, setIsLoading] = useState(false)
 
     const handleInputChange = (field: string, value: string) => {
         setFormData((prev) => ({ ...prev, [field]: value }))
@@ -31,25 +34,47 @@ export default function RegisterPage() {
     const validateForm = () => {
         const newErrors: Record<string, string> = {}
 
-        if (!formData.cc.trim()) newErrors.cc = "La cédula es requerida"
+        if (!formData.idUser.trim()) newErrors.idUser = "La cédula es requerida"
         if (!formData.email.trim()) newErrors.email = "El email es requerido"
         if (!formData.name.trim()) newErrors.name = "El nombre es requerido"
         if (!formData.lastName.trim()) newErrors.lastName = "El apellido es requerido"
         if (!formData.password) newErrors.password = "La contraseña es requerida"
-        if (formData.password.length < 6) newErrors.password = "La contraseña debe tener al menos 6 caracteres"
-        if (formData.password !== formData.confirmPassword) {
-            newErrors.confirmPassword = "Las contraseñas no coinciden"
+        if (formData.password.length < 6) newErrors.password = "La contraseña debe tener al menos 8 caracteres"
+        if (formData.password !== formData.password2) {
+            newErrors.password2 = "Las contraseñas no coinciden"
         }
 
         setErrors(newErrors)
         return Object.keys(newErrors).length === 0
     }
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         if (validateForm()) {
-            // Aquí iría la lógica de registro
-            console.log("Register attempt:", formData)
+            setIsLoading(true)
+            try {
+                const userData = {
+                    idUser: formData.idUser,
+                    name: formData.name,
+                    lastName: formData.lastName,
+                    email: formData.email,
+                    password: formData.password,
+                    password2: formData.password2
+                }
+
+                const newUser = await createUser(userData)
+                console.log("Usuario creado exitosamente:", newUser)
+
+                alert(`El usuario: ${userData.name} ${userData.lastName} ha sido creado exitosamente.`);
+
+                navigate("/login");
+
+            } catch (error) {
+                console.error("Error al registrar usuario:", error)
+                setErrors({ submit: "Error al registrar el usuario. Inténtalo de nuevo." })
+            } finally {
+                setIsLoading(false)
+            }
         }
     }
 
@@ -111,18 +136,18 @@ export default function RegisterPage() {
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="cc" className="text-sm font-medium">
+                                <Label htmlFor="idUser" className="text-sm font-medium">
                                     Cédula de Ciudadanía
                                 </Label>
                                 <Input
-                                    id="cc"
+                                    id="idUser"
                                     type="text"
                                     placeholder="12345678"
-                                    value={formData.cc}
-                                    onChange={(e) => handleInputChange("cc", e.target.value)}
-                                    className={`h-11 ${errors.cc ? "border-destructive" : ""}`}
+                                    value={formData.idUser}
+                                    onChange={(e) => handleInputChange("idUser", e.target.value)}
+                                    className={`h-11 ${errors.idUser ? "border-destructive" : ""}`}
                                 />
-                                {errors.cc && <p className="text-xs text-destructive">{errors.cc}</p>}
+                                {errors.idUser && <p className="text-xs text-destructive">{errors.idUser}</p>}
                             </div>
 
                             <div className="space-y-2">
@@ -156,26 +181,37 @@ export default function RegisterPage() {
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="confirmPassword" className="text-sm font-medium">
+                                <Label htmlFor="password2" className="text-sm font-medium">
                                     Confirmar Contraseña
                                 </Label>
                                 <Input
-                                    id="confirmPassword"
+                                    id="password2"
                                     type="password"
                                     placeholder="••••••••"
-                                    value={formData.confirmPassword}
-                                    onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
-                                    className={`h-11 ${errors.confirmPassword ? "border-destructive" : ""}`}
+                                    value={formData.password2}
+                                    onChange={(e) => handleInputChange("password2", e.target.value)}
+                                    className={`h-11 ${errors.password2 ? "border-destructive" : ""}`}
                                 />
-                                {errors.confirmPassword && <p className="text-xs text-destructive">{errors.confirmPassword}</p>}
+                                {errors.password2 && <p className="text-xs text-destructive">{errors.password2}</p>}
                             </div>
+
+                            {errors.submit && (
+                                <p className="text-xs text-destructive text-center">{errors.submit}</p>
+                            )}
 
                             <Button
                                 type="submit"
                                 className="w-full h-11 bg-primary hover:bg-primary/90 text-primary-foreground font-medium"
+                                disabled={isLoading}
                             >
-                                <CheckCircle className="w-4 h-4 mr-2" />
-                                Crear Cuenta
+                                {isLoading ? (
+                                    "Creando cuenta..."
+                                ) : (
+                                    <>
+                                        <CheckCircle className="w-4 h-4 mr-2" />
+                                        Crear Cuenta
+                                    </>
+                                )}
                             </Button>
                         </form>
 
