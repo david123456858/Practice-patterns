@@ -1,10 +1,11 @@
+import { roleAdmin } from '../../../domain/entities/Role/Role'
 import { User } from '../../../domain/entities/User/User'
 import { ICrudOperations } from '../../../domain/interfaces/common/ICrud'
-let UserList: User[] = [new User('1067593914', 'Laura altahona', 'laura@unicesar.edu.co'), new User('1067592444', 'Juan Peralta', 'jdavid@unicesar.edu.co')]
+let UserList: User[] = [new User('1', 'Admin', 'admin', 'admin@gmail.com', 'admin', roleAdmin)]
 
 export class UserRepository implements ICrudOperations<User> {
   findAll (): User[] {
-    return UserList
+    return UserList.filter(user => user.getRole().find(role => role.getName() !== 'admin'))
   }
 
   save (data: User): void {
@@ -18,6 +19,10 @@ export class UserRepository implements ICrudOperations<User> {
   update (data: User): void {
     const index = UserList.findIndex(user => user.getCC() === data.getCC())
     UserList[index] = data
+  }
+
+  findByEmail (email: string): User | undefined {
+    return UserList.find(user => user.getEmail() === email)
   }
 
   findById (id: string): User | undefined {

@@ -1,27 +1,20 @@
-import { TypesPricePeriods } from './../../types/Suscription/Suscription'
 
-export class Suscription {
-  private pricing: number
-  private TypesPricePeriods: TypesPricePeriods
+export class SuscriptionPlan {
+  private idPlan: string
+  private name: string
+  private monthlyFee: number
 
-  constructor (pricing: number, TypesPricePeriods: TypesPricePeriods) {
-    this.pricing = pricing
-    this.TypesPricePeriods = TypesPricePeriods
+  constructor (idPlan: string, name: string, monthlyFee: number) {
+    this.idPlan = idPlan
+    this.name = name
+    this.monthlyFee = monthlyFee
   }
 
-  SetPricing (princig: number): void {
-    this.pricing = princig
-  }
+  setIdPlan (idPlan: string): void { this.idPlan = idPlan }
+  setName (name: string): void { this.name = name }
+  SetPricing (princig: number): void { this.monthlyFee = princig }
 
-  getPricing (): number {
-    return this.pricing
-  }
-
-  getTypePricePeriods (): TypesPricePeriods {
-    return this.TypesPricePeriods
-  }
-
-  setTypesPricePeriods (types: TypesPricePeriods): void {
-    this.TypesPricePeriods = types
-  }
+  getPricing (): number { return this.monthlyFee }
+  getName (): string { return this.name }
+  getIdPlan (): string { return this.idPlan }
 }

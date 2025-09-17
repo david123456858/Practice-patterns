@@ -1,0 +1,160 @@
+@startuml EcoMove-Packages
+
+!theme plain
+title Diagrama de Paquetes - EcoMove Platform
+
+' Main Application Package
+package "com.ecomove" {
+    
+    ' Domain Layer
+    package "domain" {
+        package "model" {
+            package "vehicle" {
+                class Vehicle
+                class Bicycle
+                class ElectricScooter
+                class Skateboard
+                class CarElectric
+                class Battery
+                enum StatusVehicle
+            }
+            
+            package "user" {
+                class User
+                class Admin
+                class Client
+                enum UserStatus
+            }
+            
+            package "station" {
+                class Station
+                class GeoLocation
+            }
+            
+            package "loan" {
+                class Loan
+                enum LoanStatus
+            }
+            
+            package "payment" {
+                class Payment
+                enum PaymentStatus
+                enum PaymentMethod
+            }
+        }
+    }
+    
+    ' Service Layer
+    package "service" {
+        package "payment" {
+            interface IPaymentProcessor
+            class PaymentProcessorFactory
+            class CashPaymentProcessor
+            class CreditCardPaymentProcessor
+        }
+        
+        package "vehicle" {
+            interface IVehicleService
+            class VehicleService
+        }
+        
+        package "loan" {
+            interface ILoanService
+            class LoanService
+        }
+        
+        package "user" {
+            interface IUserService
+            class UserService
+        }
+        
+        package "station" {
+            interface IStationService
+            class StationService
+        }
+    }
+    
+    ' Controller Layer (API)
+    package "controller" {
+        class VehicleController
+        class UserController
+        class LoanController
+        class StationController
+        class PaymentController
+    }
+    
+    ' Infrastructure Layer
+    package "infrastructure" {
+        package "repository" {
+            interface IVehicleRepository
+            interface IUserRepository
+            interface ILoanRepository
+            interface IStationRepository
+            interface IPaymentRepository
+            
+            class VehicleRepositoryImpl
+            class UserRepositoryImpl
+            class LoanRepositoryImpl
+            class StationRepositoryImpl
+            class PaymentRepositoryImpl
+        }
+        
+        package "external" {
+            class GPSService
+            class NotificationService
+            class BankingService
+        }
+        
+        package "config" {
+            class DatabaseConfig
+            class AppConfig
+        }
+    }
+}
+
+' Dependencies between packages
+domain.model.vehicle ..> domain.model.station : uses
+domain.model.loan ..> domain.model.vehicle : uses
+domain.model.loan ..> domain.model.user : uses
+domain.model.loan ..> domain.model.station : uses
+domain.model.loan ..> domain.model.payment : uses
+
+service.vehicle ..> domain.model.vehicle : uses
+service.user ..> domain.model.user : uses
+service.loan ..> domain.model.loan : uses
+service.station ..> domain.model.station : uses
+service.payment ..> domain.model.payment : uses
+
+controller ..> service : uses
+service ..> infrastructure.repository : uses
+infrastructure.external ..> service : provides to
+
+note top of domain
+  **DOMAIN LAYER**
+  - Entidades del negocio
+  - Lógica de dominio pura
+  - Sin dependencias externas
+end note
+
+note top of service
+  **SERVICE LAYER**
+  - Lógica de aplicación
+  - Orquestación de casos de uso
+  - Implementa reglas de negocio
+end note
+
+note top of controller
+  **PRESENTATION LAYER**
+  - API REST endpoints
+  - Manejo de requests/responses
+  - Validación de entrada
+end note
+
+note top of infrastructure
+  **INFRASTRUCTURE LAYER**
+  - Acceso a datos
+  - Servicios externos
+  - Configuración
+end note
+
+@enduml

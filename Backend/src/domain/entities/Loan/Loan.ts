@@ -1,64 +1,86 @@
+import { LoanStatus } from '../../types/Loan/LoanEnum'
+
 export class Loan {
-  private id: string
-  private idUser: string
-  private idVehicle: string
-  private idStationOrigin: string
-  private idStationDestination: string
-  private dateStart: Date
-  constructor (id: string, idUser: string, idVehicule: string, idStationOrigin: string, idStationDestination: string, dateStart: Date) {
-    this.id = id
-    this.idUser = idUser
-    this.idVehicle = idVehicule
-    this.idStationOrigin = idStationOrigin
-    this.idStationDestination = idStationDestination
-    this.dateStart = dateStart
+  private readonly loanId: string
+  private readonly userId: string
+  private readonly vehicleId: string
+  private readonly startTime: Date
+  private endTime: Date
+  private readonly startStationId: string
+  private endStationId: string | null
+  private status: LoanStatus
+  private cost: number
+
+  constructor (
+    loanId: string,
+    userId: string,
+    vehicleId: string,
+    startStationId: string,
+    startTime: Date,
+    status: LoanStatus = LoanStatus.ACTIVE
+  ) {
+    this.loanId = loanId
+    this.userId = userId
+    this.vehicleId = vehicleId
+    this.startTime = startTime
+    this.endTime = new Date()
+    this.startStationId = startStationId
+    this.endStationId = null
+    this.status = status
+    this.cost = 0
   }
 
-  getId (): string {
-    return this.id
+  // Getters
+  getLoanId (): string {
+    return this.loanId
   }
 
-  setId (id: string): void {
-    this.id = id
+  getUserId (): string {
+    return this.userId
   }
 
-  getIdUser (): string {
-    return this.idUser
+  getVehicleId (): string {
+    return this.vehicleId
   }
 
-  setIdUser (idUser: string): void {
-    this.idUser = idUser
+  getStartTime (): Date {
+    return this.startTime
   }
 
-  getIdStationOrigin (): string {
-    return this.idStationOrigin
+  getEndTime (): Date {
+    return this.endTime
   }
 
-  setIdStationOrigin (idStationOrigin: string): void {
-    this.idStationOrigin = idStationOrigin
+  getStartStationId (): string {
+    return this.startStationId
   }
 
-  setIdStationDestination (idStationDestination: string): void {
-    this.idStationDestination = idStationDestination
+  getEndStationId (): string | null {
+    return this.endStationId
   }
 
-  setDateStart (dateStart: Date): void {
-    this.dateStart = dateStart
+  getStatus (): LoanStatus {
+    return this.status
   }
 
-  getDateStart (): Date {
-    return this.dateStart
+  getCost (): number {
+    return this.cost
   }
 
-  getIdStationDestination (): string {
-    return this.idStationDestination
+  // Setters
+  setEndTime (endTime: Date): void {
+    this.endTime = endTime
   }
 
-  setIdVehicle (idVehicle: string): void {
-    this.idVehicle = idVehicle
+  setEndStationId (stationId: string): void {
+    this.endStationId = stationId
   }
 
-  getIdVehicle (): string {
-    return this.idVehicle
+  setStatus (status: LoanStatus): void {
+    this.status = status
+  }
+
+  setCost (cost: number): void {
+    this.cost = cost
   }
 }

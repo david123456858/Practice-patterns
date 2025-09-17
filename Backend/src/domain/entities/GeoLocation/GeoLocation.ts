@@ -8,17 +8,9 @@ export class GeoLocation {
     this.timestamp = timestamp ?? new Date()
   }
 
-  getLatitude (): number {
-    return this.latitude
-  }
-
-  getLongitude (): number {
-    return this.longitude
-  }
-
-  getTimestamp (): Date {
-    return this.timestamp
-  }
+  getLatitude (): number { return this.latitude }
+  getLongitude (): number { return this.longitude }
+  getTimestamp (): Date { return this.timestamp }
 
   setLocation (latitude: number, longitude: number): void {
     this.latitude = latitude

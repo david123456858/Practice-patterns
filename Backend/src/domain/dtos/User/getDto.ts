@@ -1,6 +1,6 @@
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator'
 
-export class UserDtoCreate {
+export class getAllDtoUser {
   @IsString()
   @IsNotEmpty()
     idUser!: string
@@ -20,9 +20,13 @@ export class UserDtoCreate {
 
   @IsString()
   @IsNotEmpty()
-    password!: string
+    rol!: string
 
-  @IsString()
-  @IsNotEmpty()
-    password2!: string
+  constructor (id: string, name: string, lastName: string, email: string, rol: string) {
+    this.idUser = id
+    this.name = name
+    this.lastName = lastName
+    this.email = email
+    this.rol = rol
+  }
 }
