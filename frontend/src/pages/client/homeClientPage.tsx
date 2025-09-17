@@ -1,15 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Label } from "@/components/ui/label"
 import {
     Car,
     Bike,
@@ -17,165 +14,190 @@ import {
     Search,
     User,
     MapPin,
-    Battery,
-    Gauge,
     ChevronDown,
     ChevronUp,
-    CreditCard,
-    Banknote,
     QrCode,
 } from "lucide-react"
-
-// Datos estáticos de vehículos de ejemplo
-const vehiclesData = [
-    {
-        id: 1,
-        name: "Mazda 323",
-        model: "Eléctrico Compacto",
-        type: "car",
-        status: "activo",
-        batteryCapacity: "60 kWh",
-        range: "400 km",
-        location: "Estación Centro",
-        costPerMinute: "$150",
-    },
-    {
-        id: 2,
-        name: "Hyundai Yatsen",
-        model: "Sedán Eléctrico",
-        type: "car",
-        status: "activo",
-        batteryCapacity: "75 kWh",
-        range: "500 km",
-        location: "Estación Norte",
-        costPerMinute: "$200",
-    },
-    {
-        id: 3,
-        name: "Kia Rio",
-        model: "Hatchback Eléctrico",
-        type: "car",
-        status: "activo",
-        batteryCapacity: "50 kWh",
-        range: "350 km",
-        location: "Estación Sur",
-        costPerMinute: "$120",
-    },
-    {
-        id: 4,
-        name: "Tesla Model 3",
-        model: "Sedán Premium",
-        type: "car",
-        status: "activo",
-        batteryCapacity: "82 kWh",
-        range: "600 km",
-        location: "Estación Chapinero",
-        costPerMinute: "$300",
-    },
-    {
-        id: 5,
-        name: "EcoBike Pro",
-        model: "Bicicleta Eléctrica",
-        type: "bike",
-        status: "activo",
-        batteryCapacity: "0.5 kWh",
-        range: "80 km",
-        location: "Estación Zona Rosa",
-        costPerMinute: "$50",
-    },
-    {
-        id: 6,
-        name: "Urban Scooter",
-        model: "Scooter Eléctrico",
-        type: "scooter",
-        status: "activo",
-        batteryCapacity: "1.2 kWh",
-        range: "45 km",
-        location: "Estación Universidad",
-        costPerMinute: "$80",
-    },
-]
-
-// Datos del usuario de ejemplo
-const userData = {
-    name: "Carlos Rodríguez",
-    email: "carlos.rodriguez@email.com",
-}
+import { getAvailableVehicles } from "@/services/vehicle/getVehicleAvailable"
+import { createLoan } from "@/services/loan/getAllLoan"
+import { type Vehicle } from "@/services/vehicle/getAllVehicle"
+import { returnVehicle } from "@/services/loan/getAllLoan"
+import { getPaymentMethods, createPayment } from "@/services/payment/payment"
 
 export default function ClientPage() {
     const [searchTerm, setSearchTerm] = useState("")
-    const [expandedCard, setExpandedCard] = useState<number | null>(null)
-    const [reservedVehicles, setReservedVehicles] = useState<number[]>([])
+    const [expandedCard, setExpandedCard] = useState<string | null>(null) // idVehicle
+    const [reservedVehicles, setReservedVehicles] = useState<{ vehicleId: string; loanId: string }[]>([])
     const [reservationCode, setReservationCode] = useState("")
     const [showReservationModal, setShowReservationModal] = useState(false)
-    const [showPaymentModal, setShowPaymentModal] = useState(false)
-    const [selectedVehicleForReturn, setSelectedVehicleForReturn] = useState<number | null>(null)
-    const [paymentMethod, setPaymentMethod] = useState("")
 
-    // Filtrar vehículos activos y por término de búsqueda
-    const filteredVehicles = vehiclesData.filter(
+    const [userData, setUserData] = useState<{ name: string; email: string } | null>(null)
+    const [vehicles, setVehicles] = useState<Vehicle[]>([])
+
+    // estaciones
+    const [stations, setStations] = useState<any[]>([])
+    const [selectedStation, setSelectedStation] = useState<{ [key: string]: string }>({})
+    const [showSelectForVehicle, setShowSelectForVehicle] = useState<string | null>(null)
+
+    const [showPaymentModal, setShowPaymentModal] = useState(false)
+    const [paymentMethods, setPaymentMethods] = useState<string[]>([])
+    const [selectedMethod, setSelectedMethod] = useState("")
+    const [amount, setAmount] = useState<string>("")
+
+    const [loanToPay, setLoanToPay] = useState<string | null>(null)
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem("user")
+        if (storedUser) {
+            const parsedUser = JSON.parse(storedUser)
+            setUserData({
+                name: parsedUser.userName,
+                email: parsedUser.userEmail,
+            })
+        }
+    }, [])
+
+    useEffect(() => {
+        const fetchVehicles = async () => {
+            try {
+                const data = await getAvailableVehicles()
+                setVehicles(data)
+            } catch (err) {
+                console.error(err)
+            }
+        }
+        fetchVehicles()
+    }, [])
+
+    const filteredVehicles = vehicles.filter(
         (vehicle) =>
-            vehicle.status === "activo" &&
-            (vehicle.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                vehicle.model.toLowerCase().includes(searchTerm.toLowerCase())),
+            vehicle.model.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            vehicle.type.toLowerCase().includes(searchTerm.toLowerCase())
     )
 
     const getVehicleIcon = (type: string) => {
         switch (type) {
             case "car":
                 return <Car className="h-8 w-8 text-primary" />
-            case "bike":
+            case "bicycle":
                 return <Bike className="h-8 w-8 text-primary" />
-            case "scooter":
+            case "electric_scooter":
                 return <Zap className="h-8 w-8 text-primary" />
             default:
                 return <Car className="h-8 w-8 text-primary" />
         }
     }
 
-    const toggleCardExpansion = (id: number) => {
-        setExpandedCard(expandedCard === id ? null : id)
+    const toggleCardExpansion = (id: string) => {
+        setExpandedCard(prev => (prev === id ? null : id))
     }
 
-    const generateReservationCode = () => {
-        return Math.floor(100000 + Math.random() * 900000).toString()
+    const handleReserveVehicle = async (vehicle: Vehicle) => {
+        try {
+            const storedUser = localStorage.getItem("user")
+            if (!storedUser) throw new Error("Usuario no autenticado")
+
+            const parsedUser = JSON.parse(storedUser)
+
+            const payload = {
+                loanId: Math.floor(100000 + Math.random() * 900000).toString(),
+                userId: parsedUser.userId, // ⚠️ asegurarse que aquí es userId y no idUser
+                vehicleId: vehicle.idVehicle,
+                startStationId: vehicle.idStation,
+            }
+
+            await createLoan(payload)
+
+            setReservedVehicles(prev => [...prev, { vehicleId: vehicle.idVehicle, loanId: payload.loanId }])
+            setReservationCode(payload.loanId)
+            setShowReservationModal(true)
+        } catch (err) {
+            console.error(err)
+            alert("Error al reservar vehículo")
+        }
     }
 
-    const handleReserveVehicle = (vehicleId: number) => {
-        const code = generateReservationCode()
-        setReservationCode(code)
-        setReservedVehicles([...reservedVehicles, vehicleId])
-        setShowReservationModal(true)
+    const handleShowSelect = async (vehicleId: string) => {
+        try {
+            const res = await fetch("https://lq3p60dt-3000.use2.devtunnels.ms/api/v1/station")
+            const data = await res.json()
+            setStations(data.message)
+            setShowSelectForVehicle(vehicleId)
+        } catch (err) {
+            console.error("Error cargando estaciones:", err)
+        }
     }
 
-    const handleReturnVehicle = (vehicleId: number) => {
-        setSelectedVehicleForReturn(vehicleId)
-        setShowPaymentModal(true)
+    // al devolver vehículo -> abrir modal de pago
+    const handleReturn = async (vehicleId: string) => {
+        const reserved = reservedVehicles.find(r => r.vehicleId === vehicleId)
+        if (!reserved) return
+
+        if (!selectedStation[vehicleId]) {
+            alert("Debes seleccionar una estación")
+            return
+        }
+
+        try {
+            await returnVehicle({
+                loanId: reserved.loanId,
+                endStationId: selectedStation[vehicleId],
+            })
+
+            // abrir modal de pago
+            setLoanToPay(reserved.loanId)
+            const methods = await getPaymentMethods()
+            setPaymentMethods(methods)
+            setShowPaymentModal(true)
+
+            // limpiar reservas
+            setReservedVehicles(prev => prev.filter(r => r.vehicleId !== vehicleId))
+            setShowSelectForVehicle(null)
+        } catch (err) {
+            alert("Error devolviendo vehículo")
+        }
     }
 
-    const handlePaymentComplete = () => {
-        if (selectedVehicleForReturn) {
-            setReservedVehicles(reservedVehicles.filter((id) => id !== selectedVehicleForReturn))
-            setSelectedVehicleForReturn(null)
-            setPaymentMethod("")
+    // confirmar pago
+    const handlePayment = async () => {
+        if (!loanToPay) return
+        if (!amount || !selectedMethod) {
+            alert("Debes completar todos los campos")
+            return
+        }
+
+        try {
+
+            const numericAmount = parseFloat(amount) || 0
+
+            await createPayment({
+                loanId: loanToPay,
+                amount: numericAmount,
+                method: selectedMethod,
+            })
+
+            alert("Pago realizado con éxito ✅")
             setShowPaymentModal(false)
+            setLoanToPay(null)
+            setSelectedMethod("")
+        } catch {
+            alert("Error procesando el pago")
         }
     }
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-background via-muted/30 to-secondary/20">
             <div className="container mx-auto px-4 py-8">
-                {/* Header con búsqueda y perfil */}
+                {/* Header */}
                 <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
                     <div className="flex items-center gap-3">
                         <div className="flex items-center gap-2">
                             <Zap className="h-8 w-8 text-primary" />
-                            <h1 className="text-3xl font-bold text-primary">EcoMove Client</h1>
+                            <h1 className="text-3xl font-bold text-primary">EcoMove Cliente</h1>
                         </div>
                     </div>
 
                     <div className="flex items-center gap-4 w-full md:w-auto">
-                        {/* Barra de búsqueda */}
                         <div className="relative flex-1 md:w-80">
                             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
                             <Input
@@ -186,12 +208,11 @@ export default function ClientPage() {
                             />
                         </div>
 
-                        {/* Botón de perfil */}
                         <Dialog>
                             <DialogTrigger asChild>
-                                <Button variant="outline" size="icon" className="shrink-0 bg-transparent">
+                                <button className="p-2 rounded-md border border-transparent">
                                     <User className="h-4 w-4" />
-                                </Button>
+                                </button>
                             </DialogTrigger>
                             <DialogContent className="sm:max-w-md">
                                 <DialogHeader>
@@ -199,47 +220,78 @@ export default function ClientPage() {
                                         <Avatar className="h-12 w-12">
                                             <AvatarImage src="/placeholder.svg?height=48&width=48" />
                                             <AvatarFallback className="bg-primary text-primary-foreground">
-                                                {userData.name
-                                                    .split(" ")
+                                                {userData?.name
+                                                    ?.split(" ")
                                                     .map((n) => n[0])
                                                     .join("")}
                                             </AvatarFallback>
                                         </Avatar>
                                         <div>
-                                            <h3 className="text-lg font-semibold">{userData.name}</h3>
-                                            <p className="text-sm text-muted-foreground">{userData.email}</p>
+                                            <h3 className="text-lg font-semibold">{userData?.name ?? "Cargando..."}</h3>
+                                            <p className="text-sm text-muted-foreground">{userData?.email ?? ""}</p>
                                         </div>
                                     </DialogTitle>
                                 </DialogHeader>
 
                                 <div className="space-y-4">
                                     <Separator />
-
                                     <div className="space-y-3">
                                         <h4 className="font-semibold text-primary">Vehículos Reservados</h4>
                                         {reservedVehicles.length === 0 ? (
                                             <p className="text-sm text-muted-foreground">No tienes vehículos reservados</p>
                                         ) : (
                                             <div className="space-y-2">
-                                                {reservedVehicles.map((vehicleId) => {
-                                                    const vehicle = vehiclesData.find((v) => v.id === vehicleId)
+                                                {reservedVehicles.map(({ vehicleId, loanId }) => {
+                                                    const vehicle = vehicles.find((v) => v.idVehicle === vehicleId)
                                                     return vehicle ? (
-                                                        <div
-                                                            key={vehicleId}
-                                                            className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
-                                                        >
-                                                            <div>
-                                                                <p className="font-medium">{vehicle.name}</p>
-                                                                <p className="text-sm text-muted-foreground">Reservado</p>
+                                                        <div key={vehicleId} className="p-3 bg-muted/50 rounded-lg">
+                                                            <div className="flex items-center justify-between">
+                                                                <div>
+                                                                    <p className="font-medium">{vehicle.model}</p>
+                                                                    <p className="text-sm text-muted-foreground">Reservado</p>
+                                                                </div>
+
+                                                                {showSelectForVehicle !== vehicleId && (
+                                                                    <Button
+                                                                        size="sm"
+                                                                        variant="outline"
+                                                                        className="text-xs"
+                                                                        onClick={() => handleShowSelect(vehicleId)}
+                                                                    >
+                                                                        Devolver
+                                                                    </Button>
+                                                                )}
                                                             </div>
-                                                            <Button
-                                                                size="sm"
-                                                                variant="outline"
-                                                                onClick={() => handleReturnVehicle(vehicleId)}
-                                                                className="text-xs"
-                                                            >
-                                                                Devolver Vehículo
-                                                            </Button>
+
+                                                            {showSelectForVehicle === vehicleId && (
+                                                                <div className="mt-3 space-y-3">
+                                                                    <select
+                                                                        value={selectedStation[vehicleId] || ""}
+                                                                        onChange={(e) =>
+                                                                            setSelectedStation((prev) => ({
+                                                                                ...prev,
+                                                                                [vehicleId]: e.target.value,
+                                                                            }))
+                                                                        }
+                                                                        className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/60 transition"
+                                                                    >
+                                                                        <option value="">Selecciona una estación</option>
+                                                                        {stations.map((station) => (
+                                                                            <option key={station.idStation} value={station.idStation}>
+                                                                                {station.name}
+                                                                            </option>
+                                                                        ))}
+                                                                    </select>
+
+                                                                    <Button
+                                                                        onClick={() => handleReturn(vehicleId)}
+                                                                        className="w-full bg-primary hover:bg-primary/90 text-white rounded-xl shadow-md transition"
+                                                                    >
+                                                                        Aceptar
+                                                                    </Button>
+                                                                </div>
+
+                                                            )}
                                                         </div>
                                                     ) : null
                                                 })}
@@ -255,76 +307,88 @@ export default function ClientPage() {
                 {/* Grid de vehículos */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filteredVehicles.map((vehicle) => (
-                        <Card key={vehicle.id} className="shadow-lg border-border/50 hover:shadow-xl transition-all duration-300">
+                        <Card
+                            key={vehicle.idVehicle}
+                            className="shadow-lg border-border/50 hover:shadow-xl transition-all duration-300 overflow-hidden"
+                        >
                             <CardHeader className="pb-3">
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-3">
                                         {getVehicleIcon(vehicle.type)}
                                         <div>
-                                            <CardTitle className="text-lg">{vehicle.name}</CardTitle>
-                                            <CardDescription>{vehicle.model}</CardDescription>
+                                            <CardTitle className="text-lg">{vehicle.model}</CardTitle>
+                                            <CardDescription className="capitalize">{vehicle.type}</CardDescription>
                                         </div>
                                     </div>
-                                    <Badge variant="secondary" className="bg-primary/10 text-primary">
-                                        {vehicle.status}
-                                    </Badge>
+                                    <div className="text-sm font-medium text-muted-foreground">{vehicle.idStation}</div>
                                 </div>
                             </CardHeader>
 
                             <CardContent className="space-y-3">
                                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                                     <MapPin className="h-4 w-4" />
-                                    <span>{vehicle.location}</span>
+                                    <span>Estación: {vehicle.nameStation}</span>
                                 </div>
 
                                 <div className="flex items-center justify-between text-sm">
                                     <span className="text-muted-foreground">Costo por minuto:</span>
-                                    <span className="font-semibold text-primary">{vehicle.costPerMinute}</span>
+                                    <span className="font-semibold text-primary">{vehicle.costForMinute}</span>
                                 </div>
 
-                                {/* Información expandible */}
                                 <Button
                                     variant="ghost"
                                     size="sm"
-                                    onClick={() => toggleCardExpansion(vehicle.id)}
+                                    onClick={() => toggleCardExpansion(vehicle.idVehicle)}
                                     className="w-full justify-between p-2 h-8"
                                 >
                                     <span className="text-xs">Ver detalles</span>
-                                    {expandedCard === vehicle.id ? (
+                                    {expandedCard === vehicle.idVehicle ? (
                                         <ChevronUp className="h-3 w-3" />
                                     ) : (
                                         <ChevronDown className="h-3 w-3" />
                                     )}
                                 </Button>
 
-                                {expandedCard === vehicle.id && (
+                                {expandedCard === vehicle.idVehicle && (
                                     <div className="space-y-2 pt-2 border-t border-border/50">
-                                        <div className="flex items-center justify-between text-sm">
-                                            <div className="flex items-center gap-2">
-                                                <Battery className="h-4 w-4 text-muted-foreground" />
-                                                <span className="text-muted-foreground">Capacidad:</span>
-                                            </div>
-                                            <span className="font-medium">{vehicle.batteryCapacity}</span>
-                                        </div>
+                                        {vehicle.type === "bicycle" && (
+                                            <>
+                                                <div className="flex items-center justify-between text-sm">
+                                                    <span className="text-muted-foreground">Engranajes:</span>
+                                                    <span className="font-medium">{vehicle.gears ?? "N/A"}</span>
+                                                </div>
+                                                <div className="flex items-center justify-between text-sm">
+                                                    <span className="text-muted-foreground">Canasta:</span>
+                                                    <span className="font-medium">{vehicle.hasBasket ? "Sí" : "No"}</span>
+                                                </div>
+                                            </>
+                                        )}
 
-                                        <div className="flex items-center justify-between text-sm">
-                                            <div className="flex items-center gap-2">
-                                                <Gauge className="h-4 w-4 text-muted-foreground" />
-                                                <span className="text-muted-foreground">Autonomía:</span>
-                                            </div>
-                                            <span className="font-medium">{vehicle.range}</span>
-                                        </div>
+                                        {vehicle.type === "electric_scooter" && (
+                                            <>
+                                                <div className="flex items-center justify-between text-sm">
+                                                    <span className="text-muted-foreground">Asiento:</span>
+                                                    <span className="font-medium">{vehicle.hasSeat ? "Sí" : "No"}</span>
+                                                </div>
+                                                <div className="flex items-center justify-between text-sm">
+                                                    <span className="text-muted-foreground">Capacidad batería:</span>
+                                                    <span className="font-medium">{vehicle.batteryInfo?.capacity ?? "N/A"}</span>
+                                                </div>
+                                                <div className="flex items-center justify-between text-sm">
+                                                    <span className="text-muted-foreground">Autonomía:</span>
+                                                    <span className="font-medium">{vehicle.batteryInfo?.autonomyRange ?? "N/A"}</span>
+                                                </div>
+                                            </>
+                                        )}
 
-                                        {!reservedVehicles.includes(vehicle.id) && (
+                                        {!reservedVehicles.some(r => r.vehicleId === vehicle.idVehicle) ? (
                                             <Button
                                                 className="w-full mt-3 bg-primary hover:bg-primary/90"
-                                                onClick={() => handleReserveVehicle(vehicle.id)}
+                                                onClick={() => handleReserveVehicle(vehicle)}
                                             >
                                                 Reservar Vehículo
                                             </Button>
-                                        )}
-
-                                        {reservedVehicles.includes(vehicle.id) && (
+                                        ) : (
                                             <div className="w-full mt-3 p-2 bg-primary/10 text-primary text-center rounded-md text-sm font-medium">
                                                 Vehículo Reservado
                                             </div>
@@ -336,17 +400,7 @@ export default function ClientPage() {
                     ))}
                 </div>
 
-                {/* Mensaje cuando no hay resultados */}
-                {filteredVehicles.length === 0 && (
-                    <div className="text-center py-12">
-                        <Car className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                        <h3 className="text-lg font-semibold text-muted-foreground mb-2">No se encontraron vehículos</h3>
-                        <p className="text-muted-foreground">
-                            Intenta con otros términos de búsqueda o verifica que haya vehículos disponibles.
-                        </p>
-                    </div>
-                )}
-
+                {/* Modal de reserva */}
                 <Dialog open={showReservationModal} onOpenChange={setShowReservationModal}>
                     <DialogContent className="sm:max-w-md">
                         <DialogHeader>
@@ -357,70 +411,77 @@ export default function ClientPage() {
                         </DialogHeader>
 
                         <div className="space-y-4 text-center">
-                            <p className="text-muted-foreground">
-                                Por favor, diríjase a la estación más cercana de EcoMove y presente el siguiente código:
+                            {/* Mensaje informativo */}
+                            <p className="text-sm text-muted-foreground">
+                                Este código es de un solo uso. Por favor, acérquese a la estación de EcoMove más cercana y,
+                                cuando reciba su vehículo, presione <span className="font-medium text-primary">"Aceptar"</span>.
                             </p>
 
                             <div className="bg-primary/10 p-6 rounded-lg">
                                 <p className="text-2xl font-bold text-primary tracking-wider">{reservationCode}</p>
                             </div>
 
-                            <p className="text-sm text-muted-foreground">
-                                Presente este código para que su vehículo pueda ser entregado.
-                            </p>
-
-                            <Button onClick={() => setShowReservationModal(false)} className="w-full bg-primary hover:bg-primary/90">
+                            <Button
+                                onClick={() => setShowReservationModal(false)}
+                                className="w-full bg-primary hover:bg-primary/90"
+                            >
                                 Aceptar
                             </Button>
                         </div>
                     </DialogContent>
                 </Dialog>
 
-                <Dialog open={showPaymentModal} onOpenChange={setShowPaymentModal}>
+                {/* Modal de pago */}
+                <Dialog open={showPaymentModal} onOpenChange={() => { }}>
                     <DialogContent className="sm:max-w-md">
                         <DialogHeader>
-                            <DialogTitle className="flex items-center gap-2">
-                                <CreditCard className="h-5 w-5 text-primary" />
-                                Devolver Vehículo
-                            </DialogTitle>
+                            <DialogTitle className="text-lg font-bold text-primary">Realizar Pago</DialogTitle>
                         </DialogHeader>
 
                         <div className="space-y-4">
-                            <p className="text-muted-foreground">Selecciona tu método de pago para completar la devolución:</p>
+                            <p className="text-sm text-muted-foreground">
+                                Para finalizar la devolución del vehículo, debe realizar el pago.
+                            </p>
 
-                            <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod}>
-                                <div className="flex items-center space-x-2 p-3 border rounded-lg hover:bg-muted/50">
-                                    <RadioGroupItem value="transfer" id="transfer" />
-                                    <Label htmlFor="transfer" className="flex items-center gap-2 cursor-pointer flex-1">
-                                        <Banknote className="h-4 w-4" />
-                                        Pago por Transferencia
-                                    </Label>
-                                </div>
-
-                                <div className="flex items-center space-x-2 p-3 border rounded-lg hover:bg-muted/50">
-                                    <RadioGroupItem value="card" id="card" />
-                                    <Label htmlFor="card" className="flex items-center gap-2 cursor-pointer flex-1">
-                                        <CreditCard className="h-4 w-4" />
-                                        Pago por Tarjeta
-                                    </Label>
-                                </div>
-                            </RadioGroup>
-
-                            <div className="flex gap-2">
-                                <Button variant="outline" onClick={() => setShowPaymentModal(false)} className="flex-1">
-                                    Cancelar
-                                </Button>
-                                <Button
-                                    onClick={handlePaymentComplete}
-                                    disabled={!paymentMethod}
-                                    className="flex-1 bg-primary hover:bg-primary/90"
-                                >
-                                    Confirmar Pago
-                                </Button>
+                            {/* Amount */}
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Monto</label>
+                                <Input
+                                    type="number"
+                                    placeholder="Ingrese el monto"
+                                    value={amount}
+                                    onChange={(e) => setAmount(e.target.value)}  // manejar como string
+                                />
                             </div>
+
+
+                            {/* Método de pago */}
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Método de Pago</label>
+                                <select
+                                    value={selectedMethod}
+                                    onChange={(e) => setSelectedMethod(e.target.value)}
+                                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/60"
+                                >
+                                    <option value="">Seleccione un método</option>
+                                    {paymentMethods.map((method) => (
+                                        <option key={method} value={method}>
+                                            {method}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <Button
+                                onClick={handlePayment}
+                                className="w-full bg-primary hover:bg-primary/90 text-white rounded-xl shadow-md"
+                            >
+                                Confirmar Pago
+                            </Button>
                         </div>
                     </DialogContent>
                 </Dialog>
+
             </div>
         </div>
     )

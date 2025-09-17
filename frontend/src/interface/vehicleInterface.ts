@@ -40,3 +40,21 @@ export interface VehiclePayload {
         longitude: number
     }
 }
+
+export interface Vehicle {
+    idVehicle: string
+    color: string
+    model: string
+    idStation: string
+    state: string
+    type: string
+    costForMinute: number
+    gears?: number
+    hasBasket?: boolean
+    hasSeat?: boolean
+    batteryInfo?: {
+        capacity: number
+        autonomyRange: number
+    }
+    nameStation: string
+}

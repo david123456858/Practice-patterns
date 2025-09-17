@@ -135,9 +135,12 @@ function RegisterStation({ isOpen, onClose, onSuccess }: RegisterStationModalPro
             <div className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50 p-4">
                 <div className="bg-white rounded-lg shadow-xl w-full max-w-md transform transition-all duration-300 scale-100">
                     {/* Header */}
-                    <div className="flex items-center justify-between p-6 border-b border-gray-200">
-                        <h2 className="text-xl font-semibold text-gray-900">Register Station</h2>
-                        <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors">
+                    <div className="flex items-center justify-between p-6 border-b border-green-200">
+                        <h2 className="text-xl font-semibold text-green-800">Registrar Estación</h2>
+                        <button
+                            onClick={onClose}
+                            className="text-green-400 hover:text-green-600 transition-colors"
+                        >
                             <X className="w-6 h-6" />
                         </button>
                     </div>
@@ -152,15 +155,15 @@ function RegisterStation({ isOpen, onClose, onSuccess }: RegisterStationModalPro
 
                         {/* Station Name Field */}
                         <div className="space-y-2">
-                            <label className="block text-sm font-medium text-gray-700">Station Name</label>
+                            <label className="block text-sm font-medium text-green-700">Nombre de la estación</label>
                             <div className="relative">
-                                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-green-400 w-5 h-5" />
                                 <input
                                     type="text"
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                    placeholder="Enter station name"
-                                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
+                                    placeholder="Ingresa el nombre de la estación"
+                                    className="w-full pl-10 pr-4 py-3 border border-green-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 placeholder-green-400"
                                     required
                                 />
                             </div>
@@ -168,15 +171,15 @@ function RegisterStation({ isOpen, onClose, onSuccess }: RegisterStationModalPro
 
                         {/* Address Field */}
                         <div className="space-y-2">
-                            <label className="block text-sm font-medium text-gray-700">Address</label>
+                            <label className="block text-sm font-medium text-green-700">Dirección</label>
                             <div className="relative">
-                                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-green-400 w-5 h-5" />
                                 <input
                                     type="text"
                                     value={formData.address}
                                     onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                                    placeholder="Enter station address"
-                                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
+                                    placeholder="Ingresa la dirección de la estación"
+                                    className="w-full pl-10 pr-4 py-3 border border-green-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 placeholder-green-400"
                                     required
                                 />
                             </div>
@@ -184,41 +187,41 @@ function RegisterStation({ isOpen, onClose, onSuccess }: RegisterStationModalPro
 
                         {/* Geolocation Section */}
                         <div className="space-y-2">
-                            <label className="block text-sm font-medium text-gray-700">Geolocation</label>
+                            <label className="block text-sm font-medium text-green-700">Geolocalización</label>
 
                             {!geoData ? (
                                 <button
                                     type="button"
                                     onClick={acquireGeolocation}
                                     disabled={isGettingLocation}
-                                    className="w-full flex items-center justify-center px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium disabled:bg-blue-400 disabled:cursor-not-allowed"
+                                    className="w-full flex items-center justify-center px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 font-medium disabled:bg-green-400 disabled:cursor-not-allowed"
                                 >
                                     <Navigation className="w-5 h-5 mr-2" />
-                                    {isGettingLocation ? "Acquiring Location..." : "Acquire Geolocation"}
+                                    {isGettingLocation ? "Obteniendo ubicación..." : "Obtener geolocalización"}
                                 </button>
                             ) : (
-                                <div className="p-4 bg-gray-50 rounded-lg space-y-2">
+                                <div className="p-4 bg-green-50 rounded-lg space-y-2">
                                     <div className="flex justify-between items-center">
-                                        <span className="text-sm font-medium text-gray-700">Location Acquired</span>
+                                        <span className="text-sm font-medium text-green-700">Ubicación obtenida</span>
                                         <button
                                             type="button"
                                             onClick={acquireGeolocation}
-                                            className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                            className="text-green-600 hover:text-green-800 text-sm font-medium"
                                         >
-                                            Update
+                                            Actualizar
                                         </button>
                                     </div>
                                     <div className="grid grid-cols-2 gap-2 text-sm">
                                         <div>
-                                            <span className="text-gray-600">Latitude:</span>
+                                            <span className="text-green-600">Latitud:</span>
                                             <span className="block font-medium">{geoData.latitude.toFixed(6)}</span>
                                         </div>
                                         <div>
-                                            <span className="text-gray-600">Longitude:</span>
+                                            <span className="text-green-600">Longitud:</span>
                                             <span className="block font-medium">{geoData.longitude.toFixed(6)}</span>
                                         </div>
                                         <div className="col-span-2">
-                                            <span className="text-gray-600">Timestamp:</span>
+                                            <span className="text-green-600">Fecha:</span>
                                             <span className="block font-medium">{geoData.timeStamp.toLocaleString()}</span>
                                         </div>
                                     </div>
@@ -231,16 +234,16 @@ function RegisterStation({ isOpen, onClose, onSuccess }: RegisterStationModalPro
                             <button
                                 type="button"
                                 onClick={handleCancel}
-                                className="flex-1 px-4 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors duration-200 font-medium"
+                                className="flex-1 px-4 py-3 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors duration-200 font-medium"
                             >
-                                Cancel
+                                Cancelar
                             </button>
                             <button
                                 type="submit"
                                 disabled={!geoData || isSubmitting}
                                 className="flex-1 px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 font-medium disabled:bg-gray-400 disabled:cursor-not-allowed"
                             >
-                                {isSubmitting ? "Registering..." : "Register Station"}
+                                {isSubmitting ? "Registrando..." : "Registrar estación"}
                             </button>
                         </div>
                     </form>

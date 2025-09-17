@@ -1,4 +1,4 @@
-import { Leaf, Zap, ArrowRight, Car, MapPin } from "lucide-react"
+import { Leaf, Zap, ArrowLeft, Car, MapPin, User } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 
 export function WelcomeComponent() {
@@ -13,7 +13,7 @@ export function WelcomeComponent() {
                             <Zap className="absolute -bottom-2 -right-2 h-8 w-8 text-green-500" />
                         </div>
                     </div>
-                    <h1 className="text-4xl font-bold text-green-800 mb-4">Bienvenido a EcoMove</h1>
+                    <h1 className="text-4xl font-bold text-green-800 mb-4">Bienvenido al sistema administrativo de EcoMove</h1>
                     <div className="w-24 h-1 bg-green-600 mx-auto mb-6"></div>
                 </div>
 
@@ -42,16 +42,16 @@ export function WelcomeComponent() {
                                     <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
                                         <MapPin className="h-6 w-6 text-green-600" />
                                     </div>
-                                    <h3 className="font-semibold text-green-800 mb-2">Estaciones de Carga</h3>
-                                    <p className="text-sm text-green-600">Red completa de puntos de recarga</p>
+                                    <h3 className="font-semibold text-green-800 mb-2">Estaciones de Compra</h3>
+                                    <p className="text-sm text-green-600">Gestiona tus diferentes estaciones de compra</p>
                                 </div>
 
                                 <div className="text-center p-4">
                                     <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                                        <Leaf className="h-6 w-6 text-green-600" />
+                                        <User className="h-6 w-6 text-green-600" />
                                     </div>
-                                    <h3 className="font-semibold text-green-800 mb-2">Impacto Ambiental</h3>
-                                    <p className="text-sm text-green-600">Contribuye a un planeta más limpio</p>
+                                    <h3 className="font-semibold text-green-800 mb-2">Usuarios activos</h3>
+                                    <p className="text-sm text-green-600">Gestiona a tus usuarios contribuyentes a EcoMove</p>
                                 </div>
                             </div>
 
@@ -61,8 +61,8 @@ export function WelcomeComponent() {
                                     Comienza a explorar las funcionalidades de EcoMove usando el menú lateral
                                 </p>
                                 <div className="flex items-center justify-center gap-2 text-green-600">
-                                    <span className="text-sm font-medium">Selecciona una opción del menú</span>
-                                    <ArrowRight className="h-4 w-4" />
+                                    <ArrowLeft className="h-4 w-4" />
+                                    <span className="text-sm font-medium">Selecciona una opción del menú lateral izquierdo</span>
                                 </div>
                             </div>
                         </div>

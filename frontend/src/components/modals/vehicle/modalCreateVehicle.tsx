@@ -1,15 +1,15 @@
 "use client"
 
-import type React from "react"
-
-import { useState, useEffect } from "react"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import type React from "react"
+import { useState, useEffect } from "react"
 import { Car } from "lucide-react"
-import { getVehicleTypes, createVehicle } from "@/services/vehicle/vehicleService"
+import { getVehicleTypes } from "@/services/vehicle/getTypeVehicle"
+import { createVehicle } from "@/services/vehicle/createVehicle"
 import { getStations, type Station } from "@/services/station/stationService"
 import { type BicycleData, type ScooterData, type SkateboardData } from "@/interface/vehicleInterface";
 
@@ -128,8 +128,6 @@ export function AddVehicleModal({ isOpen, onClose }: AddVehicleModalProps) {
                 alert("Tipo de vehículo no soportado")
                 return
         }
-
-        console.log("🚀 Payload final:", vehicleData)
 
         try {
             await createVehicle(vehicleData)
