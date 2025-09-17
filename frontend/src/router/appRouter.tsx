@@ -12,6 +12,8 @@ import { ManagementStation } from "@/pages/management/station/managementStation"
 import RegisterPayment from "@/pages/register/payment/registerPayment";
 import { WelcomeComponent } from "@/components/welcome";
 
+import ClientPage from "@/pages/client/homeClientPage";
+
 export default function AppRouter() {
     return (
         <BrowserRouter>
@@ -20,6 +22,8 @@ export default function AppRouter() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
+
+                <Route path="/homeClient" element={<ClientPage />} />
 
                 {/* Rutas privadas (Dashboard con sidebar) */}
                 <Route path="/dashboard" element={<MainDashboard />}>

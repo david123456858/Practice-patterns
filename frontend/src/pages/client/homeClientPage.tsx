@@ -8,7 +8,23 @@ import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
-import { Car, Bike, Zap, Search, User, MapPin, Battery, Gauge, ChevronDown, ChevronUp } from "lucide-react"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Label } from "@/components/ui/label"
+import {
+    Car,
+    Bike,
+    Zap,
+    Search,
+    User,
+    MapPin,
+    Battery,
+    Gauge,
+    ChevronDown,
+    ChevronUp,
+    CreditCard,
+    Banknote,
+    QrCode,
+} from "lucide-react"
 
 // Datos estáticos de vehículos de ejemplo
 const vehiclesData = [
@@ -84,16 +100,17 @@ const vehiclesData = [
 const userData = {
     name: "Carlos Rodríguez",
     email: "carlos.rodriguez@email.com",
-    phone: "+57 300 123 4567",
-    memberSince: "Enero 2024",
-    totalTrips: 47,
-    totalDistance: "1,250 km",
-    carbonSaved: "180 kg CO₂",
 }
 
 export default function ClientPage() {
     const [searchTerm, setSearchTerm] = useState("")
     const [expandedCard, setExpandedCard] = useState<number | null>(null)
+    const [reservedVehicles, setReservedVehicles] = useState<number[]>([])
+    const [reservationCode, setReservationCode] = useState("")
+    const [showReservationModal, setShowReservationModal] = useState(false)
+    const [showPaymentModal, setShowPaymentModal] = useState(false)
+    const [selectedVehicleForReturn, setSelectedVehicleForReturn] = useState<number | null>(null)
+    const [paymentMethod, setPaymentMethod] = useState("")
 
     // Filtrar vehículos activos y por término de búsqueda
     const filteredVehicles = vehiclesData.filter(
@@ -118,6 +135,31 @@ export default function ClientPage() {
 
     const toggleCardExpansion = (id: number) => {
         setExpandedCard(expandedCard === id ? null : id)
+    }
+
+    const generateReservationCode = () => {
+        return Math.floor(100000 + Math.random() * 900000).toString()
+    }
+
+    const handleReserveVehicle = (vehicleId: number) => {
+        const code = generateReservationCode()
+        setReservationCode(code)
+        setReservedVehicles([...reservedVehicles, vehicleId])
+        setShowReservationModal(true)
+    }
+
+    const handleReturnVehicle = (vehicleId: number) => {
+        setSelectedVehicleForReturn(vehicleId)
+        setShowPaymentModal(true)
+    }
+
+    const handlePaymentComplete = () => {
+        if (selectedVehicleForReturn) {
+            setReservedVehicles(reservedVehicles.filter((id) => id !== selectedVehicleForReturn))
+            setSelectedVehicleForReturn(null)
+            setPaymentMethod("")
+            setShowPaymentModal(false)
+        }
     }
 
     return (
@@ -173,35 +215,36 @@ export default function ClientPage() {
                                 <div className="space-y-4">
                                     <Separator />
 
-                                    <div className="grid grid-cols-2 gap-4 text-sm">
-                                        <div>
-                                            <p className="text-muted-foreground">Teléfono</p>
-                                            <p className="font-medium">{userData.phone}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-muted-foreground">Miembro desde</p>
-                                            <p className="font-medium">{userData.memberSince}</p>
-                                        </div>
-                                    </div>
-
-                                    <Separator />
-
                                     <div className="space-y-3">
-                                        <h4 className="font-semibold text-primary">Estadísticas</h4>
-                                        <div className="grid grid-cols-1 gap-3">
-                                            <div className="flex justify-between">
-                                                <span className="text-muted-foreground">Viajes totales:</span>
-                                                <span className="font-medium">{userData.totalTrips}</span>
+                                        <h4 className="font-semibold text-primary">Vehículos Reservados</h4>
+                                        {reservedVehicles.length === 0 ? (
+                                            <p className="text-sm text-muted-foreground">No tienes vehículos reservados</p>
+                                        ) : (
+                                            <div className="space-y-2">
+                                                {reservedVehicles.map((vehicleId) => {
+                                                    const vehicle = vehiclesData.find((v) => v.id === vehicleId)
+                                                    return vehicle ? (
+                                                        <div
+                                                            key={vehicleId}
+                                                            className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
+                                                        >
+                                                            <div>
+                                                                <p className="font-medium">{vehicle.name}</p>
+                                                                <p className="text-sm text-muted-foreground">Reservado</p>
+                                                            </div>
+                                                            <Button
+                                                                size="sm"
+                                                                variant="outline"
+                                                                onClick={() => handleReturnVehicle(vehicleId)}
+                                                                className="text-xs"
+                                                            >
+                                                                Devolver Vehículo
+                                                            </Button>
+                                                        </div>
+                                                    ) : null
+                                                })}
                                             </div>
-                                            <div className="flex justify-between">
-                                                <span className="text-muted-foreground">Distancia recorrida:</span>
-                                                <span className="font-medium">{userData.totalDistance}</span>
-                                            </div>
-                                            <div className="flex justify-between">
-                                                <span className="text-muted-foreground">CO₂ ahorrado:</span>
-                                                <span className="font-medium text-primary">{userData.carbonSaved}</span>
-                                            </div>
-                                        </div>
+                                        )}
                                     </div>
                                 </div>
                             </DialogContent>
@@ -272,7 +315,20 @@ export default function ClientPage() {
                                             <span className="font-medium">{vehicle.range}</span>
                                         </div>
 
-                                        <Button className="w-full mt-3 bg-primary hover:bg-primary/90">Reservar Vehículo</Button>
+                                        {!reservedVehicles.includes(vehicle.id) && (
+                                            <Button
+                                                className="w-full mt-3 bg-primary hover:bg-primary/90"
+                                                onClick={() => handleReserveVehicle(vehicle.id)}
+                                            >
+                                                Reservar Vehículo
+                                            </Button>
+                                        )}
+
+                                        {reservedVehicles.includes(vehicle.id) && (
+                                            <div className="w-full mt-3 p-2 bg-primary/10 text-primary text-center rounded-md text-sm font-medium">
+                                                Vehículo Reservado
+                                            </div>
+                                        )}
                                     </div>
                                 )}
                             </CardContent>
@@ -290,6 +346,81 @@ export default function ClientPage() {
                         </p>
                     </div>
                 )}
+
+                <Dialog open={showReservationModal} onOpenChange={setShowReservationModal}>
+                    <DialogContent className="sm:max-w-md">
+                        <DialogHeader>
+                            <DialogTitle className="flex items-center gap-2">
+                                <QrCode className="h-5 w-5 text-primary" />
+                                Reserva Confirmada
+                            </DialogTitle>
+                        </DialogHeader>
+
+                        <div className="space-y-4 text-center">
+                            <p className="text-muted-foreground">
+                                Por favor, diríjase a la estación más cercana de EcoMove y presente el siguiente código:
+                            </p>
+
+                            <div className="bg-primary/10 p-6 rounded-lg">
+                                <p className="text-2xl font-bold text-primary tracking-wider">{reservationCode}</p>
+                            </div>
+
+                            <p className="text-sm text-muted-foreground">
+                                Presente este código para que su vehículo pueda ser entregado.
+                            </p>
+
+                            <Button onClick={() => setShowReservationModal(false)} className="w-full bg-primary hover:bg-primary/90">
+                                Aceptar
+                            </Button>
+                        </div>
+                    </DialogContent>
+                </Dialog>
+
+                <Dialog open={showPaymentModal} onOpenChange={setShowPaymentModal}>
+                    <DialogContent className="sm:max-w-md">
+                        <DialogHeader>
+                            <DialogTitle className="flex items-center gap-2">
+                                <CreditCard className="h-5 w-5 text-primary" />
+                                Devolver Vehículo
+                            </DialogTitle>
+                        </DialogHeader>
+
+                        <div className="space-y-4">
+                            <p className="text-muted-foreground">Selecciona tu método de pago para completar la devolución:</p>
+
+                            <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod}>
+                                <div className="flex items-center space-x-2 p-3 border rounded-lg hover:bg-muted/50">
+                                    <RadioGroupItem value="transfer" id="transfer" />
+                                    <Label htmlFor="transfer" className="flex items-center gap-2 cursor-pointer flex-1">
+                                        <Banknote className="h-4 w-4" />
+                                        Pago por Transferencia
+                                    </Label>
+                                </div>
+
+                                <div className="flex items-center space-x-2 p-3 border rounded-lg hover:bg-muted/50">
+                                    <RadioGroupItem value="card" id="card" />
+                                    <Label htmlFor="card" className="flex items-center gap-2 cursor-pointer flex-1">
+                                        <CreditCard className="h-4 w-4" />
+                                        Pago por Tarjeta
+                                    </Label>
+                                </div>
+                            </RadioGroup>
+
+                            <div className="flex gap-2">
+                                <Button variant="outline" onClick={() => setShowPaymentModal(false)} className="flex-1">
+                                    Cancelar
+                                </Button>
+                                <Button
+                                    onClick={handlePaymentComplete}
+                                    disabled={!paymentMethod}
+                                    className="flex-1 bg-primary hover:bg-primary/90"
+                                >
+                                    Confirmar Pago
+                                </Button>
+                            </div>
+                        </div>
+                    </DialogContent>
+                </Dialog>
             </div>
         </div>
     )
