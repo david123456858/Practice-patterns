@@ -1,6 +1,6 @@
 import { User } from '../../../domain/entities/User/User'
 import { ICrudOperations } from '../../../domain/interfaces/common/ICrud'
-let UserList: User[] = [new User('1067593914', 'Laura altahona', 'laura@unicesar.edu.co'), new User('1067592444', 'Juan Peralta', 'jdavid@unicesar.edu.co')]
+let UserList: User[] = []
 
 export class UserRepository implements ICrudOperations<User> {
   findAll (): User[] {
@@ -18,6 +18,10 @@ export class UserRepository implements ICrudOperations<User> {
   update (data: User): void {
     const index = UserList.findIndex(user => user.getCC() === data.getCC())
     UserList[index] = data
+  }
+
+  findByEmail (email: string): User | undefined {
+    return UserList.find(user => user.getEmail() === email)
   }
 
   findById (id: string): User | undefined {

@@ -5,6 +5,9 @@ export class AuthController {
   private readonly serviceAuth: AuthService
   constructor (service: AuthService) {
     this.serviceAuth = service
+
+    this.autenticate = this.autenticate.bind(this)
+    this.register = this.register.bind(this)
   }
 
   async autenticate (req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -22,7 +25,7 @@ export class AuthController {
 
   async register (req: Request, res: Response, next: NextFunction): Promise<void> {
     const user = req.body
-    const response = await this.serviceAuth.authenticate(user)
+    const response = await this.serviceAuth.register(user)
 
     if (!response.success) {
       res.status(response.status).json({ error: response.error })

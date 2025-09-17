@@ -1,3 +1,5 @@
+import { Loan } from '../Loan/Loan'
+import { Role } from '../Role/Role'
 import { SuscriptionPlan } from './../Suscription/Suscription'
 
 export class User {
@@ -7,6 +9,8 @@ export class User {
   private email: string
   private suscription: SuscriptionPlan | any
   private password: string
+  private readonly role: Role[] = []
+  private readonly loanHistory: Loan[] = []
 
   constructor (
     idUser: string,
@@ -14,7 +18,9 @@ export class User {
     lastName: string,
     email: string,
     password: string,
-    suscription?: SuscriptionPlan) {
+    role: Role,
+    suscription?: SuscriptionPlan
+  ) {
     this.idUser = idUser
     this.email = email
     this.lastName = lastName
@@ -29,6 +35,8 @@ export class User {
   setEmail (email: string): void { this.email = email }
   setSuscription (suscription: SuscriptionPlan): void { this.suscription = suscription }
   setPassword (password: string): void { this.password = password }
+  setLoanHistory (loan: Loan): void { this.loanHistory.push(loan) }
+  setRole (role: Role): void { this.role.push(role) }
 
   getCC (): string { return this.idUser }
   getName (): string { return this.name }
@@ -36,4 +44,6 @@ export class User {
   getEmail (): string { return this.email }
   getSuscription (): SuscriptionPlan { return this.suscription }
   getPassword (): string { return this.password }
+  getRole (): Role[] { return this.role }
+  getLoanHistory (): Loan[] { return this.loanHistory }
 }

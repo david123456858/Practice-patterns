@@ -31,6 +31,7 @@ class GeoLocation{
 
 class Station{
     - String idStation
+    - String name
     - String address      
     - GeoLocation geoLocation
     + getters()
@@ -172,17 +173,17 @@ enum PaymentMethod {
     CREDIT_CARD
 }
 
+
+
+class PaymentProcessorFactory{
+    - Map<String, IPaymentProcessor>
+    + createPayMethod(method: PaymentMethod): IPaymentProcessor
+}
+
 ' interface IPaymentProcessor{
 '     + doPay(payment: Payment): PaymentStatus
 '     + updatePay(payment: Payment): PaymentStatus
 ' }
-
-' class PaymentProcessorFactory{
-'     - Map<String, IPaymentProcessor>
-'     + createPayMethod(method: PaymentMethod): IPaymentProcessor
-' }
-
-
 ' class CashPaymentProcessor{
 
 ' }
@@ -202,6 +203,7 @@ end note
 ' CashPaymentProcessor ..|> IPaymentProcessor
 ' CreditCardPaymentProcessor ..|> IPaymentProcessor
 ' PaymentProcessorFactory --> IPaymentProcessor
+' PaymentProcessorFactory ..> PaymentMethod : use
 
 ' note right of IPaymentProcessor
 '   Capa de Servicio/Aplicación

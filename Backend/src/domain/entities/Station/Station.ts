@@ -1,24 +1,24 @@
 import { GeoLocation } from '../GeoLocation/GeoLocation'
 
 export class Station {
-  private id: string
+  private idStation: string
   private name: string
   private address: string
   private readonly geoLocation: GeoLocation
 
-  constructor (id: string, name: string, address: string, geoLocation: GeoLocation) {
-    this.id = id
+  constructor (idStation: string, name: string, address: string, geoLocation: GeoLocation) {
+    this.idStation = idStation
     this.name = name
     this.address = address
     this.geoLocation = geoLocation
   }
 
   getId (): string {
-    return this.id
+    return this.idStation
   }
 
-  setId (id: string): void {
-    this.id = id
+  setId (idStation: string): void {
+    this.idStation = idStation
   }
 
   getName (): string {
