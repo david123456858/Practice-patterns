@@ -2,7 +2,7 @@ import { API_BASE_URL } from "../../config/api";
 
 export interface Station {
     idStation: string;
-    name: string;
+    nameStation: string;
     geoLocation: {
         latitude: number;
         longitude: number;

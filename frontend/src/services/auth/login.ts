@@ -1,12 +1,27 @@
 // services/auth/loginService.ts
 import { API_BASE_URL } from "../../config/api";
 
-export const loginUser = async (credentials: { email: string; password: string }): Promise<void> => {
+interface Role {
+    idRole: string;
+    name: string;
+    permissions: string[];
+}
+
+export interface UserData {
+    userId: string;
+    userEmail: string;
+    userName: string;
+    role: Role[];
+}
+
+export const loginUser = async (
+    credentials: { email: string; password: string }
+): Promise<UserData> => {
     try {
         const response = await fetch(`${API_BASE_URL}auth`, {
-            method: 'POST',
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
             },
             body: JSON.stringify(credentials),
         });
@@ -15,8 +30,14 @@ export const loginUser = async (credentials: { email: string; password: string }
             throw new Error(`${response.status}: ${response.statusText}`);
         }
 
+        const data = await response.json();
+        
+        localStorage.setItem("user", JSON.stringify(data.message));
+
+        return data.message as UserData;
     } catch (error) {
-        console.error('Error en login:', error);
-        throw new Error('Error al iniciar sesión. Verifica tus credenciales.');
+        console.error("Error en login:", error);
+        throw new Error("Error al iniciar sesión. Verifica tus credenciales.");
     }
 };
+

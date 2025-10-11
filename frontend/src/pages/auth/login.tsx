@@ -24,18 +24,26 @@ export default function LoginPage() {
         try {
             const userData = await loginUser({ email, password });
 
-            // ✅ Si llega aquí es porque el login fue exitoso
-            console.log("Login exitoso:", userData);
-            navigate("/dashboard");
+            localStorage.setItem("user", JSON.stringify(userData));
+
+            const role = userData.role[0]?.name;
+            
+            if (role === "client") {
+                navigate("/homeClient");
+            }
+
+            if (role === "admin") {
+                navigate("/dashboard");
+            }
 
         } catch (error) {
-            // ❌ Si el backend devolvió 404 o cualquier otro error
             console.error("Error en login:", error);
             setError(error instanceof Error ? error.message : "Error al iniciar sesión");
         } finally {
             setIsLoading(false);
         }
     };
+
 
 
     return (

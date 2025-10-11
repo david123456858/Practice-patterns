@@ -1,26 +1,27 @@
-import type { User } from "@/types/classes/user";
 import { API_BASE_URL } from "../../config/api";
 
-export interface ApiResponse {
-    message: User[];
+export interface Role {
+    idRole: string;
+    name: string;
+    permissions: string[];
 }
 
-// Mapeo de tipos de suscripción a IDs
-export const subscriptionMapping = {
-    "ANNUAL": "1",
-    "MONTH": "2",
-    "SEMIANNUAL": "3"
-};
+export interface ApiUser {
+    role: Role[];
+    loanHistory: any[];
+    idUser: string;
+    email: string;
+    lastName: string;
+    name: string;
+    suscription: string | null;
+    password: string;
+}
 
-// Mapeo inverso para mostrar en la UI
-export const subscriptionOptions = [
-    { id: "1", label: "ANNUAL", displayName: "Annual Subscription" },
-    { id: "2", label: "MONTH", displayName: "Monthly Subscription" },
-    { id: "3", label: "SEMIANNUAL", displayName: "Semi-Annual Subscription" }
-];
+export interface ApiResponse {
+    message: ApiUser[];
+}
 
-// Función para obtener todos los usuarios
-export const getUsers = async (): Promise<User[]> => {
+export const getUsers = async (): Promise<ApiUser[]> => {
     try {
         const response = await fetch(`${API_BASE_URL}user`);
 

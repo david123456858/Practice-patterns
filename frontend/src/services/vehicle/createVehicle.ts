@@ -1,11 +1,6 @@
 import { API_BASE_URL } from "../../config/api";
 import { type BicycleData, type ScooterData, type SkateboardData } from "@/interface/vehicleInterface";
 
-export interface VehicleTypesResponse {
-    message: Record<string, string>;
-}
-
-
 type VehiclePayload = BicycleData | ScooterData | SkateboardData
 
 export const createVehicle = async (vehicle: VehiclePayload) => {
@@ -13,7 +8,7 @@ export const createVehicle = async (vehicle: VehiclePayload) => {
         let endpoint = ""
 
         switch (vehicle.vehicleType) {
-            case "BICYCLE":
+            case "bicycle":
                 endpoint = "bicycle"
                 break
             case "electric_scooter":
@@ -38,18 +33,5 @@ export const createVehicle = async (vehicle: VehiclePayload) => {
     } catch (error) {
         console.error("Error creando vehículo:", error)
         throw error
-    }
-}
-
-// Traer tipos de vehículo
-export const getVehicleTypes = async (): Promise<Record<string, string>> => {
-    try {
-        const response = await fetch(`${API_BASE_URL}vehicle/types`)
-        if (!response.ok) throw new Error(`Error ${response.status}: ${response.statusText}`)
-        const data: VehicleTypesResponse = await response.json()
-        return data.message || {}
-    } catch (error) {
-        console.error("Error fetching vehicle types:", error)
-        throw new Error("Failed to fetch vehicle types")
     }
 }

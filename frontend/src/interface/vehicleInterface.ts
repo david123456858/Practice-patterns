@@ -12,7 +12,7 @@ export interface BaseVehicle {
 }
 
 export interface BicycleData extends BaseVehicle {
-    vehicleType: "BICYCLE"
+    vehicleType: "bicycle"
     gears: number
     hasBasket: boolean
 }
@@ -39,4 +39,22 @@ export interface VehiclePayload {
         latitude: number
         longitude: number
     }
+}
+
+export interface Vehicle {
+    idVehicle: string
+    color: string
+    model: string
+    idStation: string
+    state: string
+    type: string
+    costForMinute: number
+    gears?: number
+    hasBasket?: boolean
+    hasSeat?: boolean
+    batteryInfo?: {
+        capacity: number
+        autonomyRange: number
+    }
+    nameStation: string
 }
