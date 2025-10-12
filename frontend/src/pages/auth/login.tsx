@@ -24,8 +24,17 @@ export default function LoginPage() {
         try {
             const userData = await loginUser({ email, password });
 
-            // ✅ Guardar en localStorage (o en contexto global si usas Context/Redux)
             localStorage.setItem("user", JSON.stringify(userData));
+
+            const role = userData.role[0]?.name;
+            
+            if (role === "client") {
+                navigate("/homeClient");
+            }
+
+            if (role === "admin") {
+                navigate("/dashboard");
+            }
 
             // ✅ Redirección según rol
             const role = userData.role[0]?.name;

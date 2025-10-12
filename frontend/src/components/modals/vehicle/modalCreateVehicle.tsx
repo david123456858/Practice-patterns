@@ -98,7 +98,7 @@ export function AddVehicleModal({ isOpen, onClose }: AddVehicleModalProps) {
             case "BICYCLE":
                 vehicleData = {
                     ...baseData,
-                    vehicleType: "BICYCLE",
+                    vehicleType: "bicycle",
                     gears: Number(formData.engranajes),
                     hasBasket: formData.tieneCesta === "YES",
                 }

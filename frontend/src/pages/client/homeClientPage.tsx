@@ -127,7 +127,6 @@ export default function ClientPage() {
             console.error("Error cargando estaciones:", err)
         }
     }
-
     // al devolver vehículo -> abrir modal de pago
     const handleReturn = async (vehicleId: string) => {
         const reserved = reservedVehicles.find(r => r.vehicleId === vehicleId)
@@ -139,10 +138,13 @@ export default function ClientPage() {
         }
 
         try {
-            await returnVehicle({
+            const response = await returnVehicle({
                 loanId: reserved.loanId,
                 endStationId: selectedStation[vehicleId],
             })
+
+            // ✅ Guardamos el amount que devuelve el backend
+            setAmount(response.amount.toString())
 
             // abrir modal de pago
             setLoanToPay(reserved.loanId)
@@ -158,16 +160,16 @@ export default function ClientPage() {
         }
     }
 
+
     // confirmar pago
     const handlePayment = async () => {
         if (!loanToPay) return
         if (!amount || !selectedMethod) {
-            alert("Debes completar todos los campos")
+            alert("Debes seleccionar un método de pago")
             return
         }
 
         try {
-
             const numericAmount = parseFloat(amount) || 0
 
             await createPayment({
@@ -180,10 +182,12 @@ export default function ClientPage() {
             setShowPaymentModal(false)
             setLoanToPay(null)
             setSelectedMethod("")
+            setAmount("") // limpiar
         } catch {
             alert("Error procesando el pago")
         }
     }
+
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-background via-muted/30 to-secondary/20">
@@ -230,7 +234,10 @@ export default function ClientPage() {
                                             <h3 className="text-lg font-semibold">{userData?.name ?? "Cargando..."}</h3>
                                             <p className="text-sm text-muted-foreground">{userData?.email ?? ""}</p>
                                         </div>
+                                        <a href="/login" className="ml-40">salir</a>
                                     </DialogTitle>
+
+
                                 </DialogHeader>
 
                                 <div className="space-y-4">
@@ -454,23 +461,51 @@ export default function ClientPage() {
                                 />
                             </div>
 
+                            {/* Modal de pago */}
+                            <Dialog open={showPaymentModal} onOpenChange={() => { }}>
+                                <DialogContent className="sm:max-w-md">
+                                    <DialogHeader>
+                                        <DialogTitle className="text-lg font-bold text-primary">Realizar Pago</DialogTitle>
+                                    </DialogHeader>
 
-                            {/* Método de pago */}
-                            <div>
-                                <label className="block text-sm font-medium mb-1">Método de Pago</label>
-                                <select
-                                    value={selectedMethod}
-                                    onChange={(e) => setSelectedMethod(e.target.value)}
-                                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/60"
-                                >
-                                    <option value="">Seleccione un método</option>
-                                    {paymentMethods.map((method) => (
-                                        <option key={method} value={method}>
-                                            {method}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
+                                    <div className="space-y-4">
+                                        <p className="text-sm text-muted-foreground">
+                                            Para finalizar la devolución del vehículo, debe realizar el pago.
+                                        </p>
+
+                                        {/* ✅ Mostrar monto devuelto por el backend */}
+                                        <div className="p-3 bg-muted/50 rounded-lg text-center">
+                                            <p className="text-sm text-muted-foreground">El valor del monto a pagar es:</p>
+                                            <p className="text-xl font-bold text-primary">{amount} COP</p>
+                                        </div>
+
+                                        {/* Método de pago */}
+                                        <div>
+                                            <label className="block text-sm font-medium mb-1">Método de Pago</label>
+                                            <select
+                                                value={selectedMethod}
+                                                onChange={(e) => setSelectedMethod(e.target.value)}
+                                                className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/60"
+                                            >
+                                                <option value="">Seleccione un método</option>
+                                                {paymentMethods.map((method) => (
+                                                    <option key={method} value={method}>
+                                                        {method}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+
+                                        <Button
+                                            onClick={handlePayment}
+                                            className="w-full bg-primary hover:bg-primary/90 text-white rounded-xl shadow-md"
+                                        >
+                                            Confirmar Pago
+                                        </Button>
+                                    </div>
+                                </DialogContent>
+                            </Dialog>
+
 
                             <Button
                                 onClick={handlePayment}

@@ -12,7 +12,7 @@ export interface BaseVehicle {
 }
 
 export interface BicycleData extends BaseVehicle {
-    vehicleType: "BICYCLE"
+    vehicleType: "bicycle"
     gears: number
     hasBasket: boolean
 }

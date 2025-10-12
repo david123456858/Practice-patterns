@@ -8,7 +8,7 @@ export const createVehicle = async (vehicle: VehiclePayload) => {
         let endpoint = ""
 
         switch (vehicle.vehicleType) {
-            case "BICYCLE":
+            case "bicycle":
                 endpoint = "bicycle"
                 break
             case "electric_scooter":

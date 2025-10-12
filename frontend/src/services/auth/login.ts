@@ -31,8 +31,7 @@ export const loginUser = async (
         }
 
         const data = await response.json();
-
-        // ✅ Guardamos el usuario logueado
+        
         localStorage.setItem("user", JSON.stringify(data.message));
 
         return data.message as UserData;
