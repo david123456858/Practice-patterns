@@ -3,7 +3,7 @@ export class Images {
   private readonly idImages: string
   private fileName: string
   private filePath: string
-  private fileSize: string
+  private fileSize: number
   private width: number
   private height: number
   private updated_at: Date
@@ -13,7 +13,7 @@ export class Images {
     idImages: string,
     fileName: string,
     filePath: string,
-    fileSize: string,
+    fileSize: number,
     width: number,
     height: number,
     updated_at: Date,
@@ -42,7 +42,7 @@ export class Images {
     return this.filePath
   }
 
-  getFileSize (): string {
+  getFileSize (): number {
     return this.fileSize
   }
 
@@ -71,7 +71,7 @@ export class Images {
     this.filePath = path
   }
 
-  setFileSize (size: string): void {
+  setFileSize (size: number): void {
     this.fileSize = size
   }
 

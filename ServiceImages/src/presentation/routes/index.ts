@@ -1,6 +1,6 @@
 
 import { Router } from 'express'
-import { ImagesRoutes } from './images/Images'
+import { ImagesRoutes } from './images/Images.js'
 
 export class router {
   public router: Router

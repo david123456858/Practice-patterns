@@ -5,7 +5,7 @@ export class ConcreteBuilderImages implements BuilderImages {
   idImages!: string
   fileName!: string
   filePath!: string
-  fileSize!: string
+  fileSize!: number
   width!: number
   height!: number
   updated_at!: Date
@@ -23,7 +23,7 @@ export class ConcreteBuilderImages implements BuilderImages {
     this.filePath = path
   }
 
-  setFileSize (size: string): void {
+  setFileSize (size: number): void {
     this.fileSize = size
   }
 

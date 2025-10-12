@@ -3,7 +3,7 @@
 import express, { Application } from 'express'
 import cors from 'cors'
 import morgan from 'morgan'
-import { router } from '../../presentation/routes'
+import { router } from '../../presentation/routes/index'
 
 export class Server {
   private readonly app: Application

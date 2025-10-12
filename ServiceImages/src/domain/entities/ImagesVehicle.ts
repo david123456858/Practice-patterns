@@ -9,7 +9,7 @@ export class ImagesVehicle extends Images {
     idImages: string,
     fileName: string,
     filePath: string,
-    fileSize: string,
+    fileSize: number,
     width: number,
     height: number,
     updated_at: Date,

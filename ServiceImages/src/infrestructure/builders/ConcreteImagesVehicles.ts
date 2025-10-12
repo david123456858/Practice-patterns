@@ -1,17 +1,17 @@
-import { Images } from '../../domain/entities/Images'
+
 import { ImagesVehicle } from '../../domain/entities/ImagesVehicle'
 import { BuilderImages } from '../../domain/interfaces/builderImages'
 
 export class ConcreteBuilderImagesVehicles implements BuilderImages {
-  idVehicle!: string
-  idImages!: string
-  fileName!: string
-  filePath!: string
-  fileSize!: string
-  width!: number
-  height!: number
-  updated_at!: Date
-  created_at!: Date
+  private idVehicle!: string
+  private idImages!: string
+  private fileName!: string
+  private filePath!: string
+  private fileSize!: number
+  private width!: number
+  private height!: number
+  private updated_at!: Date
+  private created_at!: Date
 
   setIdImages (id: string): void {
     this.idImages = id
@@ -25,16 +25,16 @@ export class ConcreteBuilderImagesVehicles implements BuilderImages {
     this.filePath = path
   }
 
-  setFileSize (size: string): void {
+  setFileSize (size: number): void {
     this.fileSize = size
   }
 
   setWidth (width: number): void {
-    this.width = width
+    this.width = 300
   }
 
   setHeight (height: number): void {
-    this.height = height
+    this.height = 300
   }
 
   setUpdatedAt (date: Date): void {
@@ -49,7 +49,7 @@ export class ConcreteBuilderImagesVehicles implements BuilderImages {
     this.idVehicle = id
   }
 
-  build (): Images {
+  build (): ImagesVehicle {
     return new ImagesVehicle(
       this.idVehicle,
       this.idImages,
