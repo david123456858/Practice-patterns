@@ -1,26 +1,40 @@
+import { NodePgDatabase } from 'drizzle-orm/node-postgres'
 import { ImagesVehicle } from '../../domain/entities/ImagesVehicle'
 import { OperationsImages } from '../../domain/interfaces/OperationsBase'
-
-const vectorImagesInfo: ImagesVehicle[] = []
+import { Images } from '../../domain/schemas/images'
+import { DatabaseSql } from '../database/db'
+import { Pool, QueryResult } from 'pg'
+import { eq } from 'drizzle-orm'
 
 export class repositoryImages implements OperationsImages<ImagesVehicle> {
-  async upload (payload: ImagesVehicle): Promise<ImagesVehicle> {
-    vectorImagesInfo.push(payload)
-    console.log(vectorImagesInfo)
-
-    return payload
+  private readonly poolDb: NodePgDatabase<Record<string, never>> & { $client: Pool }
+  constructor () {
+    this.poolDb = DatabaseSql.getInstacne().getDb()
   }
 
-  async get (): Promise<void> {
-
+  async upload (payload: ImagesVehicle): Promise<QueryResult<never>> {
+    const ImagesCreated = await this.poolDb.insert(Images).values({
+      idImages: payload.getIdImages(),
+      idVehicle: payload.getIdVehicle(),
+      fileName: payload.getFileName(),
+      filePath: payload.getFilePath(),
+      fileSize: payload.getFileSize(),
+      width: payload.getWidth(),
+      height: payload.getHeight()
+    })
+    return ImagesCreated
   }
 
-  async getById (id: string): Promise<ImagesVehicle | undefined> {
-    return vectorImagesInfo.find((image) => image.getIdImages() === id)
+  async get (): Promise<any[]> {
+    return await this.poolDb.select().from(Images)
   }
 
-  async getByIdVehicle (id: string): Promise<ImagesVehicle | undefined> {
-    return vectorImagesInfo.find((image) => image.getIdVehicle() === id)
+  async getById (id: string): Promise<any[]> {
+    return await this.poolDb.select().from(Images).where(eq(Images.idImages, id))
+  }
+
+  async getByIdVehicle (id: string): Promise<any[]> {
+    return await this.poolDb.select().from(Images).where(eq(Images.idVehicle, id))
   }
 
   async delete (): Promise<void> {
