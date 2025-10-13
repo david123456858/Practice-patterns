@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "@/config/api"
+import { VITE_API_URL } from "@/config/api"
 
 export interface VehicleTypesResponse {
     message: Record<string, string>;
@@ -6,7 +6,7 @@ export interface VehicleTypesResponse {
 
 export const getVehicleTypes = async (): Promise<Record<string, string>> => {
     try {
-        const response = await fetch(`${API_BASE_URL}vehicle/types`)
+        const response = await fetch(`${VITE_API_URL}vehicle/types`)
         if (!response.ok) throw new Error(`Error ${response.status}: ${response.statusText}`)
         const data: VehicleTypesResponse = await response.json()
         return data.message || {}

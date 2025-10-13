@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "@/config/api"
+import { VITE_API_URL } from "@/config/api"
 
 export interface GeoLocation {
     latitude: number;
@@ -35,7 +35,7 @@ export interface VehicleResponse {
 
 export const getAllVehicles = async (): Promise<Vehicle[]> => {
     try {
-        const response = await fetch(`${API_BASE_URL}vehicle`);
+        const response = await fetch(`${VITE_API_URL}vehicle`);
 
         if (!response.ok) {
             throw new Error(`Error al obtener vehículos: ${response.status} ${response.statusText}`);

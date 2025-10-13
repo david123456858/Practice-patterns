@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "../../config/api";
+import { VITE_API_URL } from "@/config/api";
 
 export interface Role {
     idRole: string;
@@ -23,7 +23,11 @@ export interface ApiResponse {
 
 export const getUsers = async (): Promise<ApiUser[]> => {
     try {
-        const response = await fetch(`${API_BASE_URL}user`);
+        const response = await fetch(`${VITE_API_URL}user`, {
+            headers: {
+                "Accept": "application/json",
+            },
+        });
 
         if (!response.ok) {
             throw new Error(`Error ${response.status}: ${response.statusText}`);

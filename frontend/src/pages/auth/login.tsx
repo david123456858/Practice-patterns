@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Leaf, Zap } from "lucide-react"
-import { loginUser } from "@/services/auth/login"
+import { login } from "@/services/auth/user/login"
 
 export default function LoginPage() {
     const [email, setEmail] = useState("")
@@ -22,12 +22,12 @@ export default function LoginPage() {
         setIsLoading(true);
 
         try {
-            const userData = await loginUser({ email, password });
+            const userData = await login({ email, password });
 
             localStorage.setItem("user", JSON.stringify(userData));
 
             const role = userData.role[0]?.name;
-            
+
             if (role === "client") {
                 navigate("/homeClient");
             }
@@ -36,15 +36,6 @@ export default function LoginPage() {
                 navigate("/dashboard");
             }
 
-            // ✅ Redirección según rol
-            const role = userData.role[0]?.name;
-            if (role === "client") {
-                navigate("/homeClient");
-            } else if (role === "admin") {
-                navigate("/dashboard");
-            } else {
-                setError("Rol no reconocido");
-            }
         } catch (error) {
             console.error("Error en login:", error);
             setError(error instanceof Error ? error.message : "Error al iniciar sesión");
@@ -52,8 +43,6 @@ export default function LoginPage() {
             setIsLoading(false);
         }
     };
-
-
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-background via-muted/30 to-secondary/20 flex items-center justify-center p-4">

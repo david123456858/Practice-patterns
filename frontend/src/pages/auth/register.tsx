@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Leaf, Zap, CheckCircle } from "lucide-react"
-import { createUser } from "@/services/auth/createUser" // Asegúrate de importar correctamente
+import { register } from "@/services/auth/user/register"
 
 export default function RegisterPage() {
     const [formData, setFormData] = useState({
@@ -62,7 +62,7 @@ export default function RegisterPage() {
                     password2: formData.password2
                 }
 
-                const newUser = await createUser(userData)
+                const newUser = await register(userData)
                 console.log("Usuario creado exitosamente:", newUser)
 
                 alert(`El usuario: ${userData.name} ${userData.lastName} ha sido creado exitosamente.`);

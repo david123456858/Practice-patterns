@@ -1,5 +1,4 @@
-// services/auth/loginService.ts
-import { API_BASE_URL } from "../../config/api";
+import { VITE_API_URL } from "@/config/api";
 
 interface Role {
     idRole: string;
@@ -14,11 +13,11 @@ export interface UserData {
     role: Role[];
 }
 
-export const loginUser = async (
+export const login = async (
     credentials: { email: string; password: string }
 ): Promise<UserData> => {
     try {
-        const response = await fetch(`${API_BASE_URL}auth`, {
+        const response = await fetch(`${VITE_API_URL}auth`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -31,7 +30,7 @@ export const loginUser = async (
         }
 
         const data = await response.json();
-        
+
         localStorage.setItem("user", JSON.stringify(data.message));
 
         return data.message as UserData;

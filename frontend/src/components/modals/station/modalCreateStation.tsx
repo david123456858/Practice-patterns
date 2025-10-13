@@ -1,7 +1,7 @@
 import type React from "react"
 import { useState } from "react"
 import { X, MapPin, Navigation } from "lucide-react"
-import { createStation } from "@/services/station/stationService"
+import { createStation } from "@/services/station/station"
 
 interface geoLocation {
     latitude: number;
@@ -12,7 +12,7 @@ interface geoLocation {
 interface RegisterStationModalProps {
     isOpen: boolean
     onClose: () => void
-    onSuccess?: () => void // Cambiado a onSuccess para notificar éxito
+    onSuccess?: () => void
 }
 
 function RegisterStation({ isOpen, onClose, onSuccess }: RegisterStationModalProps) {
@@ -25,15 +25,13 @@ function RegisterStation({ isOpen, onClose, onSuccess }: RegisterStationModalPro
     const [error, setError] = useState<string | null>(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
 
-    // Función para generar ID aleatorio de 1 a 9 dígitos
     const generateRandomId = (): string => {
-        const min = 100000000; // 9 dígitos (100,000,000)
-        const max = 999999999; // 9 dígitos (999,999,999)
+        const min = 100000000; 
+        const max = 999999999; 
         const randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
         return randomNum.toString();
     }
 
-    // Función para adquirir geolocalización
     const acquireGeolocation = async (): Promise<void> => {
         if (!navigator.geolocation) {
             setError("Geolocation is not supported by your browser")
@@ -103,13 +101,10 @@ function RegisterStation({ isOpen, onClose, onSuccess }: RegisterStationModalPro
                 geoLocation: geoData
             }
 
-            // Llamar directamente al servicio
             await createStation(stationData)
 
-            // Notificar éxito
             if (onSuccess) onSuccess()
 
-            // Reset form
             setFormData({ name: "", address: "" })
             setGeoData(null)
             onClose()

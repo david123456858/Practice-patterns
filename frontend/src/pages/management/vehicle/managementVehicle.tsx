@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Search, Edit, Trash2, Car, Filter, Plus, RefreshCw } from "lucide-react"
+import { Search, Car, Filter, Plus, RefreshCw } from "lucide-react"
 import { AddVehicleModal } from "@/components/modals/vehicle/modalCreateVehicle"
 import { getAllVehicles, type Vehicle } from "@/services/vehicle/getAllVehicle"
 
@@ -66,15 +66,15 @@ function ManagementVehicle() {
         }
     }
 
-    const getStatusLabel = (estado: string) => {
-        switch (estado) {
-            case "AVAILABLE": return "Disponible"
-            case "IN_USE": return "En uso"
-            case "MAINTENANCE": return "Mantenimiento"
-            case "OUT_OF_SERVICE": return "Fuera de servicio"
-            default: return estado
-        }
-    }
+    // const getStatusLabel = (estado: string) => {
+    //     switch (estado) {
+    //         case "AVAILABLE": return "Disponible"
+    //         case "IN_USE": return "En uso"
+    //         case "MAINTENANCE": return "Mantenimiento"
+    //         case "OUT_OF_SERVICE": return "Fuera de servicio"
+    //         default: return estado
+    //     }
+    // }
 
     // const handleEdit = (vehicleId: string) => {
     // }

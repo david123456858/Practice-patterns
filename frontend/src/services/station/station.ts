@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "../../config/api";
+import { VITE_API_URL } from "../../config/api";
 
 export interface Station {
     idStation: string;
@@ -13,7 +13,7 @@ export interface Station {
 
 export const createStation = async (stationData: Station): Promise<Station> => {
     try {
-        const response = await fetch(`${API_BASE_URL}station`, {
+        const response = await fetch(`${VITE_API_URL}station`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -33,17 +33,9 @@ export const createStation = async (stationData: Station): Promise<Station> => {
     }
 };
 
-// Función para generar ID aleatorio
-export const generateRandomId = (): string => {
-    const min = 100000000; // 9 dígitos (100,000,000)
-    const max = 999999999; // 9 dígitos (999,999,999)
-    const randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
-    return randomNum.toString();
-};
-
 export const getStations = async (): Promise<Station[]> => {
     try {
-        const response = await fetch(`${API_BASE_URL}station`);
+        const response = await fetch(`${VITE_API_URL}station`);
         const data = await response.json();
         return data.message as Station[];
     } catch (error) {

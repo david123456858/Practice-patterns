@@ -18,22 +18,19 @@ export default function AppRouter() {
     return (
         <BrowserRouter>
             <Routes>
-                {/* Rutas públicas */}
                 <Route path="/" element={<HomePage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
 
                 <Route path="/homeClient" element={<ClientPage />} />
 
-                {/* Rutas privadas (Dashboard con sidebar) */}
                 <Route path="/dashboard" element={<MainDashboard />}>
-                    {/* Ruta hija por defecto -> WelcomeComponent */}
+
                     <Route index element={<WelcomeComponent />} />
 
-                    {/* Rutas hijas del Dashboard */}
                     <Route path="users" element={<ManagementUser />} />
-                    <Route path="stations" element={<ManagementStation />} />
                     <Route path="vehicles" element={<ManagementVehicle />} />
+                    <Route path="stations" element={<ManagementStation />} />
                     <Route path="loan" element={<ManagementLoan />} />
                     <Route path="payment" element={<RegisterPayment />} />
                 </Route>

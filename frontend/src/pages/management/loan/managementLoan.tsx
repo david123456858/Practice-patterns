@@ -5,7 +5,7 @@ import { Search, Filter, RefreshCcw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { getLoans, type Loan } from "@/services/loan/getAllLoan"
+import { getLoans, type Loan } from "@/services/loan/loan"
 
 export default function ManagementLoan() {
     const [searchTerm, setSearchTerm] = useState("")

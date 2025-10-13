@@ -1,7 +1,6 @@
 import { useState } from "react"
 import { EcoSidebar } from "@/components/eco-sidebar"
 import { WelcomeComponent } from "@/components/welcome"
-import { Outlet } from "react-router-dom"
 import ManagementUser from "../management/user/managementUser"
 import ManagementVehicle from "../management/vehicle/managementVehicle"
 import { ManagementStation } from "../management/station/managementStation"

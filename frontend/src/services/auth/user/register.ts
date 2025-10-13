@@ -1,8 +1,8 @@
 import type { User } from "@/types/classes/user";
-import { API_BASE_URL } from "../../config/api";
+import { VITE_API_URL } from "../../../config/api";
 
 // Función para crear un nuevo usuario
-export const createUser = async (userData: {
+export const register = async (userData: {
     idUser: string;
     name: string;
     lastName: string;
@@ -11,7 +11,7 @@ export const createUser = async (userData: {
     password2: string;
 }): Promise<User> => {
     try {
-        const response = await fetch(`${API_BASE_URL}auth/register`, {
+        const response = await fetch(`${VITE_API_URL}auth/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

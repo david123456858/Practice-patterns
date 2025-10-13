@@ -10,7 +10,7 @@ import { useState, useEffect } from "react"
 import { Car } from "lucide-react"
 import { getVehicleTypes } from "@/services/vehicle/getTypeVehicle"
 import { createVehicle } from "@/services/vehicle/createVehicle"
-import { getStations, type Station } from "@/services/station/stationService"
+import { getStations, type Station } from "@/services/station/station"
 import { type BicycleData, type ScooterData, type SkateboardData } from "@/interface/vehicleInterface";
 
 interface AddVehicleModalProps {

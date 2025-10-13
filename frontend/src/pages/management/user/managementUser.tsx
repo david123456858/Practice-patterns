@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react"
 import { getUsers, type ApiUser } from "@/services/user/getUser"
 
-import { Search, Filter, Edit, Trash2, RefreshCw } from "lucide-react"
+import { Search, Filter, RefreshCw } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
