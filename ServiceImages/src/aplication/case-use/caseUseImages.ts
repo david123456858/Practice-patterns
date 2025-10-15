@@ -17,13 +17,15 @@ export class ServiceImages {
     this.jwtURLs = new JwtUrlSigner()
   }
 
-  async upload (payload: Express.Multer.File | undefined): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
+  async upload (payload: Express.Multer.File | undefined, idVehicle: string): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
     try {
       if (!payload) return FailureProccess('bad requests', 400)
 
       const director = new DirectorImages()
       director.SetBuilder(this.builderImages)
-      await director.createImagesVehicle(payload, '2222')
+      await director.createImagesVehicle(payload, idVehicle)
+      console.log(this.builderImages.build())
+
       await this.repository.upload(this.builderImages.build())
 
       return SuccessProcess('Images Uploaded', 200)
@@ -37,6 +39,7 @@ export class ServiceImages {
   async get (): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
     try {
       const result = await this.repository.get()
+
       return SuccessProcess(result, 200)
     } catch (error) {
       return FailureProccess('', 500)
@@ -50,7 +53,7 @@ export class ServiceImages {
 
       if (Imagevehicle === undefined) return FailureProccess('No found', 404)
 
-      const UrlGenerated = this.jwtURLs.generateSecureUrl(Imagevehicle.getIdImages())
+      const UrlGenerated = Imagevehicle.map((index) => this.jwtURLs.generateSecureUrl(index.idImages))
 
       return SuccessProcess({
         Imagevehicle,
@@ -76,7 +79,8 @@ export class ServiceImages {
       const Imagevehicle = await this.repository.getById(idImage)
       if (Imagevehicle === undefined) return FailureProccess('No found', 404)
 
-      const filePath = Imagevehicle.getFilePath()
+      const Image = Imagevehicle.find((index) => index.idImages === idImage)
+      const filePath = Image.filePath
       if (!fs.existsSync(filePath)) return FailureProccess('Image file not found on disk', 404)
 
       return SuccessProcess(filePath, 200)
