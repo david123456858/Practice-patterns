@@ -1,107 +1,17 @@
-import { IsNotEmpty, IsString, IsNumber, IsBoolean, ValidateNested, IsEnum } from 'class-validator'
-import { Type } from 'class-transformer'
-import { VehicleType } from '../../types/Vehicule/VehiculeEnum'
+import { Type, TypeHelpOptions } from 'class-transformer'
+import { ValidateNested } from 'class-validator'
+import { BaseVehicleDto } from './classDto'
+import { ClassVehicleConcrete } from './concreteDto'
+import { ProviderTypeVehicle } from './Provider'
 
-// DTO base para vehículos
-export class BaseVehicleDto {
-  @IsNotEmpty()
-  @IsString()
-    idVehicle!: string
-
-  @IsNotEmpty()
-  @IsString()
-    color!: string
-
-  @IsNotEmpty()
-  @IsString()
-    model!: string
-
-  @IsNotEmpty()
-  @IsString()
-    idStation!: string
-
-  @IsNotEmpty()
-  @IsNumber()
-    latitude!: number
-
-  @IsNotEmpty()
-  @IsNumber()
-    longitude!: number
-
-  @IsNotEmpty()
-  @IsNumber()
-    maxUserWeight!: number
-
-  @IsNotEmpty()
-  @IsNumber()
-    velocityMax!: number
-
-  @IsNotEmpty()
-  @IsNumber()
-    costForMinute!: number
-
-  @IsEnum(VehicleType)
-    vehicleType!: VehicleType
-}
-
-// DTO para información de batería
-export class BatteryDto {
-  @IsNotEmpty()
-  @IsNumber()
-    capacity!: number
-
-  @IsNotEmpty()
-  @IsNumber()
-    autonomyRange!: number
-}
-
-// DTO para crear bicicleta
-export class CreateBicycleDto extends BaseVehicleDto {
-  @IsNotEmpty()
-  @IsNumber()
-    gears!: number
-
-  @IsNotEmpty()
-  @IsBoolean()
-    hasBasket!: boolean
-}
-
-// DTO para crear patineta eléctrica
-export class CreateElectricScooterDto extends BaseVehicleDto {
-  @IsNotEmpty()
-  @IsBoolean()
-    hasSeat!: boolean
-
+export class VehicleDtoEspefic extends BaseVehicleDto {
   @ValidateNested()
-  @Type(() => BatteryDto)
-    batteryInfo!: BatteryDto
+  @Type((options?: TypeHelpOptions | undefined) => {
+    const provider = (options?.object as VehicleDtoEspefic)?.vehicleType
+    const provoderService = new ProviderTypeVehicle()
+    const classDto = provoderService.getVehicleClass(provider)
+
+    return classDto
+  })
+    propities!: ClassVehicleConcrete
 }
-
-// DTO para crear skateboard
-export class CreateSkateboardDto extends BaseVehicleDto {
-  @IsNotEmpty()
-  @IsNumber()
-    deckSize!: number
-}
-
-// DTO para crear carro eléctrico
-export class CreateCarElectricDto extends BaseVehicleDto {
-  @IsNotEmpty()
-  @IsNumber()
-    doors!: number
-
-  @ValidateNested()
-  @Type(() => BatteryDto)
-    batteryInfo!: BatteryDto
-
-  @IsNotEmpty()
-  @IsBoolean()
-    hasAirConditioning!: boolean
-}
-
-// DTO unificado para la creación (discriminated union)
-export type CreateVehicleDto =
-  | CreateBicycleDto
-  | CreateElectricScooterDto
-  | CreateSkateboardDto
-  | CreateCarElectricDto

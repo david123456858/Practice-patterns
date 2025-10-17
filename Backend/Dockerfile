@@ -1,0 +1,60 @@
+# check=skip=FromPlatformFlagConstDisallowed
+# ============================================
+# Etapa 1: Dependencias
+# ============================================
+FROM --platform=linux/amd64 node:24-alpine3.21 AS deps
+
+# Instalar pnpm
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+WORKDIR /app
+
+# Copiar SOLO archivos de dependencias (mejor caché)
+COPY package.json pnpm-lock.yaml ./
+
+# Instalar dependencias de producción
+RUN pnpm install --prod --frozen-lockfile
+
+# ============================================
+# Etapa 2: Runner (imagen final)
+# ============================================
+FROM --platform=linux/amd64 node:24-alpine3.21 AS runner
+
+# Variables de configuración
+ARG APP_USER=nodeapp
+ARG APP_UID=1001
+ARG APP_GID=1001
+
+# Instalar pnpm en runner
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Crear usuario no-root
+RUN addgroup -g ${APP_GID} ${APP_USER} \
+    && adduser -S -u ${APP_UID} -G ${APP_USER} ${APP_USER}
+
+WORKDIR /app
+
+# Copiar node_modules desde la etapa de deps
+COPY --from=deps --chown=${APP_USER}:${APP_USER} /app/node_modules ./node_modules
+
+# Copiar package.json (necesario para que node encuentre módulos)
+COPY --chown=${APP_USER}:${APP_USER} package.json ./
+
+# Copiar código compilado
+COPY --chown=${APP_USER}:${APP_USER} src/build ./build
+
+# Cambiar a usuario no-root
+USER ${APP_USER}
+
+# Exponer puerto
+EXPOSE 3000
+
+# Variables de entorno para producción
+ENV NODE_ENV=production
+
+# Comando de inicio
+CMD ["node", "build/index.js"]

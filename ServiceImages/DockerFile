@@ -1,0 +1,55 @@
+# Etapa de construcción
+FROM node:20-alpine AS builder
+
+# Crear usuario no privilegiado
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+# Establecer directorio de trabajo
+WORKDIR /app
+
+# Copiar archivos de dependencias
+COPY package*.json ./
+COPY pnpm-lock.yaml ./
+
+# Instalar pnpm y dependencias
+RUN npm install -g pnpm && \
+    pnpm install
+
+# Copiar código fuente
+COPY . .
+
+# Compilar TypeScript
+RUN pnpm run build
+
+# Etapa de producción
+FROM node:20-alpine
+
+# Crear usuario no privilegiado
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+# Establecer directorio de trabajo
+WORKDIR /app
+
+# Copiar archivos de dependencias
+COPY package*.json ./
+COPY pnpm-lock.yaml ./
+
+# Instalar pnpm y solo dependencias de producción
+RUN npm install -g pnpm && \
+    pnpm install --prod
+
+# Copiar archivos compilados desde la etapa de construcción
+COPY --from=builder /app/dist ./dist
+
+# Crear directorio para uploads y dar permisos
+RUN mkdir -p /app/upload && \
+    chown -R appuser:appgroup /app/upload
+
+# Cambiar al usuario no privilegiado
+USER appuser
+
+# Exponer puerto
+EXPOSE 3000
+
+# Comando para ejecutar la aplicación
+CMD ["node", "dist/index.js"]s

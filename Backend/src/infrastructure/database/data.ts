@@ -1,17 +1,15 @@
-import { Battery } from '../../domain/entities/Battery/Battery'
+
 import { GeoLocation } from '../../domain/entities/GeoLocation/GeoLocation'
-import { Bicycle } from '../../domain/entities/Vehicule/Bicycle'
-import { ElectricScooter } from '../../domain/entities/Vehicule/ElectricScooter'
+import { Station } from '../../domain/entities/Station/Station'
+import { Bicycle } from '../../domain/entities/Vehicule/VehicleGeneric/Bicycle'
 import { StatusVehicle, VehicleType } from '../../domain/types/Vehicule/VehiculeEnum'
 
 const geoLocation = new GeoLocation(10.47412, -73.25129)
-const BatteryInfo = new Battery(160, 5)
-const BatteryInfo2 = new Battery(200, 10)
 export const bici1 = new Bicycle(
   'BIC001',
   'Rojo',
   'Mountain Pro',
-  '1',
+  new Station('1', 'Sede Don carmelo', 'Calle 14 45-5', new GeoLocation(1.2151, 244.5423232)),
   StatusVehicle.AVAILABLE,
   geoLocation,
   VehicleType.BICYCLE,
@@ -25,7 +23,7 @@ export const bici2 = new Bicycle(
   'BIC002',
   'Amarrilla',
   'Mountain',
-  '1',
+  new Station('1', 'Sede Don carmelo', 'Calle 14 45-5', new GeoLocation(1.2151, 244.5423232)),
   StatusVehicle.AVAILABLE,
   geoLocation,
   VehicleType.BICYCLE,
@@ -34,32 +32,4 @@ export const bici2 = new Bicycle(
   50,
   4,
   true
-)
-
-export const scooter1 = new ElectricScooter('SCO001',
-  'Negro oro',
-  'Electric Pro',
-  '1',
-  StatusVehicle.AVAILABLE,
-  VehicleType.ELECTRIC_SCOOTER,
-  geoLocation,
-  120,
-  25,
-  1500,
-  true,
-  BatteryInfo
-)
-
-export const scooter2 = new ElectricScooter('SCO002',
-  'Negro',
-  'Electric Pro',
-  '1',
-  StatusVehicle.AVAILABLE,
-  VehicleType.ELECTRIC_SCOOTER,
-  geoLocation,
-  120,
-  25,
-  1200,
-  true,
-  BatteryInfo2
 )

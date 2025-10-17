@@ -1,0 +1,57 @@
+@startuml Pattern factory payment
+
+class Payment{
+    - String paymentId
+    - Loan loan
+    - float amount
+    - PaymentStatus status
+    - PaymentMethod method
+    - Date paymentDate
+    + getters()
+    + setters()
+}
+
+enum PaymentStatus {
+    PENDING
+    COMPLETED
+    FAILED
+    REFUNDED
+}
+
+enum PaymentMethod {
+    CASH
+    CREDIT_CARD
+}
+
+class PaymentProcessorFactory{
+    + getProviderPayment()
+    + createPayMethod(method: PaymentMethod): IPaymentProcessor
+}
+
+class ProviderFactoryPayment {
+    - Map<String, IPaymentProcessor> methods
+    + IPaymentProcessor getPayment()
+}
+
+interface IPaymentProcessor{
+    + doPay(payment: Payment): PaymentStatus
+    + updatePay(payment: Payment): PaymentStatus
+}
+
+class CashPaymentProcessor{
+
+}
+
+class CreditCardPaymentProcessor{
+
+}
+CashPaymentProcessor ..|> IPaymentProcessor
+CreditCardPaymentProcessor ..|> IPaymentProcessor
+PaymentProcessorFactory --> IPaymentProcessor
+PaymentProcessorFactory ..> PaymentMethod : use
+Payment ..> PaymentStatus
+Payment ..> PaymentMethod
+PaymentProcessorFactory --> ProviderFactoryPayment
+IPaymentProcessor --> Payment
+
+@enduml

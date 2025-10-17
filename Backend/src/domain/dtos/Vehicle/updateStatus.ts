@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsString } from 'class-validator'
-import { StatusVehicule } from '../../types/Vehicule/VehiculeEnum'
+import { StatusVehicle } from '../../types/Vehicule/VehiculeEnum'
 
 export class updateStatusDto {
   @IsNotEmpty()
@@ -7,5 +7,5 @@ export class updateStatusDto {
     id!: string
 
   @IsNotEmpty()
-    status!: StatusVehicule
+    status!: StatusVehicle
 }

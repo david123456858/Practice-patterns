@@ -37,7 +37,9 @@ export class AuthService {
     try {
       const findUser = this.userRepository.findById(data.idUser)
       if (findUser) return FailureProccess('User already exists', 400)
+
       const newUser = new User(data.idUser, data.name, data.lastName, data.email, data.password, roleClient)
+
       this.userRepository.save(newUser)
       return SuccessProcess('User created successfully', 200)
     } catch (error) {

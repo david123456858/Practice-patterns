@@ -4,10 +4,10 @@
 // src/domain/factories/Vehicle/VehicleFactory.ts
 import { StatusVehicle, VehicleType } from '../../types/Vehicule/VehiculeEnum'
 import { Vehicle } from '../../entities/Vehicule/Vehicle'
-import { Bicycle } from '../../entities/Vehicule/Bicycle'
-import { ElectricScooter } from '../../entities/Vehicule/ElectricScooter'
-import { Skateboard } from '../../entities/Vehicule/Skateboard'
-import { CarElectric } from '../../entities/Vehicule/CarElectric'
+import { Bicycle } from '../../entities/Vehicule/VehicleGeneric/Bicycle'
+import { ElectricScooter } from '../../entities/Vehicule/VehicleGeneric/Scooter'
+import { Skateboard } from '../../entities/Vehicule/VehicleGeneric/Skateboard'
+import { CarElectric } from '../../entities/Vehicule/VehicleGeneric/CarElectric'
 import { Battery } from '../../entities/Battery/Battery'
 import { GeoLocation } from '../../entities/GeoLocation/GeoLocation'
 import {

@@ -36,15 +36,6 @@ export default function LoginPage() {
                 navigate("/dashboard");
             }
 
-            // ✅ Redirección según rol
-            const role = userData.role[0]?.name;
-            if (role === "client") {
-                navigate("/homeClient");
-            } else if (role === "admin") {
-                navigate("/dashboard");
-            } else {
-                setError("Rol no reconocido");
-            }
         } catch (error) {
             console.error("Error en login:", error);
             setError(error instanceof Error ? error.message : "Error al iniciar sesión");

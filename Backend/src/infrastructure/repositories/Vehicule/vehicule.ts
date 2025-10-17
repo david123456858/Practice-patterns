@@ -1,9 +1,9 @@
-import { ICrudOperations } from './../../../domain/interfaces/common/ICrud'
-import { Vehicle } from '../../../domain/entities/Vehicule/Vehicle'
+import { ICrudOperations } from '../../../domain/interfaces/common/ICrud'
+import { Vehicle } from '../../../domain/entities/Vehicule/VehicleGeneric/Vehicle'
 import { StatusVehicle } from '../../../domain/types/Vehicule/VehiculeEnum'
-import { bici1, bici2, scooter1, scooter2 } from '../../database/data'
+import { bici1, bici2 } from '../../database/data'
 
-let vehiculeList: Vehicle[] = [bici1, bici2, scooter1, scooter2]
+let vehiculeList: Vehicle[] = [bici1, bici2]
 
 export class RepositoryVehicule implements ICrudOperations<Vehicle> {
   save (data: Vehicle): void {
@@ -35,7 +35,6 @@ export class RepositoryVehicule implements ICrudOperations<Vehicle> {
 
   findByStationAvailable (idStation: string): Vehicle[] {
     return vehiculeList.filter(vehicle =>
-      vehicle.getIdStation() === idStation &&
       vehicle.getState() === StatusVehicle.AVAILABLE
     )
   }

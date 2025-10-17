@@ -1,13 +1,14 @@
-import { StatusVehicle, VehicleType } from '../../types/Vehicule/VehiculeEnum'
-import { GeoLocation } from '../GeoLocation/GeoLocation'
+import { StatusVehicle, VehicleType } from '../../../types/Vehicule/VehiculeEnum'
+import { GeoLocation } from '../../GeoLocation/GeoLocation'
 import { Vehicle } from './Vehicle'
+import { Station } from '../../Station/Station'
 
 export class Skateboard extends Vehicle {
   constructor (
     idVehicle: string,
     color: string,
     model: string,
-    idStation: string,
+    Station: Station,
     state: StatusVehicle,
     type: VehicleType,
     geoLocation: GeoLocation,
@@ -16,7 +17,7 @@ export class Skateboard extends Vehicle {
     costForMinute: number,
     private deckSize: number
   ) {
-    super(idVehicle, color, model, idStation, state, type, geoLocation, maxUserWeight, velocityMax, costForMinute)
+    super(idVehicle, color, model, Station, state, type, geoLocation, maxUserWeight, velocityMax, costForMinute)
   }
 
   setDeckSize (size: number): void { this.deckSize = size }
