@@ -1,4 +1,4 @@
-export class Battery {
+export class ElectricComponents {
   constructor (
     private capacity: number,
     private autonomyRange: number

@@ -1,11 +1,10 @@
-import { Vehicle } from '../Vehicle'
 import { MechanicalComponents } from './MechanicalComponents'
-import { GeoLocation } from '../../GeoLocation/GeoLocation'
-import { Station } from '../../Station/Station'
-import { StatusVehicle, VehicleType } from '../../../types/Vehicule/VehiculeEnum'
+import { GeoLocation } from '../../../GeoLocation/GeoLocation'
+import { Station } from '../../../Station/Station'
+import { StatusVehicle, VehicleType } from '../../../../types/Vehicule/VehiculeEnum'
+import { Scooter } from '../../VehicleGeneric/Scooter'
 
-export class SkateboardMechanic extends Vehicle {
-  private deckSize: number
+export class ScooterMechanical extends Scooter {
   private info: MechanicalComponents
 
   constructor (
@@ -14,11 +13,12 @@ export class SkateboardMechanic extends Vehicle {
     model: string,
     station: Station,
     state: StatusVehicle,
+    type: VehicleType,
     geoLocation: GeoLocation,
     maxUserWeight: number,
     velocityMax: number,
     costForMinute: number,
-    deckSize: number,
+    hasSeat: boolean,
     mechanicalInfo: MechanicalComponents
   ) {
     super(
@@ -27,29 +27,24 @@ export class SkateboardMechanic extends Vehicle {
       model,
       station,
       state,
-      VehicleType.SKATEBOARD,
+      type,
       geoLocation,
       maxUserWeight,
       velocityMax,
-      costForMinute
+      costForMinute,
+      hasSeat
     )
-    this.deckSize = deckSize
+
     this.info = mechanicalInfo
   }
 
   // Getters
-  getDeckSize (): number {
-    return this.deckSize
-  }
 
   getMechanicalInfo (): MechanicalComponents {
     return this.info
   }
 
   // Setters
-  setDeckSize (deckSize: number): void {
-    this.deckSize = deckSize
-  }
 
   setMechanicalInfo (info: MechanicalComponents): void {
     this.info = info

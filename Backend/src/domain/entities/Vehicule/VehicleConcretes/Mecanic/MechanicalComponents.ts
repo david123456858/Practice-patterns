@@ -1,5 +1,5 @@
-import { DriveSystem } from '../../../types/Vehicule/DriveSystemEnum'
-import { BrakeType } from '../../../types/Vehicule/BrakeTypeEnum'
+import { DriveSystem } from '../../../../types/Vehicule/DriveSystemEnum'
+import { BrakeType } from '../../../../types/Vehicule/BrakeTypeEnum'
 
 export class MechanicalComponents {
   private driveSystem: DriveSystem

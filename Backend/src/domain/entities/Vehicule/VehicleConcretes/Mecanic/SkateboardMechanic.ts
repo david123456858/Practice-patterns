@@ -1,11 +1,10 @@
-import { Vehicle } from '../Vehicle'
 import { MechanicalComponents } from './MechanicalComponents'
-import { GeoLocation } from '../../GeoLocation/GeoLocation'
-import { Station } from '../../Station/Station'
-import { StatusVehicle, VehicleType } from '../../../types/Vehicule/VehiculeEnum'
+import { GeoLocation } from '../../../GeoLocation/GeoLocation'
+import { Station } from '../../../Station/Station'
+import { StatusVehicle, VehicleType } from '../../../../types/Vehicule/VehiculeEnum'
+import { Skateboard } from '../../VehicleGeneric/Skateboard'
 
-export class ScooterMechanic extends Vehicle {
-  private hasSeat: boolean
+export class SkateboardMechanic extends Skateboard {
   private info: MechanicalComponents
 
   constructor (
@@ -14,11 +13,12 @@ export class ScooterMechanic extends Vehicle {
     model: string,
     station: Station,
     state: StatusVehicle,
+    type: VehicleType,
     geoLocation: GeoLocation,
     maxUserWeight: number,
     velocityMax: number,
     costForMinute: number,
-    hasSeat: boolean,
+    deckSize: number,
     mechanicalInfo: MechanicalComponents
   ) {
     super(
@@ -27,29 +27,23 @@ export class ScooterMechanic extends Vehicle {
       model,
       station,
       state,
-      VehicleType.SCOOTER,
+      type,
       geoLocation,
       maxUserWeight,
       velocityMax,
-      costForMinute
+      costForMinute,
+      deckSize
     )
-    this.hasSeat = hasSeat
     this.info = mechanicalInfo
   }
 
   // Getters
-  getHasSeat (): boolean {
-    return this.hasSeat
-  }
 
   getMechanicalInfo (): MechanicalComponents {
     return this.info
   }
 
   // Setters
-  setHasSeat (hasSeat: boolean): void {
-    this.hasSeat = hasSeat
-  }
 
   setMechanicalInfo (info: MechanicalComponents): void {
     this.info = info

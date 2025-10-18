@@ -1,12 +1,15 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { VehicleFactory } from '../VehicleFactory'
+import { VehicleDirector } from '../../../../application/Director/DirectorVehicle'
+import { VehicleFactory } from '../Factory'
 
 export class FactoryScooter extends VehicleFactory {
   createVehicleElectric (vehicle: any) {
-    throw new Error('Method not implemented.')
+    const director = new VehicleDirector()
+    return director.construcVehicle(vehicle)
   }
 
   createVehicleMecacnic (vehicle: any) {
-    throw new Error('Method not implemented.')
+    const director = new VehicleDirector()
+    return director.construcVehicle(vehicle)
   }
 }

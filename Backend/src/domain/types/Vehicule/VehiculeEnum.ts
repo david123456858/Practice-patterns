@@ -11,7 +11,7 @@ export enum VehicleType {
   SKATEBOARD = 'skateboard',
 
   ELECTRIC_SCOOTER = 'electric_scooter',
-  ELECTRIC_BICYCLE = 'electric_bicycle_',
+  ELECTRIC_BICYCLE = 'electric_bicycle',
   ELECTRIC_SKATEBOARD = 'electric_skateboard',
   CAR_ELECTRIC = 'car_electric',
 }

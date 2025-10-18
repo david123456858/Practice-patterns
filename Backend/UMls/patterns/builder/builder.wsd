@@ -247,9 +247,8 @@ class SkateboardMecanicBuilder implements VehicleBuilder {
 class VehicleDirector {
     - VehicleBuilder builder
     + VehicleDirector(VehicleBuilder builder)
-    + constructBasicVehicle()
-    + constructPremiumVehicle()
-    + getVehicle(): Vehicle
+    + constructBasicVehicle( VehiculeDto dto)
+    + getVehicle(): Vehicle 
 }
 
 
