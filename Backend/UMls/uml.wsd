@@ -4,7 +4,7 @@ class Vehicle{
     # String idVehicle
     # String color
     # String model
-    # String idStation
+    # Station station
     # StatusVehicle state
     # TypeVehicle type
     # GeoLocation geoLocation
@@ -101,7 +101,6 @@ class User{
     - String lastName
     - String email
     - String password
-    - List<Loan> loanHistory
     - List<Role> roles
     - subscriptionPlan: SubscriptionPlan 
     + getters()
@@ -133,12 +132,12 @@ class Role{
 ' part Loan
 class Loan {
     - String loanId
-    - String userId
-    - String vehicleId
+    - User user
+    - Vehicle vehicle
     - Date startTime
     - Date endTime
-    - String startStationId
-    - String endStationId
+    - Station startStation
+    - Station endStation
     - LoanStatus status
     - float cost
     + getters()
@@ -160,7 +159,7 @@ Loan "1" --> "1" Payment: has
 ' Part pay
 class Payment{
     - String paymentId
-    - String loanId
+    - Loan loan
     - float amount
     - PaymentStatus status
     - PaymentMethod method

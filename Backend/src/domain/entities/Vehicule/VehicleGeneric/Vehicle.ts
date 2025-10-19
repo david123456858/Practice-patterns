@@ -1,12 +1,13 @@
-import { GeoLocation } from '../GeoLocation/GeoLocation'
-import { StatusVehicle, VehicleType } from '../../types/Vehicule/VehiculeEnum'
+import { GeoLocation } from '../../GeoLocation/GeoLocation'
+import { StatusVehicle, VehicleType } from '../../../types/Vehicule/VehiculeEnum'
+import { Station } from '../../Station/Station'
 
 export abstract class Vehicle {
   constructor (
     protected readonly idVehicle: string,
     protected color: string,
     protected model: string,
-    protected idStation: string,
+    protected Station: Station,
     protected state: StatusVehicle,
     protected type: VehicleType,
     protected geoLocation: GeoLocation,
@@ -19,7 +20,7 @@ export abstract class Vehicle {
   getIdVehicle (): string { return this.idVehicle }
   getColor (): string { return this.color }
   getModel (): string { return this.model }
-  getIdStation (): string { return this.idStation }
+  getIdStation (): Station { return this.Station }
   getState (): StatusVehicle { return this.state }
   getGeoLocation (): GeoLocation { return this.geoLocation }
   getMaxUserWeight (): number { return this.maxUserWeight }
@@ -29,7 +30,7 @@ export abstract class Vehicle {
   // Setters
   setColor (color: string): void { this.color = color }
   setModel (model: string): void { this.model = model }
-  setIdStation (idStation: string): void { this.idStation = idStation }
+  setIdStation (idStation: Station): void { this.Station = idStation }
   setState (state: StatusVehicle): void { this.state = state }
   setGeoLocation (geoLocation: GeoLocation): void { this.geoLocation = geoLocation }
   setMaxUserWeight (weight: number): void { this.maxUserWeight = weight }

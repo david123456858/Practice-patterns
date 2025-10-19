@@ -1,0 +1,167 @@
+@startuml EcoMove-factory
+' Vehicle and relations
+abstract class Vehicle{
+    # String idVehicle
+    # String color
+    # String model
+    # Station station
+    # StatusVehicle state
+    # TypeVehicle type
+    # GeoLocation geoLocation
+    # int MaxUserWeight
+    # float velocityMax
+    # float costForMinute
+    + getters()
+    + setters()
+}
+class ElectricComponents {
+    - int capacity
+    - int autonomyRange
+    + getters()
+    + setters()
+}
+
+class MechanicalComponents {
+    - DriveSystem driveSystem       
+    - brakeType Type         
+    - String bearingType       
+}
+
+class GeoLocation{
+    - float latitude
+    - float longitude
+    - Date timestamp
+    + getters()
+    + setters()
+}
+
+class Station{
+    - String idStation
+    - String name
+    - String address      
+    - GeoLocation geoLocation
+    + getters()
+    + setters()
+}
+
+
+' Bicycle 
+class Bicycle extends Vehicle {
+    - int gears
+    - boolean hasBasket
+    + getters()
+    + setters()
+}
+
+class Skateboard extends Vehicle {
+    - int deckSize 
+    + getters()
+    + setters()
+}
+
+class Scooter extends Vehicle {
+    - boolean hasSeat
+    + getters()
+    + setters()
+}
+
+' Vehiculos electricos especificos
+class BicycleElectric extends Bicycle{
+    - ElectricComponents info
+}
+
+class ScooterElectric extends Scooter {
+     - ElectricComponents info
+}
+
+class SkateBoardElectric extends Skateboard {
+    - ElectricComponents info
+}
+
+' Vehiculos mecanicos especificos
+class BicycleMecanic extends Bicycle{
+    - MechanicalComponents info
+}
+
+class ScooterMecanic extends Scooter {
+     - MechanicalComponents info
+}
+
+class SkateBoardMecanic extends Skateboard {
+    - MechanicalComponents info
+}
+
+
+enum TypeVehicle{
+    BICYCLE 
+    ELECTRIC_SCOOTER 
+    SKATEBOARD 
+    CAR_ELECTRIC
+}
+enum StatusVehicle {
+    AVAILABLE
+    IN_USE
+    MAINTENANCE
+    OUT_OF_SERVICE
+}
+enum DriveSystem{
+    CHAIN
+    DIRECT
+    BELT
+}
+
+enum brakeType {
+    DISC
+    RIM 
+    FOOT
+}
+
+
+abstract class FactoryVehicles {
+    + createVehicleElectric(Vehicle vehicleElectric)
+    + createVehicleMecanic(Vehicle vehicleMecanical )
+}
+
+class FactoryScooter extends FactoryVehicles{
+
+}
+
+class FactoryBicycle extends FactoryVehicles {
+
+}
+
+class FactorySkateboard extends FactoryVehicles {
+
+}
+
+
+FactoryVehicles --> Vehicle
+
+Vehicle "Many" --> "1" Station 
+Vehicle ..> StatusVehicle
+Vehicle ..> TypeVehicle
+Vehicle --> GeoLocation
+
+
+MechanicalComponents --> DriveSystem
+MechanicalComponents --> brakeType
+
+ScooterElectric *-- ElectricComponents
+BicycleElectric *-- ElectricComponents
+SkateBoardElectric *-- ElectricComponents 
+
+
+ScooterMecanic *-- MechanicalComponents
+BicycleMecanic *-- MechanicalComponents
+SkateBoardMecanic *-- MechanicalComponents
+
+FactoryBicycle ..> BicycleMecanic : creates
+FactoryBicycle ..> BicycleElectric : creates
+
+FactoryScooter ..> ScooterMecanic : creates
+FactoryScooter ..> ScooterElectric : creates
+
+FactorySkateboard ..> SkateBoardMecanic : creates
+FactorySkateboard ..> SkateBoardElectric : creates
+
+@enduml

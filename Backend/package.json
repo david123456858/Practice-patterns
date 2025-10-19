@@ -23,21 +23,21 @@
     "ts-standard": "^12.0.2",
     "typescript": "^5.9.2"
   },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/morgan": "^1.9.10",
+    "ts-node-dev": "^2.0.0"
+  },
   "eslintConfig": {
     "parserOptions": {
       "project": "./tsconfig.json"
-    },
+    }, 
     "rules": {
       "new-cap": "off"
     },
     "extends": [
       "./node_modules/ts-standard/eslintrc.json"
     ]
-  },
-  "devDependencies": {
-    "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.3",
-    "@types/morgan": "^1.9.10",
-    "ts-node-dev": "^2.0.0"
   }
 }

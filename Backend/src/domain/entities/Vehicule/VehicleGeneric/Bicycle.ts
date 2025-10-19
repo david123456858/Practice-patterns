@@ -1,23 +1,24 @@
 import { Vehicle } from './Vehicle'
-import { GeoLocation } from '../GeoLocation/GeoLocation'
-import { StatusVehicle, VehicleType } from '../../types/Vehicule/VehiculeEnum'
+import { GeoLocation } from '../../GeoLocation/GeoLocation'
+import { StatusVehicle, VehicleType } from '../../../types/Vehicule/VehiculeEnum'
+import { Station } from '../../Station/Station'
 
 export class Bicycle extends Vehicle {
   constructor (
     idVehicle: string,
     color: string,
     model: string,
-    idStation: string,
+    Station: Station,
     state: StatusVehicle,
-    geoLocation: GeoLocation,
     type: VehicleType,
+    geoLocation: GeoLocation,
     maxUserWeight: number,
     velocityMax: number,
     costForMinute: number,
     private gears: number,
     private hasBasket: boolean
   ) {
-    super(idVehicle, color, model, idStation, state, type, geoLocation, maxUserWeight, velocityMax, costForMinute)
+    super(idVehicle, color, model, Station, state, type, geoLocation, maxUserWeight, velocityMax, costForMinute)
   }
 
   // Getters específicos de Bicycle

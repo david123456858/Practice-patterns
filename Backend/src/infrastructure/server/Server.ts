@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import express, { Application, Request, Response } from 'express'
 import cors from 'cors'
 import config from '../config/config'
@@ -10,10 +11,11 @@ import { routeAuth } from '../../presentation/routes/auth/auth'
 import { paymentRoute } from '../../presentation/routes/payment/payment'
 
 export class Server {
+  private static instance: Server
   private readonly app: Application
   private readonly port: string
 
-  constructor () {
+  private constructor () {
     this.app = express()
     this.port = config.port
 
@@ -49,5 +51,12 @@ export class Server {
     this.app.listen(this.port, () => {
       console.log(`Servidor corriendo en puerto http://localhost:${this.port}`)
     })
+  }
+
+  public static getIntance (): Server {
+    if (!this.instance) {
+      this.instance = new Server()
+    }
+    return this.instance
   }
 }
