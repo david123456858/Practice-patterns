@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Leaf, Zap, CheckCircle } from "lucide-react"
-import { register } from "@/services/auth/user/register"
+import { register } from "@/services/auth/register"
 
 export default function RegisterPage() {
     const [formData, setFormData] = useState({

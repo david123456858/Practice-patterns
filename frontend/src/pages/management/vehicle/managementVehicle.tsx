@@ -66,22 +66,6 @@ function ManagementVehicle() {
         }
     }
 
-    // const getStatusLabel = (estado: string) => {
-    //     switch (estado) {
-    //         case "AVAILABLE": return "Disponible"
-    //         case "IN_USE": return "En uso"
-    //         case "MAINTENANCE": return "Mantenimiento"
-    //         case "OUT_OF_SERVICE": return "Fuera de servicio"
-    //         default: return estado
-    //     }
-    // }
-
-    // const handleEdit = (vehicleId: string) => {
-    // }
-
-    // const handleDelete = (vehicleId: string) => {
-    // }
-
     const handleAddVehicle = () => {
         setIsModalOpen(true)
     }
@@ -215,7 +199,6 @@ function ManagementVehicle() {
                                         <TableHead className="text-green-700 font-semibold">Estación</TableHead>
                                         <TableHead className="text-green-700 font-semibold">Costo/min</TableHead>
                                         <TableHead className="text-green-700 font-semibold">Estado</TableHead>
-                                        {/* <TableHead className="text-green-700 font-semibold text-center">Acciones</TableHead> */}
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -228,26 +211,6 @@ function ManagementVehicle() {
                                             <TableCell className="text-gray-700">{vehicle.nameStation}</TableCell>
                                             <TableCell className="text-gray-700">${vehicle.costForMinute.toLocaleString()}</TableCell>
                                             <TableCell>{getStatusBadge(vehicle.state)}</TableCell>
-                                            {/* <TableCell>
-                                                <div className="flex justify-center gap-2">
-                                                    <Button
-                                                        variant="outline"
-                                                        size="sm"
-                                                        onClick={() => handleEdit(vehicle.idVehicle)}
-                                                        className="border-green-300 text-green-600 hover:bg-green-50 hover:border-green-400"
-                                                    >
-                                                        <Edit className="h-4 w-4" />
-                                                    </Button>
-                                                    <Button
-                                                        variant="outline"
-                                                        size="sm"
-                                                        onClick={() => handleDelete(vehicle.idVehicle)}
-                                                        className="border-red-300 text-red-600 hover:bg-red-50 hover:border-red-400"
-                                                    >
-                                                        <Trash2 className="h-4 w-4" />
-                                                    </Button>
-                                                </div>
-                                            </TableCell> */}
                                         </TableRow>
                                     ))}
                                 </TableBody>
@@ -264,7 +227,6 @@ function ManagementVehicle() {
                     </CardContent>
                 </Card>
             </div>
-            {/* AddVehicleModal component */}
             <AddVehicleModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
         </div>
     );

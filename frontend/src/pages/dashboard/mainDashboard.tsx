@@ -11,7 +11,6 @@ export default function DashboardPage() {
 
     const handleMenuSelect = (menu: string) => {
         setSelectedMenu(menu)
-        console.log("[v0] Menu seleccionado:", menu)
     }
 
     const renderContent = () => {

@@ -1,13 +1,15 @@
 "use client"
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import type React from "react"
-import { useState, useEffect } from "react"
+import { Input } from "@/components/ui/input"
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select"
+import { Button } from "@/components/ui/button"
 import { Car } from "lucide-react"
+
+import { useState, useEffect } from "react"
+import type React from "react"
+
 import { getVehicleTypes } from "@/services/vehicle/getTypeVehicle"
 import { createVehicle } from "@/services/vehicle/createVehicle"
 import { getStations, type Station } from "@/services/station/station"
@@ -28,7 +30,6 @@ export function AddVehicleModal({ isOpen, onClose }: AddVehicleModalProps) {
         velocidadMaxima: "",
         costoPorMinuto: "",
         tipoVehiculo: "",
-        // Campos específicos
         engranajes: "",
         tieneCesta: "",
         tamanoCubierta: "",
@@ -45,11 +46,11 @@ export function AddVehicleModal({ isOpen, onClose }: AddVehicleModalProps) {
 
     useEffect(() => {
         const fetchStations = async () => {
-            const data = await getStations();
-            setEstaciones(data);
-        };
-        fetchStations();
-    }, []);
+            const data = await getStations()
+            setEstaciones(data)
+        }
+        fetchStations()
+    }, [])
 
     useEffect(() => {
         if (isOpen) {
@@ -66,19 +67,19 @@ export function AddVehicleModal({ isOpen, onClose }: AddVehicleModalProps) {
         }))
     }
 
-
+    //MODIFICADO
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
+        e.preventDefault();
 
         const estacionSeleccionada = estaciones.find(
             (est) => String(est.idStation) === formData.estacion
-        )
+        );
+
         if (!estacionSeleccionada) {
-            alert("Debes seleccionar una estación")
-            return
+            alert("Debes seleccionar una estación");
+            return;
         }
 
-        // Campos comunes
         const baseData = {
             idVehicle: formData.id,
             color: formData.color,
@@ -89,57 +90,62 @@ export function AddVehicleModal({ isOpen, onClose }: AddVehicleModalProps) {
             maxUserWeight: Number(formData.maxUsuarios),
             velocityMax: Number(formData.velocidadMaxima),
             costForMinute: Number(formData.costoPorMinuto),
-        }
+        };
 
-        // Union type para vehicleData
-        let vehicleData: BicycleData | ScooterData | SkateboardData
+        let vehicleData: Record<string, any> = {
+            ...baseData,
+            vehicleType: formData.tipoVehiculo,
+        };
 
         switch (formData.tipoVehiculo) {
             case "BICYCLE":
                 vehicleData = {
-                    ...baseData,
-                    vehicleType: "bicycle",
+                    ...vehicleData,
                     gears: Number(formData.engranajes),
                     hasBasket: formData.tieneCesta === "YES",
-                }
-                break
+                };
+                break;
 
             case "ELECTRIC_SCOOTER":
                 vehicleData = {
-                    ...baseData,
-                    vehicleType: "electric_scooter",
+                    ...vehicleData,
                     hasSeat: formData.tieneAsiento === "YES",
-                    batteryInfo: {
-                        capacity: Number(formData.capacidadBateria),
-                        autonomyRange: Number(formData.autonomiaRango),
-                    },
-                }
-                break
+                    batteryCapacity: Number(formData.capacidadBateria),
+                    autonomyRange: Number(formData.autonomiaRango),
+                };
+                break;
 
             case "SKATEBOARD":
                 vehicleData = {
-                    ...baseData,
-                    vehicleType: "skateboard",
+                    ...vehicleData,
                     deckSize: Number(formData.tamanoCubierta),
-                }
-                break
+                };
+                break;
+
+            case "CAR_ELECTRIC":
+                vehicleData = {
+                    ...vehicleData,
+                    batteryCapacity: Number(formData.capacidadBateria),
+                    autonomyRange: Number(formData.autonomiaRango),
+                };
+                break;
 
             default:
-                alert("Tipo de vehículo no soportado")
-                return
+                alert("Tipo de vehículo no soportado");
+                return;
         }
 
         try {
-            await createVehicle(vehicleData)
-            alert("Vehículo creado con éxito ✅")
-            onClose()
+            await createVehicle(vehicleData);
+            alert("Vehículo creado con éxito ✅");
+            onClose();
         } catch (err) {
-            console.error(err)
-            alert("Error creando vehículo")
+            console.error("Error al crear vehículo:", err);
+            alert("Error creando vehículo");
         }
-    }
+    };
 
-
+    // INICIO MODIFICACION
     const renderConditionalFields = () => {
         switch (formData.tipoVehiculo) {
             case "BICYCLE":
@@ -162,7 +168,10 @@ export function AddVehicleModal({ isOpen, onClose }: AddVehicleModalProps) {
                             <Label htmlFor="tieneCesta" className="text-green-700 block mb-3">
                                 ¿Tiene Cesta?
                             </Label>
-                            <Select value={formData.tieneCesta} onValueChange={(value) => handleInputChange("tieneCesta", value)}>
+                            <Select
+                                value={formData.tieneCesta}
+                                onValueChange={(value) => handleInputChange("tieneCesta", value)}
+                            >
                                 <SelectTrigger className="border-green-200 focus:border-green-500">
                                     <SelectValue placeholder="Seleccionar opción" />
                                 </SelectTrigger>
@@ -212,7 +221,6 @@ export function AddVehicleModal({ isOpen, onClose }: AddVehicleModalProps) {
                             </Select>
                         </div>
 
-                        {/* Nuevo bloque para Battery Info */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <Label htmlFor="capacidadBateria" className="text-green-700 block mb-3">
@@ -280,6 +288,7 @@ export function AddVehicleModal({ isOpen, onClose }: AddVehicleModalProps) {
                 return null
         }
     }
+    //FIN MODIFICACION
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
@@ -350,12 +359,12 @@ export function AddVehicleModal({ isOpen, onClose }: AddVehicleModalProps) {
                                 <SelectContent>
                                     {estaciones.map((est) => (
                                         <SelectItem key={est.idStation} value={String(est.idStation)}>
-                                            {est.name}
+                                            {/* verificar por si no sirve, cambiar a name */}
+                                            {est.nameStation} 
                                         </SelectItem>
                                     ))}
                                 </SelectContent>
                             </Select>
-
                         </div>
                     </div>
 
@@ -411,7 +420,10 @@ export function AddVehicleModal({ isOpen, onClose }: AddVehicleModalProps) {
                         <Label htmlFor="tipoVehiculo" className="text-green-700 block mb-3">
                             Tipo de Vehículo
                         </Label>
-                        <Select value={formData.tipoVehiculo} onValueChange={(value) => handleInputChange("tipoVehiculo", value)}>
+                        <Select
+                            value={formData.tipoVehiculo}
+                            onValueChange={(value) => handleInputChange("tipoVehiculo", value)}
+                        >
                             <SelectTrigger className="border-green-200 focus:border-green-500">
                                 <SelectValue placeholder="Seleccionar tipo de vehículo" />
                             </SelectTrigger>
@@ -435,7 +447,6 @@ export function AddVehicleModal({ isOpen, onClose }: AddVehicleModalProps) {
                         </div>
                     )}
 
-                    {/* Botones */}
                     <div className="flex justify-end gap-3 pt-6 border-t border-green-200">
                         <Button
                             type="button"
