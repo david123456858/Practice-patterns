@@ -1,6 +1,6 @@
 // services/vehicle/vehicleService.ts
 import { VITE_API_URL } from "../../config/api";
-import { type Vehicle } from "@/interface/vehicleInterface";
+import { type Vehicle } from "@/interface/vehicle/vehicleInterface";
 
 export const getAvailableVehicles = async (): Promise<Vehicle[]> => {
     try {

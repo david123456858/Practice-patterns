@@ -1,4 +1,4 @@
-import type { User } from "@/types/classes/user";
+import type { User } from "@/interface/user/user";
 import { VITE_API_URL } from "@/config/api";
 
 // Función para crear un nuevo usuario

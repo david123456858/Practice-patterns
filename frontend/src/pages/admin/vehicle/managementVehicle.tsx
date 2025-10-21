@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Search, Car, Filter, Plus, RefreshCw } from "lucide-react"
-import { AddVehicleModal } from "@/components/modals/vehicle/modalCreateVehicle"
+import { AddVehicleModal } from "@/pages/admin/vehicle/modals/modalCreateVehicle"
 import { getAllVehicles, type Vehicle } from "@/services/vehicle/getAllVehicle"
 
 function ManagementVehicle() {

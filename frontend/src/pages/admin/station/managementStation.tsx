@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Search, Plus, MapPin } from "lucide-react"
 import RegisterStation from "@/pages/admin/station/modals/modalCreateStation"
-import { getStations, type Station } from "@/services/station/stationService"  // Importar el servicio
+import { getStations, type Station } from "@/services/station/station"
 
 export function ManagementStation() {
     const [stations, setStations] = useState<Station[]>([])
@@ -24,13 +24,12 @@ export function ManagementStation() {
         fetchStations()
     }, [refreshTrigger])
 
-    // Filtrar estaciones
     const filteredStations = useMemo(() => {
         if (!searchTerm) return stations
         return stations.filter(
             (station) =>
                 station.idStation.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                station.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                station.nameStation.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 station.address.toLowerCase().includes(searchTerm.toLowerCase()),
         )
     }, [searchTerm, stations])
@@ -39,7 +38,7 @@ export function ManagementStation() {
     const handleModalClose = () => setIsModalOpen(false)
     const handleStationCreated = () => {
         setIsModalOpen(false)
-        setRefreshTrigger(prev => prev + 1) // Refrescar lista
+        setRefreshTrigger(prev => prev + 1)
     }
 
     return (
@@ -96,16 +95,19 @@ export function ManagementStation() {
                                         <TableHead className="text-green-700 font-semibold">Dirección</TableHead>
                                         <TableHead className="text-green-700 font-semibold">Latitud</TableHead>
                                         <TableHead className="text-green-700 font-semibold">Longitud</TableHead>
+                                        <TableHead className="text-green-700 font-semibold">Actualizado</TableHead>
                                     </TableRow>
                                 </TableHeader>
+
                                 <TableBody>
                                     {filteredStations.map((station) => (
                                         <TableRow key={station.idStation} className="hover:bg-green-50">
                                             <TableCell className="font-medium text-green-800">{station.idStation}</TableCell>
-                                            <TableCell className="text-gray-700">{station.name}</TableCell>
+                                            <TableCell className="text-gray-700">{station.nameStation}</TableCell>
                                             <TableCell className="text-gray-700">{station.address}</TableCell>
                                             <TableCell className="text-gray-700">{station.geoLocation.latitude.toFixed(4)}</TableCell>
                                             <TableCell className="text-gray-700">{station.geoLocation.longitude.toFixed(4)}</TableCell>
+                                            <TableCell className="text-gray-700">{station.locationTimestamp}</TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>

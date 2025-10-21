@@ -1,5 +1,5 @@
 import { VITE_API_URL } from "../../config/api"
-import { type BaseVehicle } from "@/interface/vehicle"
+import { type BaseVehicle } from "@/interface/vehicle/vehicle"
 
 // SE SUPONE QUE ESTA LISTO
 

@@ -25,7 +25,6 @@ export default function RegisterPage() {
 
     const handleInputChange = (field: string, value: string) => {
         setFormData((prev) => ({ ...prev, [field]: value }))
-        // Limpiar error cuando el usuario empiece a escribir
         if (errors[field]) {
             setErrors((prev) => ({ ...prev, [field]: "" }))
         }

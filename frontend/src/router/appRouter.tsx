@@ -5,11 +5,10 @@ import LoginPage from "@/pages/auth/login";
 import RegisterPage from "@/pages/auth/register";
 
 import MainDashboard from "@/pages/dashboard/mainDashboard";
-import ManagementUser from "@/pages/management/user/managementUser";
-import ManagementLoan from "@/pages/management/loan/managementLoan";
-import ManagementVehicle from "@/pages/management/vehicle/managementVehicle";
-import { ManagementStation } from "@/pages/management/station/managementStation";
-import RegisterPayment from "@/pages/register/payment/registerPayment";
+import ManagementUser from "@/pages/admin/user/managementUser";
+import ManagementLoan from "@/pages/admin/loan/managementLoan";
+import ManagementVehicle from "@/pages/admin/vehicle/managementVehicle";
+import { ManagementStation } from "@/pages/admin/station/managementStation";
 import { WelcomeComponent } from "@/components/welcome";
 
 import ClientPage from "@/pages/client/homeClientPage";
@@ -32,7 +31,6 @@ export default function AppRouter() {
                     <Route path="vehicles" element={<ManagementVehicle />} />
                     <Route path="stations" element={<ManagementStation />} />
                     <Route path="loan" element={<ManagementLoan />} />
-                    <Route path="payment" element={<RegisterPayment />} />
                 </Route>
             </Routes>
         </BrowserRouter>

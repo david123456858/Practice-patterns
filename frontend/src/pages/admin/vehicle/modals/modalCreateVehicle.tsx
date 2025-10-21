@@ -13,7 +13,7 @@ import type React from "react"
 import { getVehicleTypes } from "@/services/vehicle/getTypeVehicle"
 import { createVehicle } from "@/services/vehicle/createVehicle"
 import { getStations, type Station } from "@/services/station/station"
-import { type BicycleData, type ScooterData, type SkateboardData } from "@/interface/vehicleInterface";
+import { type BicycleData, type ScooterData, type SkateboardData } from "@/interface/vehicle/vehicleInterface";
 
 interface AddVehicleModalProps {
     isOpen: boolean
@@ -360,7 +360,7 @@ export function AddVehicleModal({ isOpen, onClose }: AddVehicleModalProps) {
                                     {estaciones.map((est) => (
                                         <SelectItem key={est.idStation} value={String(est.idStation)}>
                                             {/* verificar por si no sirve, cambiar a name */}
-                                            {est.nameStation} 
+                                            {est.nameStation}
                                         </SelectItem>
                                     ))}
                                 </SelectContent>
