@@ -19,8 +19,8 @@ export default function ClientPage() {
     const [vehicles, setVehicles] = useState<Vehicle[]>([])
 
     const [showPaymentModal, setShowPaymentModal] = useState(false)
-    const [setPaymentMethods] = useState<string[]>([])
-    const [setSelectedMethod] = useState("")
+    const [p, setPaymentMethods] = useState<string[]>([])
+    const [s, setSelectedMethod] = useState("")
     const [amount, setAmount] = useState<string>("")
 
     const [loanToPay, setLoanToPay] = useState<string | null>(null)
@@ -63,7 +63,7 @@ export default function ClientPage() {
 
             const payload = {
                 loanId: Math.floor(100000 + Math.random() * 900000).toString(),
-                userId: parsedUser.userId, // ⚠️ asegurarse que aquí es userId y no idUser
+                userId: parsedUser.userId,
                 vehicleId: vehicle.idVehicle,
                 startStationId: vehicle.idStation,
             }

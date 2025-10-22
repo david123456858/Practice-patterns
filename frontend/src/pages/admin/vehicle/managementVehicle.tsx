@@ -8,7 +8,8 @@ import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Search, Car, Filter, Plus, RefreshCw } from "lucide-react"
-import { AddVehicleModal } from "@/pages/admin/vehicle/modals/modalCreateVehicle"
+
+import AddVehicleModal from "./modals/modalCreateVehicle"
 import { getAllVehicles, type Vehicle } from "@/services/vehicle/getAllVehicle"
 
 function ManagementVehicle() {
@@ -19,7 +20,6 @@ function ManagementVehicle() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
 
-    // Cargar vehículos al montar el componente
     useEffect(() => {
         const fetchVehicles = async () => {
             try {
@@ -37,7 +37,6 @@ function ManagementVehicle() {
         fetchVehicles()
     }, [])
 
-    // Filtrar vehículos basado en búsqueda y filtro de estado
     const filteredVehicles = useMemo(() => {
         return vehicles.filter((vehicle) => {
             const matchesSearch =
@@ -196,7 +195,7 @@ function ManagementVehicle() {
                                         <TableHead className="text-green-700 font-semibold">Modelo</TableHead>
                                         <TableHead className="text-green-700 font-semibold">Color</TableHead>
                                         <TableHead className="text-green-700 font-semibold">Tipo</TableHead>
-                                        <TableHead className="text-green-700 font-semibold">Estación</TableHead>
+                                        {/* <TableHead className="text-green-700 font-semibold">Estación</TableHead> */}
                                         <TableHead className="text-green-700 font-semibold">Costo/min</TableHead>
                                         <TableHead className="text-green-700 font-semibold">Estado</TableHead>
                                     </TableRow>
@@ -208,7 +207,7 @@ function ManagementVehicle() {
                                             <TableCell className="text-gray-700">{vehicle.model}</TableCell>
                                             <TableCell className="text-gray-700">{vehicle.color}</TableCell>
                                             <TableCell className="text-gray-700 capitalize">{vehicle.type}</TableCell>
-                                            <TableCell className="text-gray-700">{vehicle.nameStation}</TableCell>
+                                            {/* <TableCell className="text-gray-700">{vehicle.name}</TableCell> */}
                                             <TableCell className="text-gray-700">${vehicle.costForMinute.toLocaleString()}</TableCell>
                                             <TableCell>{getStatusBadge(vehicle.state)}</TableCell>
                                         </TableRow>

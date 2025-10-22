@@ -16,7 +16,7 @@ export interface Vehicle {
     color: string;
     model: string;
     idStation: string;
-    nameStation: string;
+    name: string;
     state: "AVAILABLE" | "IN_USE" | "MAINTENANCE" | "OUT_OF_SERVICE";
     type: string;
     geoLocation: GeoLocation;

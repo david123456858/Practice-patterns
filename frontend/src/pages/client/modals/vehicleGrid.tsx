@@ -59,7 +59,7 @@ export default function VehicleGrid({
                     <CardContent className="space-y-3">
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
                             <MapPin className="h-4 w-4" />
-                            <span>Estación: {vehicle.nameStation}</span>
+                            <span>Estación: {vehicle.name}</span>
                         </div>
 
                         <div className="flex items-center justify-between text-sm">

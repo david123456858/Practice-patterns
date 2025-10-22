@@ -1,15 +1,5 @@
 import { VITE_API_URL } from "../../config/api";
-
-export interface Station {
-    idStation: string;
-    nameStation: string;
-    geoLocation: {
-        latitude: number;
-        longitude: number;
-    };
-    address: string;
-    locationTimestamp: string;
-}
+import { type Station } from "@/interface/vehicle/vehicleInterface"
 
 export const createStation = async (stationData: Station): Promise<Station> => {
     try {
@@ -35,26 +25,27 @@ export const createStation = async (stationData: Station): Promise<Station> => {
 
 export const getStations = async (): Promise<Station[]> => {
     try {
-        const response = await fetch(`${VITE_API_URL}station`);
-        const data = await response.json();
+        const response = await fetch(`${VITE_API_URL}station`)
+        const data = await response.json()
 
         const formattedStations: Station[] = data.message.map((station: any) => ({
             idStation: station.idStation,
-            nameStation: station.name,
+            name: station.name,
             address: station.address,
             geoLocation: {
                 latitude: parseFloat(station.latitude),
                 longitude: parseFloat(station.longitude),
+                timestamp: new Date(station.locationTimestamp).toLocaleString("es-CO", {
+                    dateStyle: "short",
+                    timeStyle: "short",
+                }),
             },
-            locationTimestamp: new Date(station.locationTimestamp).toLocaleString("es-CO", {
-                dateStyle: "short",
-                timeStyle: "short",
-            }),
-        }));
+        }))
 
-        return formattedStations;
+        return formattedStations
     } catch (error) {
-        console.error("Error fetching stations:", error);
-        return [];
+        console.error("Error fetching stations:", error)
+        return []
     }
-};
+}
+

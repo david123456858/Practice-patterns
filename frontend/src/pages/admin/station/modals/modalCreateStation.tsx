@@ -25,6 +25,7 @@ function RegisterStation({ isOpen, onClose, onSuccess }: RegisterStationModalPro
     const [error, setError] = useState<string | null>(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
 
+    //RAMDONID
     const generateRandomId = (): string => {
         const min = 100000000; 
         const max = 999999999; 

@@ -37,7 +37,6 @@ export default function ManagementLoan() {
         fetchLoans()
     }, [])
 
-    // Filtrar préstamos
     const filteredLoans = loans.filter((loan) => {
         const matchesSearch =
             loan.loanId.toLowerCase().includes(searchTerm.toLowerCase()) ||

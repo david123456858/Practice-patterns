@@ -1,26 +1,23 @@
-"use client"
-
+import React, { useEffect, useState } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
-import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
 import { Car } from "lucide-react"
-
-import { useState, useEffect } from "react"
-import type React from "react"
-
-import { getVehicleTypes } from "@/services/vehicle/getTypeVehicle"
 import { createVehicle } from "@/services/vehicle/createVehicle"
-import { getStations, type Station } from "@/services/station/station"
-import { type BicycleData, type ScooterData, type SkateboardData } from "@/interface/vehicle/vehicleInterface";
+import { getVehicleTypes } from "@/services/vehicle/getTypeVehicle"
+import { getVehicleMechanicalTypes } from "@/services/vehicle/getVehicleMechanicalTypes"
+import { getStations } from "@/services/station/station"
+import VehicleFields from "./vehicleFields/vehicle"
+import { type Station } from "@/interface/vehicle/vehicleInterface"
 
-interface AddVehicleModalProps {
+interface Props {
     isOpen: boolean
     onClose: () => void
 }
 
-export function AddVehicleModal({ isOpen, onClose }: AddVehicleModalProps) {
+export default function AddVehicleModal({ isOpen, onClose }: Props) {
     const initialFormData = {
         id: "",
         color: "",
@@ -38,257 +35,144 @@ export function AddVehicleModal({ isOpen, onClose }: AddVehicleModalProps) {
         autonomiaRango: "",
         numeroPuertas: "",
         tieneAireAcondicionado: "",
+        drive: "",
+        brake: "",
+        bearing: "",
     }
 
     const [formData, setFormData] = useState(initialFormData)
     const [vehicleTypes, setVehicleTypes] = useState<Record<string, string>>({})
+    const [mechanicalTypes, setMechanicalTypes] = useState<{
+        drive: Record<string, string>
+        bearing: Record<string, string>
+        brake: Record<string, string>
+    }>({
+        drive: {},
+        bearing: {},
+        brake: {},
+    })
     const [estaciones, setEstaciones] = useState<Station[]>([])
 
-    useEffect(() => {
-        const fetchStations = async () => {
-            const data = await getStations()
-            setEstaciones(data)
+
+    const loadStations = async () => {
+        try {
+            const stations = await getStations()
+            setEstaciones(stations)
+        } catch (err) {
+            console.error("Error fetching stations:", err)
         }
-        fetchStations()
-    }, [])
+    }
 
     useEffect(() => {
         if (isOpen) {
             setFormData(initialFormData)
+            loadStations()
             getVehicleTypes().then(setVehicleTypes).catch(console.error)
-            getStations().then(setEstaciones).catch(console.error)
+            getVehicleMechanicalTypes().then(setMechanicalTypes).catch(console.error)
         }
     }, [isOpen])
 
-    const handleInputChange = (field: string, value: string) => {
-        setFormData((prev) => ({
-            ...prev,
-            [field]: value,
-        }))
-    }
+    const handleInputChange = (field: string, value: string) =>
+        setFormData((prev) => ({ ...prev, [field]: value }))
 
-    //MODIFICADO
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    function mapFormDataToVehicle(formData: any) {
+        const selectedStation = estaciones.find((s) => s.idStation === formData.estacion)
 
-        const estacionSeleccionada = estaciones.find(
-            (est) => String(est.idStation) === formData.estacion
-        );
-
-        if (!estacionSeleccionada) {
-            alert("Debes seleccionar una estación");
-            return;
+        if (!selectedStation) {
+            throw new Error("Debe seleccionar una estación válida.")
         }
 
-        const baseData = {
+        return {
             idVehicle: formData.id,
+            vehicleType: formData.tipoVehiculo,
             color: formData.color,
             model: formData.modelo,
-            idStation: estacionSeleccionada.idStation,
-            latitude: Number(estacionSeleccionada.geoLocation.latitude),
-            longitude: Number(estacionSeleccionada.geoLocation.longitude),
-            maxUserWeight: Number(formData.maxUsuarios),
-            velocityMax: Number(formData.velocidadMaxima),
-            costForMinute: Number(formData.costoPorMinuto),
-        };
-
-        let vehicleData: Record<string, any> = {
-            ...baseData,
-            vehicleType: formData.tipoVehiculo,
-        };
-
-        switch (formData.tipoVehiculo) {
-            case "BICYCLE":
-                vehicleData = {
-                    ...vehicleData,
-                    gears: Number(formData.engranajes),
-                    hasBasket: formData.tieneCesta === "YES",
-                };
-                break;
-
-            case "ELECTRIC_SCOOTER":
-                vehicleData = {
-                    ...vehicleData,
-                    hasSeat: formData.tieneAsiento === "YES",
-                    batteryCapacity: Number(formData.capacidadBateria),
-                    autonomyRange: Number(formData.autonomiaRango),
-                };
-                break;
-
-            case "SKATEBOARD":
-                vehicleData = {
-                    ...vehicleData,
-                    deckSize: Number(formData.tamanoCubierta),
-                };
-                break;
-
-            case "CAR_ELECTRIC":
-                vehicleData = {
-                    ...vehicleData,
-                    batteryCapacity: Number(formData.capacidadBateria),
-                    autonomyRange: Number(formData.autonomiaRango),
-                };
-                break;
-
-            default:
-                alert("Tipo de vehículo no soportado");
-                return;
-        }
-
-        try {
-            await createVehicle(vehicleData);
-            alert("Vehículo creado con éxito ✅");
-            onClose();
-        } catch (err) {
-            console.error("Error al crear vehículo:", err);
-            alert("Error creando vehículo");
-        }
-    };
-
-    // INICIO MODIFICACION
-    const renderConditionalFields = () => {
-        switch (formData.tipoVehiculo) {
-            case "BICYCLE":
-                return (
-                    <div className="space-y-6">
-                        <div>
-                            <Label htmlFor="engranajes" className="text-green-700 block mb-3">
-                                Cantidad de Engranajes
-                            </Label>
-                            <Input
-                                id="engranajes"
-                                type="number"
-                                value={formData.engranajes}
-                                onChange={(e) => handleInputChange("engranajes", e.target.value)}
-                                className="border-green-200 focus:border-green-500"
-                                placeholder="Ej: 21"
-                            />
-                        </div>
-                        <div>
-                            <Label htmlFor="tieneCesta" className="text-green-700 block mb-3">
-                                ¿Tiene Cesta?
-                            </Label>
-                            <Select
-                                value={formData.tieneCesta}
-                                onValueChange={(value) => handleInputChange("tieneCesta", value)}
-                            >
-                                <SelectTrigger className="border-green-200 focus:border-green-500">
-                                    <SelectValue placeholder="Seleccionar opción" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="YES">YES</SelectItem>
-                                    <SelectItem value="NO">NO</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                    </div>
-                )
-
-            case "SKATEBOARD":
-                return (
-                    <div>
-                        <Label htmlFor="tamanoCubierta" className="text-green-700 block mb-3">
-                            Tamaño de la Cubierta
-                        </Label>
-                        <Input
-                            id="tamanoCubierta"
-                            value={formData.tamanoCubierta}
-                            onChange={(e) => handleInputChange("tamanoCubierta", e.target.value)}
-                            className="border-green-200 focus:border-green-500"
-                            placeholder="Ej: 8 pulgadas"
-                        />
-                    </div>
-                )
-
-            case "ELECTRIC_SCOOTER":
-                return (
-                    <div className="space-y-6">
-                        <div>
-                            <Label htmlFor="tieneAsiento" className="text-green-700 block mb-3">
-                                ¿Tiene asiento?
-                            </Label>
-                            <Select
-                                value={formData.tieneAsiento}
-                                onValueChange={(value) => handleInputChange("tieneAsiento", value)}
-                            >
-                                <SelectTrigger className="border-green-200 focus:border-green-500">
-                                    <SelectValue placeholder="Seleccionar opción" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="YES">YES</SelectItem>
-                                    <SelectItem value="NO">NO</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <Label htmlFor="capacidadBateria" className="text-green-700 block mb-3">
-                                    Capacidad de la Batería (mAh / kWh)
-                                </Label>
-                                <Input
-                                    id="capacidadBateria"
-                                    type="number"
-                                    value={formData.capacidadBateria}
-                                    onChange={(e) => handleInputChange("capacidadBateria", e.target.value)}
-                                    className="border-green-200 focus:border-green-500"
-                                    placeholder="Ej: 5000"
-                                />
-                            </div>
-                            <div>
-                                <Label htmlFor="autonomiaRango" className="text-green-700 block mb-3">
-                                    Autonomía de la Batería (km)
-                                </Label>
-                                <Input
-                                    id="autonomiaRango"
-                                    type="number"
-                                    value={formData.autonomiaRango}
-                                    onChange={(e) => handleInputChange("autonomiaRango", e.target.value)}
-                                    className="border-green-200 focus:border-green-500"
-                                    placeholder="Ej: 25"
-                                />
-                            </div>
-                        </div>
-                    </div>
-                )
-
-            case "CAR_ELECTRIC":
-                return (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <Label htmlFor="capacidadBateria" className="text-green-700 block mb-3">
-                                Capacidad de la Batería (kWh)
-                            </Label>
-                            <Input
-                                id="capacidadBateria"
-                                type="number"
-                                value={formData.capacidadBateria}
-                                onChange={(e) => handleInputChange("capacidadBateria", e.target.value)}
-                                className="border-green-200 focus:border-green-500"
-                                placeholder="Ej: 75"
-                            />
-                        </div>
-                        <div>
-                            <Label htmlFor="autonomiaRango" className="text-green-700 block mb-3">
-                                Autonomía (km)
-                            </Label>
-                            <Input
-                                id="autonomiaRango"
-                                type="number"
-                                value={formData.autonomiaRango}
-                                onChange={(e) => handleInputChange("autonomiaRango", e.target.value)}
-                                className="border-green-200 focus:border-green-500"
-                                placeholder="Ej: 450"
-                            />
-                        </div>
-                    </div>
-                )
-
-            default:
-                return null
+            station: {
+                idStation: selectedStation.idStation,
+                name: selectedStation.name,
+                address: selectedStation.address,
+                geoLocation: {
+                    latitude: selectedStation.geoLocation.latitude,
+                    longitude: selectedStation.geoLocation.longitude,
+                    timestamp: selectedStation.geoLocation.timestamp,
+                },
+            },
+            geolocation: {
+                latitude: selectedStation.geoLocation.latitude,
+                longitude: selectedStation.geoLocation.longitude,
+                timestamp: selectedStation.geoLocation.timestamp,
+            },
+            maxUserWeight: parseFloat(formData.maxUsuarios || "0"),
+            velocityMax: parseFloat(formData.velocidadMaxima || "0"),
+            costForMinute: parseFloat(formData.costoPorMinuto || "0"),
+            propities: {
+                gears: formData.engranajes,
+                hasBasket: formData.tieneCesta === "true" || formData.tieneCesta === true,
+                deckSize: parseFloat(formData.tamanoCubierta || "0"),
+                hasSeat: formData.tieneAsiento === "true" || formData.tieneAsiento === true,
+                capacityBattery: parseFloat(formData.capacidadBateria || "0"),
+                autonomyRange: parseFloat(formData.autonomiaRango || "0"),
+                numberOfDoors: parseInt(formData.numeroPuertas || "0"),
+                airConditioning: formData.tieneAireAcondicionado === "true" || formData.tieneAireAcondicionado === true,
+                info: {
+                    driveSystem: formData.drive,
+                    Type: formData.brake,
+                    bearingType: formData.bearing,
+                },
+            },
         }
     }
-    //FIN MODIFICACION
+
+    const handleSubmit = async (e: React.FormEvent) => {
+
+        console.log("modal", formData)
+        e.preventDefault()
+        try {
+            const vehicleData = mapFormDataToVehicle(formData)
+            await createVehicle(vehicleData)
+            alert("Vehículo creado con éxito ✅")
+            onClose()
+        } catch (err) {
+            alert("Error creando vehículo")
+        }
+    }
+
+    const renderMechanicalSelect = (name: "drive" | "brake" | "bearing", label: string) => {
+        const options =
+            name === "drive"
+                ? mechanicalTypes.drive
+                : name === "brake"
+                    ? mechanicalTypes.brake
+                    : mechanicalTypes.bearing
+
+        return (
+            <div>
+                <Label htmlFor={name} className="text-green-700 block mb-3">
+                    {label}
+                </Label>
+                <Select value={(formData as any)[name]} onValueChange={(v) => handleInputChange(name, v)}>
+                    <SelectTrigger className="border-green-200 focus:border-green-500">
+                        <SelectValue placeholder={`Seleccionar ${label.toLowerCase()}`} />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {Object.entries(options).map(([key, val]) => (
+                            <SelectItem key={key} value={val}>
+                                {val}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+            </div>
+        )
+    }
+
+    const renderConditionalFields = () => (
+        <VehicleFields
+            formData={formData}
+            handleInputChange={handleInputChange}
+            renderMechanicalSelect={renderMechanicalSelect}
+        />
+    )
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
@@ -354,13 +238,12 @@ export function AddVehicleModal({ isOpen, onClose }: AddVehicleModalProps) {
                                 onValueChange={(value) => handleInputChange("estacion", value)}
                             >
                                 <SelectTrigger className="border-green-200 focus:border-green-500">
-                                    <SelectValue placeholder="Seleccionar estación" />
+                                    <SelectValue placeholder="Seleccionar una estación . . ." />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {estaciones.map((est) => (
-                                        <SelectItem key={est.idStation} value={String(est.idStation)}>
-                                            {/* verificar por si no sirve, cambiar a name */}
-                                            {est.nameStation}
+                                    {estaciones.map((station) => (
+                                        <SelectItem key={station.idStation} value={station.idStation}>
+                                            {station.name}
                                         </SelectItem>
                                     ))}
                                 </SelectContent>
@@ -368,7 +251,8 @@ export function AddVehicleModal({ isOpen, onClose }: AddVehicleModalProps) {
                         </div>
                     </div>
 
-                    <div className="space-y-6">
+                    {/* Resto de campos */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <Label htmlFor="maxUsuarios" className="text-green-700 block mb-3">
                                 Máximo de Usuarios
@@ -398,6 +282,9 @@ export function AddVehicleModal({ isOpen, onClose }: AddVehicleModalProps) {
                                 required
                             />
                         </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <Label htmlFor="costoPorMinuto" className="text-green-700 block mb-3">
                                 Costo por Minuto ($)
@@ -413,28 +300,24 @@ export function AddVehicleModal({ isOpen, onClose }: AddVehicleModalProps) {
                                 required
                             />
                         </div>
-                    </div>
 
-                    {/* Tipo de vehículo */}
-                    <div>
-                        <Label htmlFor="tipoVehiculo" className="text-green-700 block mb-3">
-                            Tipo de Vehículo
-                        </Label>
-                        <Select
-                            value={formData.tipoVehiculo}
-                            onValueChange={(value) => handleInputChange("tipoVehiculo", value)}
-                        >
-                            <SelectTrigger className="border-green-200 focus:border-green-500">
-                                <SelectValue placeholder="Seleccionar tipo de vehículo" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {Object.entries(vehicleTypes).map(([key, label]) => (
-                                    <SelectItem key={key} value={key}>
-                                        {label}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
+                        <div>
+                            <Label htmlFor="tipoVehiculo" className="text-green-700 block mb-3">
+                                Tipo de Vehículo
+                            </Label>
+                            <Select value={formData.tipoVehiculo} onValueChange={(v) => handleInputChange("tipoVehiculo", v)}>
+                                <SelectTrigger className="border-green-200 focus:border-green-500">
+                                    <SelectValue placeholder="Seleccionar tipo de vehículo" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {Object.entries(vehicleTypes).map(([key, label]) => (
+                                        <SelectItem key={key} value={key}>
+                                            {label}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
                     </div>
 
                     {/* Campos condicionales */}
@@ -448,12 +331,7 @@ export function AddVehicleModal({ isOpen, onClose }: AddVehicleModalProps) {
                     )}
 
                     <div className="flex justify-end gap-3 pt-6 border-t border-green-200">
-                        <Button
-                            type="button"
-                            variant="outline"
-                            onClick={onClose}
-                            className="border-green-300 text-green-600 hover:bg-green-50 bg-transparent"
-                        >
+                        <Button type="button" variant="outline" onClick={onClose} className="border-green-300 text-green-600 hover:bg-green-50 bg-transparent">
                             Cancelar
                         </Button>
                         <Button type="submit" className="bg-green-600 hover:bg-green-700 text-white">

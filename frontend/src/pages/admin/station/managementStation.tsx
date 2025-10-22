@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Search, Plus, MapPin } from "lucide-react"
 import RegisterStation from "@/pages/admin/station/modals/modalCreateStation"
-import { getStations, type Station } from "@/services/station/station"
+import { getStations } from "@/services/station/station"
+import { type Station } from "@/interface/vehicle/vehicleInterface"
 
 export function ManagementStation() {
     const [stations, setStations] = useState<Station[]>([])
@@ -15,7 +16,6 @@ export function ManagementStation() {
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [refreshTrigger, setRefreshTrigger] = useState(0)
 
-    // Traer estaciones desde el servicio
     useEffect(() => {
         const fetchStations = async () => {
             const data = await getStations()
@@ -29,13 +29,14 @@ export function ManagementStation() {
         return stations.filter(
             (station) =>
                 station.idStation.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                station.nameStation.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                station.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 station.address.toLowerCase().includes(searchTerm.toLowerCase()),
         )
     }, [searchTerm, stations])
 
     const handleAddStation = () => setIsModalOpen(true)
     const handleModalClose = () => setIsModalOpen(false)
+
     const handleStationCreated = () => {
         setIsModalOpen(false)
         setRefreshTrigger(prev => prev + 1)
@@ -103,11 +104,11 @@ export function ManagementStation() {
                                     {filteredStations.map((station) => (
                                         <TableRow key={station.idStation} className="hover:bg-green-50">
                                             <TableCell className="font-medium text-green-800">{station.idStation}</TableCell>
-                                            <TableCell className="text-gray-700">{station.nameStation}</TableCell>
+                                            <TableCell className="text-gray-700">{station.name}</TableCell>
                                             <TableCell className="text-gray-700">{station.address}</TableCell>
                                             <TableCell className="text-gray-700">{station.geoLocation.latitude.toFixed(4)}</TableCell>
                                             <TableCell className="text-gray-700">{station.geoLocation.longitude.toFixed(4)}</TableCell>
-                                            <TableCell className="text-gray-700">{station.locationTimestamp}</TableCell>
+                                            <TableCell className="text-gray-700">{station.geoLocation.timestamp}</TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>

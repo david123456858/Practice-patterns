@@ -1,60 +1,73 @@
-export interface BaseVehicle {
-    idVehicle: string
-    color: string
-    model: string
-    idStation: string
+// src/interface/vehicle/vehicleInterface.ts
+
+export interface GeoLocation {
     latitude: number
     longitude: number
-    maxUserWeight: number
-    velocityMax: number
-    costForMinute: number
-    vehicleType: string
+    timestamp: string
 }
 
-export interface BicycleData extends BaseVehicle {
-    vehicleType: "bicycle"
-    gears: number
-    hasBasket: boolean
-}
-
-export interface ScooterData extends BaseVehicle {
-    vehicleType: "electric_scooter"
-    hasSeat: boolean
-    batteryInfo: {
-        capacity: number
-        autonomyRange: number
-    }
-}
-
-export interface SkateboardData extends BaseVehicle {
-    vehicleType: "skateboard"
-    deckSize: number
-}
-
-export interface VehiclePayload {
-    model: string
-    color: string
-    station: {
-        idStation: string
+export interface Station {
+    idStation: string
+    name: string
+    address: string
+    geoLocation: {
         latitude: number
         longitude: number
+        timestamp: string
     }
 }
 
-export interface Vehicle {
-    idVehicle: string
-    color: string
-    model: string
-    idStation: string
-    state: string
-    type: string
-    costForMinute: number
+export interface InfoMechanical {
+    driveSystem?: string
+    Type?: string
+    bearingType?: string
+}
+
+export interface InfoElectric {
+    driveSystem?: string
+    Type?: string
+    bearingType?: string
+    capacity?: number           // capacidad de batería
+    autonomyRange?: number      // autonomía en km o minutos
+}
+
+export interface PropitiesMechanical {
     gears?: number
     hasBasket?: boolean
     hasSeat?: boolean
-    batteryInfo?: {
-        capacity: number
-        autonomyRange: number
-    }
-    nameStation: string
+    deckSize?: number
+    info?: InfoMechanical
 }
+
+export interface PropitiesElectric {
+    gears?: number
+    hasBasket?: boolean
+    hasSeat?: boolean
+    deckSize?: number
+    numberOfDoors?: number       // para autos eléctricos
+    airConditioning?: boolean    // para autos eléctricos
+    capacityBattery?: number     // capacidad total de la batería
+    autonomyRange?: number       // rango de autonomía
+    info?: InfoElectric
+}
+export interface VehicleBase {
+    idVehicle: string
+    vehicleType: string
+    color: string
+    model: string
+    station: Station
+    geolocation: GeoLocation
+    maxUserWeight: number
+    velocityMax: number
+    costForMinute: number
+}
+
+export interface MechanicalVehicle extends VehicleBase {
+    propities: PropitiesMechanical
+}
+
+export interface ElectricVehicle extends VehicleBase {
+    propities: PropitiesElectric
+}
+
+export type Vehicle = MechanicalVehicle | ElectricVehicle
