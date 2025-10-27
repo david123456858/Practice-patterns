@@ -1,38 +1,27 @@
-import { API_BASE_URL } from "../../config/api";
-
-export interface Role {
-    idRole: string;
-    name: string;
-    permissions: string[];
-}
-
-export interface ApiUser {
-    role: Role[];
-    loanHistory: any[];
-    idUser: string;
-    email: string;
-    lastName: string;
-    name: string;
-    suscription: string | null;
-    password: string;
-}
-
-export interface ApiResponse {
-    message: ApiUser[];
-}
+import { VITE_API_URL } from "@/config/api"
+import type { ApiUser, ApiResponse } from "@/interface/user/user";
 
 export const getUsers = async (): Promise<ApiUser[]> => {
     try {
-        const response = await fetch(`${API_BASE_URL}user`);
+        const response = await fetch(`${VITE_API_URL}user`, {
+            headers: { "Accept": "application/json" },
+        })
 
-        if (!response.ok) {
-            throw new Error(`Error ${response.status}: ${response.statusText}`);
-        }
+        if (!response.ok) throw new Error(`Error ${response.status}: ${response.statusText}`)
 
-        const data: ApiResponse = await response.json();
-        return data.message || []; // Aseguramos que siempre retorne un array
+        const data: ApiResponse = await response.json()
+
+        const formattedUsers = data.message.map((user) => ({
+            ...user,
+            createdAt: new Date(user.createdAt).toLocaleString("es-CO", {
+                dateStyle: "short",
+                timeStyle: "short",
+            }),
+        }))
+
+        return formattedUsers
     } catch (error) {
-        console.error('Error fetching users:', error);
-        throw new Error('Failed to fetch users');
+        console.error("Error fetching users:", error)
+        throw new Error("Failed to fetch users")
     }
-};
+}

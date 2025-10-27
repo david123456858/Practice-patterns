@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Leaf, Zap } from "lucide-react"
-import { loginUser } from "@/services/auth/login"
+import { login } from "@/services/auth/login"
 
 export default function LoginPage() {
     const [email, setEmail] = useState("")
@@ -16,18 +16,18 @@ export default function LoginPage() {
     const [error, setError] = useState<string>("")
     const navigate = useNavigate()
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {    
         e.preventDefault();
         setError("");
         setIsLoading(true);
 
         try {
-            const userData = await loginUser({ email, password });
+            const userData = await login({ email, password });
 
             localStorage.setItem("user", JSON.stringify(userData));
 
-            const role = userData.role[0]?.name;
-            
+            const role = userData.role;
+
             if (role === "client") {
                 navigate("/homeClient");
             }
@@ -43,8 +43,6 @@ export default function LoginPage() {
             setIsLoading(false);
         }
     };
-
-
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-background via-muted/30 to-secondary/20 flex items-center justify-center p-4">
