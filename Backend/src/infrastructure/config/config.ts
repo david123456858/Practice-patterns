@@ -6,6 +6,6 @@ config()
 
 export const route = Router()
 export default {
-  port: process.env.PORT ?? '3000',
+  port: process.env.PORT ?? '3001',
   routeBase: '/api/v1'
 }
