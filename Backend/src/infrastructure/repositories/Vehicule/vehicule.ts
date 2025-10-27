@@ -1,40 +1,92 @@
-import { ICrudOperations } from '../../../domain/interfaces/common/ICrud'
-import { Vehicle } from '../../../domain/entities/Vehicule/VehicleGeneric/Vehicle'
+import { NodePgDatabase } from 'drizzle-orm/node-postgres'
+import { eq } from 'drizzle-orm'
+import { Pool } from 'pg'
+
+import { DatabaseSql } from '../../database/data'
+import { vehicles } from '../../database/Schemas/Vehicle'
 import { StatusVehicle } from '../../../domain/types/Vehicule/VehiculeEnum'
+import { parseJson } from '../../../presentation/utils/parse/parse'
 
-let vehiculeList: Vehicle[] = []
+export class RepositoryVehicule {
+  private readonly pool: NodePgDatabase<Record<string, never>> & { $client: Pool }
 
-export class RepositoryVehicule implements ICrudOperations<Vehicle> {
-  save (data: Vehicle): void {
-    vehiculeList.push(data)
+  constructor () {
+    this.pool = DatabaseSql.getInstacne().getDb()
   }
 
-  delete (id: string): void {
-    vehiculeList = vehiculeList.filter(vehicule => vehicule.getIdVehicle() !== id)
+  // 🔹 CREATE
+  async save (data: any): Promise<void> {
+    await this.pool.insert(vehicles).values({
+      idVehicle: data.getIdVehicle(),
+      color: data.getColor(),
+      model: data.getModel(),
+      stationId: data.getIdStation().idStation,
+      state: data.getState(),
+      type: data.getType(),
+      latitude: data.getGeoLocation().getLatitude(),
+      longitude: data.getGeoLocation().getLongitude(),
+      locationTimestamp: new Date(data.getGeoLocation().getTimestamp()),
+      maxUserWeight: data.getMaxUserWeight(),
+      velocityMax: data.getVelocityMax(),
+      costForMinute: data.getCostForMinute(),
+      info: data.getInfo()
+    })
   }
 
-  update (data: Vehicle): void {
-    const index = vehiculeList.findIndex(vehicule => vehicule.getIdVehicle() === data.getIdVehicle())
-    if (index !== -1) {
-      vehiculeList[index] = data
-    }
+  // 🔹 DELETE
+  async delete (id: string): Promise<void> {
+    await this.pool.delete(vehicles).where(eq(vehicles.idVehicle, id))
   }
 
-  findById (id: string): Vehicle | undefined {
-    return vehiculeList.find(vehicule => vehicule.getIdVehicle() === id)
+  // 🔹 UPDATE
+  async update (data: any): Promise<void> {
+    await this.pool.update(vehicles).set({
+      color: data.color,
+      model: data.model,
+      stationId: data.stationId,
+      state: data.state,
+      type: data.type,
+      latitude: data.latitude,
+      longitude: data.longitude,
+      locationTimestamp: new Date(data.locationTimestamp),
+      maxUserWeight: data.maxUserWeight,
+      velocityMax: data.velocityMax,
+      costForMinute: data.costForMinute,
+      info: data.info
+    })
   }
 
-  findAll (): Vehicle[] {
-    return vehiculeList
+  // 🔹 FIND BY ID
+  async findById (id: string): Promise<any[]> {
+    return parseJson(await this.pool
+      .select()
+      .from(vehicles)
+      .where(eq(vehicles.idVehicle, id)))
   }
 
-  findByAvailable (): Vehicle[] {
-    return vehiculeList.filter(Vehicle => Vehicle.getState() === StatusVehicle.AVAILABLE)
+  // 🔹 FIND ALL
+  async findAll (): Promise<any[]> {
+    const result = await this.pool.select().from(vehicles)
+    return parseJson(result)
   }
 
-  findByStationAvailable (idStation: string): Vehicle[] {
-    return vehiculeList.filter(vehicle =>
-      vehicle.getState() === StatusVehicle.AVAILABLE
-    )
+  // 🔹 FIND AVAILABLE VEHICLES
+  async findByAvailable (): Promise<any[]> {
+    const result = await this.pool
+      .select()
+      .from(vehicles)
+      .where(eq(vehicles.state, StatusVehicle.AVAILABLE))
+
+    return parseJson(result)
+  }
+
+  // 🔹 FIND AVAILABLE VEHICLES BY STATION
+  async findByStationAvailable (idStation: string): Promise<any[]> {
+    const result = await this.pool
+      .select()
+      .from(vehicles)
+      .where(eq(vehicles.stationId, idStation))
+
+    return parseJson(result)
   }
 }

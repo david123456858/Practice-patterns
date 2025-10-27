@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Images } from './Images'
+import { Images } from './Images.js'
 
 export class ImagesVehicle extends Images {
   private IdVehicle: string

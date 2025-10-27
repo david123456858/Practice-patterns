@@ -40,13 +40,13 @@ export class ScooterMechanical extends Scooter {
 
   // Getters
 
-  getMechanicalInfo (): MechanicalComponents {
+  getInfo (): MechanicalComponents {
     return this.info
   }
 
   // Setters
 
-  setMechanicalInfo (info: MechanicalComponents): void {
+  setInfo (info: MechanicalComponents): void {
     this.info = info
   }
 }

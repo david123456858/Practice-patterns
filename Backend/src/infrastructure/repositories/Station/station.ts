@@ -1,32 +1,58 @@
-import { GeoLocation } from '../../../domain/entities/GeoLocation/GeoLocation'
+import { NodePgDatabase } from 'drizzle-orm/node-postgres'
+import { eq } from 'drizzle-orm'
 import { Station } from '../../../domain/entities/Station/Station'
 import { ICrudOperations } from '../../../domain/interfaces/common/ICrud'
+import { DatabaseSql } from '../../database/data'
+import { Pool } from 'pg'
+import { stations } from '../../database/Schemas/Station'
 
-let stationList: Station[] = [
-  new Station('1', 'Sede Don carmelo', 'Calle 14 45-5', new GeoLocation(1.2151, 244.5423232)),
-  new Station('2', 'Universidad Popular', 'Diagonal 21 n.º 29-56', new GeoLocation(10.47412, -73.25129))]
+export class RepositoryStation implements ICrudOperations<Station> {
+  private readonly pool: NodePgDatabase<Record<string, never>> & { $client: Pool }
 
-export class repositoryStation implements ICrudOperations<Station> {
-  save (data: Station): void {
-    stationList.push(data)
+  constructor () {
+    this.pool = DatabaseSql.getInstacne().getDb()
   }
 
-  delete (id: string): void {
-    stationList = stationList.filter(station => station.getId() !== id)
+  async save (data: any): Promise<void> {
+    await this.pool.insert(stations).values({
+      idStation: data.getId(),
+      name: data.getName(),
+      address: data.getAdress(),
+      latitude: data.getGeoLocation().getLatitude(),
+      longitude: data.getGeoLocation().getLongitude(),
+      locationTimestamp: data.getGeoLocation().getTimestamp()
+    })
   }
 
-  update (data: Station): void {
-    const index = stationList.findIndex(station => station.getId() === data.getId())
-    if (index !== -1) {
-      stationList[index] = data
-    }
+  async delete (id: string): Promise<void> {
+    await this.pool
+      .delete(stations)
+      .where(eq(stations.idStation, id))
   }
 
-  findById (id: string): any {
-    return stationList.find(station => station.getId() === id)
+  async update (data: Station): Promise<void> {
+    await this.pool
+      .update(stations)
+      .set({
+        idStation: data.getId(),
+        name: data.getName(),
+        address: data.getAdress(),
+        latitude: data.getGeoLocation().getLatitude().toString(),
+        longitude: data.getGeoLocation().getLongitude().toString(),
+        locationTimestamp: data.getGeoLocation().getTimestamp()
+      })
+      .where(eq(stations.idStation, data.getId()))
   }
 
-  findAll (): Station[] {
-    return stationList
+  async findById (id: string): Promise<any> {
+    const result = await this.pool
+      .select()
+      .from(stations)
+      .where(eq(stations.idStation, id))
+    return result[0]
+  }
+
+  async findAll (): Promise<any> {
+    return await this.pool.select().from(stations)
   }
 }

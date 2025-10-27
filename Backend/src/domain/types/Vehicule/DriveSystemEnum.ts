@@ -3,3 +3,8 @@ export enum DriveSystem {
   DIRECT = 'DIRECT',
   BELT = 'BELT'
 }
+
+export enum bearingType {
+  SEALED = 'sealed'
+
+}

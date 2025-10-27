@@ -18,13 +18,24 @@ export class ServicePayment {
 
   async PaymentStatus (payment: createPaymentDto): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
     try {
-      const paymet = this.repositoryPayment.findByLoanId(payment.loanId)
+      const paymet = await this.repositoryPayment.findByLoanId(payment.loanId)
       if (!paymet) {
         return FailureProccess('payment not found', 404)
       }
+      const onlypayment = paymet.find((index) => index.loanId === payment.loanId)
+
+      const paymentInstance = new Payment(
+        onlypayment.paymentId,
+        onlypayment.loanId,
+        onlypayment.amount,
+        onlypayment.status,
+        onlypayment.paymentMethod,
+        new Date()
+      )
       const paymentProccessor = this.factoryPayment.createPaymentMehod(payment.method)
-      const paymentUpdated = await paymentProccessor.doPay(paymet)
-      this.repositoryPayment.update(paymentUpdated)
+      const paymentUpdated = await paymentProccessor.doPay(paymentInstance)
+
+      await this.repositoryPayment.update(paymentUpdated)
 
       return SuccessProcess('payment processed successfully', 200)
     } catch (error) {
@@ -46,9 +57,11 @@ export class ServicePayment {
       )
       console.log(payment)
 
-      this.repositoryPayment.save(payment)
+      await this.repositoryPayment.save(payment)
       return SuccessProcess(payment, 201)
     } catch (error) {
+      console.log(error)
+
       return FailureProccess('Error creating payment', 500)
     }
   }

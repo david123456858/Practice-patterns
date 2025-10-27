@@ -17,7 +17,7 @@ export class BicycleElectricEstrategy implements VehicleStrategy {
     this.builder.setState(StatusVehicle.AVAILABLE)
     this.builder.setGeoLocation(dto.getLocation())
     this.builder.setMaxUserWeight(dto.getMaxUserWeight())
-    this.builder.setVelocityMax(dto.getCostForMinute())
+    this.builder.setVelocityMax(dto.getVelocityMax())
     this.builder.setType(dto.getVehicleType())
     this.builder.setGears(dto.propities.gears)
     this.builder.setHasBasket(dto.propities.hasBasket)

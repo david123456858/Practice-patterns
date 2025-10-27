@@ -41,12 +41,11 @@ WORKDIR /app
 # Copiar node_modules desde la etapa de deps
 COPY --from=deps --chown=${APP_USER}:${APP_USER} /app/node_modules ./node_modules
 
+
 # Copiar package.json (necesario para que node encuentre módulos)
 COPY --chown=${APP_USER}:${APP_USER} package.json ./
-
-# Copiar código compilado
+COPY --chown=${APP_USER}:${APP_USER} drizzle ./drizzle
 COPY --chown=${APP_USER}:${APP_USER} src/build ./build
-
 # Cambiar a usuario no-root
 USER ${APP_USER}
 
@@ -57,4 +56,4 @@ EXPOSE 3000
 ENV NODE_ENV=production
 
 # Comando de inicio
-CMD ["node", "build/index.js"]
+CMD ["node", "build/src/index.js"]

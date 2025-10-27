@@ -6,7 +6,7 @@ import { Type } from 'class-transformer'
 // DTO base para vehículos
 // =========================================
 
-class GeoLocationDto {
+export class GeoLocationDto {
   @IsNumber()
     latitude!: number
 

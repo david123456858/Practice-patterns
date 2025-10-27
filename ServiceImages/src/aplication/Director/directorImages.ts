@@ -1,4 +1,4 @@
-import { ConcreteBuilderImagesVehicles } from '../../infrestructure/builders/ConcreteImagesVehicles'
+import { ConcreteBuilderImagesVehicles } from '../../infrestructure/builders/ConcreteImagesVehicles.js'
 
 import { randomUUID } from 'crypto'
 export class DirectorImages {

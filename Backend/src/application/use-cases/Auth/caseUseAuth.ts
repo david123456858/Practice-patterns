@@ -9,41 +9,65 @@ import { UserRepository } from './../../../infrastructure/repositories/User/repo
 
 export class AuthService {
   private readonly userRepository: UserRepository
+
   constructor (userRepository: UserRepository) {
     this.userRepository = userRepository
   }
 
+  // 🔹 LOGIN / AUTHENTICATE
   async authenticate (data: UserDtoAuth): Promise<IFailureProcess<any> | ISuccessProcess<any>> {
     try {
-      const user = this.userRepository.findByEmail(data.email)
+      // Buscar usuario por correo
+      const userResult = await this.userRepository.findByEmail(data.email)
+      const user = Array.isArray(userResult) ? userResult[0] : userResult
 
       if (!user) return FailureProccess('User not found', 404)
 
-      if (user.getPassword() !== data.password) return FailureProccess('Invalid credentials', 401)
-
-      const userDtoResponse = {
-        userEmail: user.getEmail(),
-        userId: user.getCC(),
-        userName: user.getName(),
-        role: user.getRole()
+      // Validar contraseña (en texto plano por ahora)
+      if (user.password !== data.password) {
+        return FailureProccess('Invalid credentials', 401)
       }
+
+      // Armar respuesta DTO
+      const userDtoResponse = {
+        userEmail: user.email,
+        userId: user.idUser,
+        userName: user.name,
+        role: user.role
+      }
+
       return SuccessProcess(userDtoResponse, 200)
     } catch (error) {
-      return FailureProccess('Error internal server', 500)
+      console.error('Auth Error:', error)
+      return FailureProccess('Internal server error', 500)
     }
   }
 
+  // 🔹 REGISTER / SIGNUP
   async register (data: UserDtoCreate): Promise<IFailureProcess<any> | ISuccessProcess<any>> {
     try {
-      const findUser = this.userRepository.findById(data.idUser)
-      if (findUser) return FailureProccess('User already exists', 400)
+      const existingUser = await this.userRepository.findByEmail(data.email)
+      const userFound = Array.isArray(existingUser) && existingUser.length > 0 ? existingUser[0] : null
 
-      const newUser = new User(data.idUser, data.name, data.lastName, data.email, data.password, roleClient)
+      if (userFound) {
+        return FailureProccess('User already exists', 400)
+      }
 
-      this.userRepository.save(newUser)
-      return SuccessProcess('User created successfully', 200)
+      // Crear entidad de dominio User
+      const newUser = new User(
+        data.idUser,
+        data.name,
+        data.lastName,
+        data.email,
+        data.password,
+        roleClient // rol por defecto
+      )
+
+      await this.userRepository.save(newUser)
+      return SuccessProcess('User created successfully', 201)
     } catch (error) {
-      return FailureProccess('Error internal server', 500)
+      console.error('Register Error:', error)
+      return FailureProccess('Internal server error', 500)
     }
   }
 }

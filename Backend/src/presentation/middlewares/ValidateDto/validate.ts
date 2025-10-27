@@ -11,7 +11,7 @@ export const validateDto = (classDto: any) => {
     if (errorValidateClass.length > 0) {
       res.status(422).json({
         error: 'Inprocessible entity',
-        info: errorValidateClass[0].constraints
+        info: errorValidateClass
       })
       return
     }

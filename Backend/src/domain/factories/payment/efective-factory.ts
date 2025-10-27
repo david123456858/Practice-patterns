@@ -8,7 +8,7 @@ export class CashPaymentProcessor implements IPaymentProcessor {
     setTimeout(() => {
       console.log('Processing cash payment...')
     }, 5000)
-    payment.setPaymentDate(new Date())
+
     payment.setStatus(PaymentStatus.COMPLETED)
     return payment
   }

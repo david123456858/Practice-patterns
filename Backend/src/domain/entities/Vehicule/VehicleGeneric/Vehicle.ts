@@ -26,6 +26,7 @@ export abstract class Vehicle {
   getMaxUserWeight (): number { return this.maxUserWeight }
   getVelocityMax (): number { return this.velocityMax }
   getCostForMinute (): number { return this.costForMinute }
+  getType (): VehicleType { return this.type }
 
   // Setters
   setColor (color: string): void { this.color = color }

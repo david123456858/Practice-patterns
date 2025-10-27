@@ -1,55 +1,61 @@
-# Etapa de construcción
-FROM node:20-alpine AS builder
+# check=skip=FromPlatformFlagConstDisallowed
+# ============================================
+# Etapa 1: Dependencias
+# ============================================
+FROM --platform=linux/amd64 node:24-alpine3.21 AS deps
 
-# Crear usuario no privilegiado
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+# Instalar pnpm
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# Establecer directorio de trabajo
 WORKDIR /app
 
-# Copiar archivos de dependencias
-COPY package*.json ./
-COPY pnpm-lock.yaml ./
+# Copiar SOLO archivos de dependencias (mejor caché)
+COPY package.json pnpm-lock.yaml ./
 
-# Instalar pnpm y dependencias
-RUN npm install -g pnpm && \
-    pnpm install
+# Instalar dependencias de producción
+RUN pnpm install --prod --frozen-lockfile
 
-# Copiar código fuente
-COPY . .
+# ============================================
+# Etapa 2: Runner (imagen final)
+# ============================================
+FROM --platform=linux/amd64 node:24-alpine3.21 AS runner
 
-# Compilar TypeScript
-RUN pnpm run build
+# Variables de configuración
+ARG APP_USER=nodeapp
+ARG APP_UID=1001
+ARG APP_GID=1001
 
-# Etapa de producción
-FROM node:20-alpine
+# Instalar pnpm en runner
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# Crear usuario no privilegiado
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+# Crear usuario no-root
+RUN addgroup -g ${APP_GID} ${APP_USER} \
+    && adduser -S -u ${APP_UID} -G ${APP_USER} ${APP_USER}
 
-# Establecer directorio de trabajo
 WORKDIR /app
 
-# Copiar archivos de dependencias
-COPY package*.json ./
-COPY pnpm-lock.yaml ./
+# Copiar node_modules desde la etapa de deps
+COPY --from=deps --chown=${APP_USER}:${APP_USER} /app/node_modules ./node_modules
 
-# Instalar pnpm y solo dependencias de producción
-RUN npm install -g pnpm && \
-    pnpm install --prod
+# Copiar package.json (necesario para que node encuentre módulos)
+COPY --chown=${APP_USER}:${APP_USER} package.json ./
+COPY --chown=${APP_USER}:${APP_USER} drizzle ./drizzle
+COPY --chown=${APP_USER}:${APP_USER} src/build ./build
 
-# Copiar archivos compilados desde la etapa de construcción
-COPY --from=builder /app/dist ./dist
+RUN mkdir -p /app/upload && chown -R ${APP_USER}:${APP_USER} /app/upload
 
-# Crear directorio para uploads y dar permisos
-RUN mkdir -p /app/upload && \
-    chown -R appuser:appgroup /app/upload
-
-# Cambiar al usuario no privilegiado
-USER appuser
+# Cambiar a usuario no-root
+USER ${APP_USER}
 
 # Exponer puerto
 EXPOSE 3000
 
-# Comando para ejecutar la aplicación
-CMD ["node", "dist/index.js"]s
+# Variables de entorno para producción
+ENV NODE_ENV=production
+
+# Comando de inicio
+CMD ["node", "build/index.js"]

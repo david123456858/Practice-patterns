@@ -5,7 +5,10 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsx watch src/index.ts "
+    "dev": "tsx watch src/index.ts ",
+    "start": "node ./src/build/index.js",
+    "build": "tsc",
+    "stop" : "kill $(lsof -t -i:3000) || true"
   },
   "keywords": [],
   "author": "",
