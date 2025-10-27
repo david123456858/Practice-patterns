@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import express, { Application, Request, Response } from 'express'
 import cors from 'cors'
@@ -13,7 +14,7 @@ import { paymentRoute } from '../../presentation/routes/payment/payment'
 export class Server {
   private static instance: Server
   private readonly app: Application
-  private readonly port: string
+  private readonly port: number
 
   private constructor () {
     this.app = express()
@@ -23,7 +24,9 @@ export class Server {
     this.middlewares()
 
     // Rutas
-    this.routes()
+    this.routes().then(() => {
+      console.log('rutas listas')
+    })
   }
 
   private middlewares (): void {
@@ -34,13 +37,13 @@ export class Server {
     this.app.disable('x-powered-by')
   }
 
-  private routes (): void {
+  private async routes (): Promise<void> {
     this.app.get('/', (_req: Request, res: Response) => {
       res.status(200).json({ message: 'I life' })
     })
 
     this.app.use(config.routeBase, routeAuth('/auth'))
-    this.app.use(config.routeBase, routerUser('/user'))
+    this.app.use(config.routeBase, await routerUser('/user'))
     this.app.use(config.routeBase, routeStation('/station'))
     this.app.use(config.routeBase, routeVehicle('/vehicle'))
     this.app.use(config.routeBase, routeLoan('/loan'))
@@ -48,7 +51,7 @@ export class Server {
   }
 
   public listen (): void {
-    this.app.listen(this.port, () => {
+    this.app.listen('3001', () => {
       console.log(`Servidor corriendo en puerto http://localhost:${this.port}`)
     })
   }

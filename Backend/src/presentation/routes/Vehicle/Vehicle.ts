@@ -5,11 +5,11 @@ import { VehicleDtoEspefic } from '../../../domain/dtos/Vehicle/create'
 import { RepositoryVehicule } from '../../../infrastructure/repositories/Vehicule/vehicule'
 import { VehicleService } from '../../../application/use-cases/Vehicle/VehicleService'
 import { VehicleController } from '../../controllers/Vehicle/Vehicle'
-import { repositoryStation } from '../../../infrastructure/repositories/Station/station'
+import { RepositoryStation } from '../../../infrastructure/repositories/Station/station'
 
 export const routeVehicle = (prefix: string): Router => {
   const repositoryVehicle = new RepositoryVehicule()
-  const repostoryStation = new repositoryStation()
+  const repostoryStation = new RepositoryStation()
 
   const service = new VehicleService(repositoryVehicle, repostoryStation)
 
@@ -20,6 +20,7 @@ export const routeVehicle = (prefix: string): Router => {
   route.get(`${prefix}`, controller.getVehicle)
   route.get(`${prefix}/available`, controller.getVehicleAvaible)
   route.get(`${prefix}/types`, controller.getVehicleTypes)
+  route.get(`${prefix}/typesMechanical`, controller.getTypesMechanical)
   route.get(`${prefix}/station/:id/available`, controller.getVehicleAvaibleByStation)
 
   return route

@@ -1,34 +1,67 @@
+import { NodePgDatabase } from 'drizzle-orm/node-postgres'
+import { eq } from 'drizzle-orm'
+import { Pool } from 'pg'
 import { ICrudOperations } from '../../../domain/interfaces/common/ICrud'
+import { DatabaseSql } from '../../database/data'
+import { payments } from '../../database/Schemas/Payments'
 import { Payment } from '../../../domain/entities/Payment/payment'
 
-let payments: Payment[] = []
-
-// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class PaymentRepository implements ICrudOperations<Payment> {
-  save (data: Payment): void {
-    payments.push(data)
+  private readonly pool: NodePgDatabase<Record<string, never>> & { $client: Pool }
+
+  constructor () {
+    this.pool = DatabaseSql.getInstacne().getDb()
   }
 
-  delete (id: string): void {
-    payments = payments.filter(payment => payment.getPaymentId() !== id)
+  // 🔹 CREATE
+  async save (data: Payment): Promise<void> {
+    await this.pool.insert(payments).values({
+      paymentId: data.getPaymentId(),
+      loanId: data.getLoanId(),
+      amount: data.getAmount().toString(), // decimal -> string
+      paymentDate: data.getPaymentDate(),
+      paymentMethod: data.getPaymethod(),
+      status: data.getStatus()
+    })
   }
 
-  update (data: Payment): void {
-    const index = payments.findIndex(payment => payment.getPaymentId() === data.getPaymentId())
-    if (index !== -1) {
-      payments[index] = data
-    }
+  // 🔹 DELETE
+  async delete (id: string): Promise<void> {
+    await this.pool.delete(payments).where(eq(payments.paymentId, id))
   }
 
-  findById (id: string): any {
-    return payments.find(payment => payment.getPaymentId() === id)
+  // 🔹 UPDATE
+  async update (data: Payment): Promise<void> {
+    await this.pool
+      .update(payments)
+      .set({
+        loanId: data.getLoanId(),
+        amount: data.getAmount().toString(),
+        paymentDate: data.getPaymentDate(),
+        paymentMethod: data.getPaymethod(),
+        status: data.getStatus()
+      })
+      .where(eq(payments.paymentId, data.getPaymentId()))
   }
 
-  findByLoanId (loanId: string): any {
-    return payments.find(pay => pay.getLoanId() === loanId)
+  // 🔹 FIND BY ID
+  async findById (id: string): Promise<any> {
+    return await this.pool
+      .select()
+      .from(payments)
+      .where(eq(payments.paymentId, id))
   }
 
-  findAll (): Payment[] {
-    return payments
+  // 🔹 FIND BY LOAN ID
+  async findByLoanId (loanId: string): Promise<any[]> {
+    return await this.pool
+      .select()
+      .from(payments)
+      .where(eq(payments.loanId, loanId))
+  }
+
+  // 🔹 FIND ALL
+  async findAll (): Promise<any> {
+    return await this.pool.select().from(payments)
   }
 }

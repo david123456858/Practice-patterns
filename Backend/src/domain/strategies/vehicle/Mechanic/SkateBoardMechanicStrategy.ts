@@ -18,6 +18,7 @@ export class SkateboardMecanicEstrategy implements VehicleStrategy {
     this.builder.setGeoLocation(dto.getLocation())
     this.builder.setMaxUserWeight(dto.getMaxUserWeight())
     this.builder.setVelocityMax(dto.getCostForMinute())
+    this.builder.setCostForMinute(dto.getCostForMinute())
     this.builder.setType(dto.getVehicleType())
     this.builder.setDeskSize(dto.propities.deckSize)
     this.builder.setMechanicalComponents(dto.propities.info)

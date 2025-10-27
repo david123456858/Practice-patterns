@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
+import { roleAdmin } from '../../../domain/entities/Role/Role'
 import { User } from '../../../domain/entities/User/User'
 import { ICrudOperations } from '../../../domain/interfaces/common/ICrud'
 import { IFailureProcess, ISuccessProcess } from '../../../domain/interfaces/common/IResults'
@@ -10,9 +11,35 @@ export class ServiceUser {
     this.userRepository = userRepository
   }
 
+  async createAdmin (): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
+    try {
+      const user = new User(
+        '1',
+        'Admin',
+        'admin',
+        'admin@gmail.com',
+        'admin',
+        roleAdmin // rol por defecto
+      )
+
+      const findUser = await this.userRepository.findById(user.getCC())
+
+      if (findUser.length > 0) return FailureProccess('admin exist', 404)
+
+      if (!user) {
+        return FailureProccess('User not found', 404)
+      }
+      await this.userRepository.save(user)
+
+      return SuccessProcess('user admin created', 200)
+    } catch (error) {
+      return FailureProccess('Error fetching user', 500)
+    }
+  }
+
   async getById (cc: string): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
     try {
-      const user = this.userRepository.findById(cc)
+      const user = await this.userRepository.findById(cc)
       if (!user) {
         return FailureProccess('User not found', 404)
       }
@@ -24,11 +51,9 @@ export class ServiceUser {
 
   async getAll (): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
     try {
-      const users = this.userRepository.findAll()
+      const users = await this.userRepository.findAll()
 
-      const usersClean = users.map(user => user.toJSON())
-
-      return SuccessProcess(usersClean, 200)
+      return SuccessProcess(users, 200)
     } catch (error) {
       return FailureProccess('Error fetching users', 500)
     }

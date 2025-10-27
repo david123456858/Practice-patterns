@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { createStationDto } from '../../../domain/dtos/Station/create'
+import { GeoLocation } from '../../../domain/entities/GeoLocation/GeoLocation'
 import { Station } from '../../../domain/entities/Station/Station'
 import { ICrudOperations } from '../../../domain/interfaces/common/ICrud'
 import { IFailureProcess, ISuccessProcess } from '../../../domain/interfaces/common/IResults'
@@ -14,26 +15,28 @@ export class ServiceStation implements IServicesOperations {
 
   async create (stationDto: createStationDto): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
     try {
-      const findStation = this.userRepository.findById(stationDto.id)
+      const findStation = await this.userRepository.findById(stationDto.id)
       if (findStation) {
-        return FailureProccess('User already exists', 400)
+        return FailureProccess('Station already exists', 400)
       }
       const station = new Station(
         stationDto.id,
         stationDto.name,
         stationDto.address,
-        stationDto.geoLocation
+        new GeoLocation(
+          stationDto.geoLocation.getLatitude(),
+          stationDto.geoLocation.getLatitude())
       )
       this.userRepository.save(station)
-      return SuccessProcess('User created successfully', 201)
+      return SuccessProcess('Station created successfully', 201)
     } catch (error) {
-      return FailureProccess('Error creating user', 500)
+      return FailureProccess('Error creating Station', 500)
     }
   }
 
   async getById (id: string): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
     try {
-      const station = this.userRepository.findById(id)
+      const station = await this.userRepository.findById(id)
       if (!station) {
         return FailureProccess('User not found', 404)
       }
@@ -45,7 +48,7 @@ export class ServiceStation implements IServicesOperations {
 
   async getAll (): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
     try {
-      const users = this.userRepository.findAll()
+      const users = await this.userRepository.findAll()
       return SuccessProcess(users, 200)
     } catch (error) {
       return FailureProccess('Error fetching users', 500)

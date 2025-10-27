@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import { ServiceImages } from '../../../aplication/case-use/caseUseImages'
+import { ServiceImages } from '../../../aplication/case-use/caseUseImages.js'
 import path from 'path'
 
 export class ImagesController {

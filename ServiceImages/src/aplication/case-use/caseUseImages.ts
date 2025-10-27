@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
-import { FailureProccess, SuccessProcess } from './../../utils/result'
-import { IFailureProcess } from './../../domain/interfaces/Result'
-import { ISuccessProcess } from '../../domain/interfaces/Result'
-import { ConcreteBuilderImagesVehicles } from '../../infrestructure/builders/ConcreteImagesVehicles'
-import { DirectorImages } from '../Director/directorImages'
-import { repositoryImages } from '../../infrestructure/repositorys/imagesRepository'
-import { JwtUrlSigner } from '../../presentation/middleware/jwt/jwt'
+import { FailureProccess, SuccessProcess } from './../../utils/result.js'
+import { IFailureProcess } from './../../domain/interfaces/Result.js'
+import { ISuccessProcess } from '../../domain/interfaces/Result.js'
+import { ConcreteBuilderImagesVehicles } from '../../infrestructure/builders/ConcreteImagesVehicles.js'
+import { DirectorImages } from '../Director/directorImages.js'
+import { repositoryImages } from '../../infrestructure/repositorys/imagesRepository.js'
+import { JwtUrlSigner } from '../../presentation/middleware/jwt/jwt.js'
 import fs from 'fs'
 
 export class ServiceImages {
@@ -51,12 +51,12 @@ export class ServiceImages {
       if (!id) return FailureProccess('Bad requests', 400)
       const Imagevehicle = await this.repository.getByIdVehicle(id)
 
-      if (Imagevehicle === undefined) return FailureProccess('No found', 404)
+      if (Imagevehicle.length < 1) return FailureProccess('No found', 404)
 
       const UrlGenerated = Imagevehicle.map((index) => this.jwtURLs.generateSecureUrl(index.idImages))
+      console.log(UrlGenerated)
 
       return SuccessProcess({
-        Imagevehicle,
         images: UrlGenerated
       }, 200)
     } catch (error) {

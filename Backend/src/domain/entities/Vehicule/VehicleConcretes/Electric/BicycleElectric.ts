@@ -42,13 +42,13 @@ export class BicycleElectric extends Bicycle {
 
   // Getters
 
-  getMechanicalInfo (): ElectricComponents {
+  getInfo (): ElectricComponents {
     return this.info
   }
 
   // Setters
 
-  setMechanicalInfo (info: ElectricComponents): void {
+  setInfo (info: ElectricComponents): void {
     this.info = info
   }
 }

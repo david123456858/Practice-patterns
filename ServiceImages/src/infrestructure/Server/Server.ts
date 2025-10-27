@@ -1,20 +1,20 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
-import express, { Application } from 'express'
+import express, { Application, Request, Response } from 'express'
 import cors from 'cors'
 import morgan from 'morgan'
-import { router } from '../../presentation/routes/index'
+import { router } from '../../presentation/routes/index.js'
 
 export class Server {
   private readonly app: Application
   private readonly router: router
-  private readonly port: string
+  private readonly port: number
 
   private static instance: Server
 
   private constructor () {
     this.app = express()
-    this.port = '3000'
+    this.port = 3000
     this.router = new router()
 
     this.Middlwares()
@@ -30,6 +30,9 @@ export class Server {
   }
 
   private routes (): void {
+    this.app.get('/', (_req: Request, res: Response) => {
+      res.status(200).json({ message: 'I life' })
+    })
     this.app.use('/api', this.router.router)
   }
 
@@ -46,7 +49,7 @@ export class Server {
      * listenServer
      */
   public listenServer (): void {
-    this.app.listen(this.port, () => {
+    this.app.listen(this.port, '0.0.0.0', () => {
       console.log(`Servidor corriendo en puerto http://localhost:${this.port}`)
     })
   }

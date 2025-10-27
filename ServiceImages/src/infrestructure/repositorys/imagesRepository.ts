@@ -1,8 +1,8 @@
 import { NodePgDatabase } from 'drizzle-orm/node-postgres'
-import { ImagesVehicle } from '../../domain/entities/ImagesVehicle'
-import { OperationsImages } from '../../domain/interfaces/OperationsBase'
-import { Images } from '../../domain/schemas/images'
-import { DatabaseSql } from '../database/db'
+import { ImagesVehicle } from '../../domain/entities/ImagesVehicle.js'
+import { OperationsImages } from '../../domain/interfaces/OperationsBase.js'
+import { Images } from '../../domain/schemas/images.js'
+import { DatabaseSql } from '../database/db.js'
 import { Pool, QueryResult } from 'pg'
 import { eq } from 'drizzle-orm'
 

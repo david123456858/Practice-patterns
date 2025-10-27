@@ -25,13 +25,9 @@ export class ServiceLoan implements IServicesOperations {
 
   async create (LoanDto: createLoanDto): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
     try {
-      const findLoan = this.loanRepository.findById(LoanDto.loanId)
-      if (findLoan) {
+      const findLoan = await this.loanRepository.findById(LoanDto.loanId)
+      if (findLoan.length > 1) {
         return FailureProccess('loan already exists', 400)
-      }
-      const vehicle = this.vehicleReposito.findById(LoanDto.vehicleId)
-      if (!vehicle) {
-        return FailureProccess('Vehicle already exists', 400)
       }
       const loan = new Loan(
         LoanDto.loanId,
@@ -40,12 +36,13 @@ export class ServiceLoan implements IServicesOperations {
         LoanDto.startStationId,
         new Date()
       )
-      const vehicleInUse = this.vehicleReposito.findById(LoanDto.vehicleId)
+      const vehicleInUse = await this.vehicleReposito.findById(LoanDto.vehicleId)
       if (!vehicleInUse) {
         return FailureProccess('Vehicle not found', 404)
       }
-      vehicleInUse.setState(StatusVehicle.IN_USE)
-      this.vehicleReposito.update(vehicleInUse) // actualizamos el estado del vehiculo
+      const vehicle = vehicleInUse.find(index => index.idVehicle === LoanDto.vehicleId)
+      vehicle.state = StatusVehicle.IN_USE
+      this.vehicleReposito.update(vehicle) // actualizamos el estado del vehiculo
       this.loanRepository.save(loan)
       console.log(loan)
 
@@ -57,7 +54,7 @@ export class ServiceLoan implements IServicesOperations {
 
   async getById (id: string): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
     try {
-      const Loan = this.loanRepository.findById(id)
+      const Loan = await this.loanRepository.findById(id)
       if (!Loan) {
         return FailureProccess('loan not found', 404)
       }
@@ -69,7 +66,7 @@ export class ServiceLoan implements IServicesOperations {
 
   async getAll (): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
     try {
-      const Loans = this.loanRepository.findAll()
+      const Loans = await this.loanRepository.findAll()
       return SuccessProcess(Loans, 200)
     } catch (error) {
       return FailureProccess('Error fetching loans', 500)
@@ -94,50 +91,57 @@ export class ServiceLoan implements IServicesOperations {
 
   async returnVehicleLoaned (loanDto: finishLoanDto): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
     try {
-      const loan = this.loanRepository.findById(loanDto.loanId)
+    // 🔹 1. Buscar préstamo
+      const loanResult = await this.loanRepository.findById(loanDto.loanId)
+      const loan = loanResult.find(index => index.loanId === loanDto.loanId)
       if (!loan) return FailureProccess('Loan not found', 404)
 
-      loan.setEndTime(new Date())
-      loan.setStatus(LoanStatus.COMPLETED)
-      loan.setEndStationId(loanDto.endStationId) // cambiar por la estacion real
+      // 🔹 2. Actualizar estado y tiempos
+      const endTime = new Date()
+      const startTime = new Date(loan.startTime)
+      const durationMinutes = diffDatesInMinutes(startTime, endTime)
+      const cost = durationMinutes * Number(loan.cost || 0)
 
-      const durationHours = diffDatesInMinutes(loan.getStartTime(), loan.getEndTime())
+      loan.endTime = endTime
+      loan.status = LoanStatus.COMPLETED
+      loan.endStationId = loanDto.endStationId
+      loan.cost = cost.toString()
 
-      const vehicle = this.vehicleReposito.findById(loan.getVehicleId())
+      // 🔹 3. Buscar vehículo
+      const vehicleResult = await this.vehicleReposito.findById(loan.vehicleId)
+      const vehicle = Array.isArray(vehicleResult) ? vehicleResult[0] : vehicleResult
       if (!vehicle) return FailureProccess('Vehicle not found', 404)
 
-      loan.setCost(durationHours * vehicle.getCostForMinute())
+      vehicle.state = StatusVehicle.AVAILABLE
 
-      vehicle.setState(StatusVehicle.AVAILABLE)
+      // 🔹 4. Buscar usuario
+      const userResult = await this.repositoryUser.findById(loan.userId)
+      const user = Array.isArray(userResult) ? userResult[0] : userResult
+      if (!user) return FailureProccess('User not found', 404)
 
-      const userHistory = this.repositoryUser.findById(loan.getUserId())
-
-      if (!userHistory) return FailureProccess('User not found', 404)
-      userHistory.setLoanHistory(loan)
-
-      const verifiy = userHistory.getLoanHistory().filter(u => u.getLoanId() === loan.getLoanId())
-      if (verifiy.length === 0) {
-        userHistory.setLoanHistory(loan)
-      }
-
+      // 🔹 5. Crear pago
       const dto = new createPaymentDto()
-      dto.amount = loan.getCost()
-      dto.loanId = loan.getLoanId()
+      dto.amount = cost
+      dto.loanId = loan.loanId
       dto.method = PaymentMethod.EFECTIVE
 
-      const resulty = await this.servicePayment.paymentCreate(dto)
-      if (!resulty.success) {
-        console.log()
-        return FailureProccess('', 444)
+      const paymentResult = await this.servicePayment.paymentCreate(dto)
+      if (!paymentResult.success) {
+        return FailureProccess('Payment creation failed', 400)
       }
-      this.vehicleReposito.update(vehicle)
-      this.loanRepository.update(loan)
-      this.repositoryUser.update(userHistory)
-
+      console.log(vehicle)
       console.log(loan)
-      return SuccessProcess(resulty.value, 200)
+      console.log(user)
+
+      // 🔹 6. Actualizar entidades en DB
+      await this.vehicleReposito.update(vehicle)
+      await this.loanRepository.update(loan)
+      await this.repositoryUser.update(user)
+
+      return SuccessProcess(paymentResult.value, 200)
     } catch (error) {
-      return FailureProccess('', 500)
+      console.error('Error in returnVehicleLoaned:', error)
+      return FailureProccess('Internal Server Error', 500)
     }
   }
 }
