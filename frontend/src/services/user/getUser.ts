@@ -1,18 +1,5 @@
 import { VITE_API_URL } from "@/config/api"
-
-export interface ApiUser {
-    idUser: string
-    name: string
-    lastName: string
-    email: string
-    role: string
-    password: string
-    createdAt: string
-}
-
-export interface ApiResponse {
-    message: ApiUser[]
-}
+import type { ApiUser, ApiResponse } from "@/interface/user/user";
 
 export const getUsers = async (): Promise<ApiUser[]> => {
     try {

@@ -20,3 +20,14 @@ export interface AuthenticatedUser {
   userName: string;
   role: string;
 }
+
+
+export interface ApiUser extends UserBase {
+  role: string;
+  password: string;
+  createdAt: string;
+}
+
+export interface ApiResponse {
+  message: ApiUser[];
+}
