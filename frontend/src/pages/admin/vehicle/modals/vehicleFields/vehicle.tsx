@@ -20,69 +20,58 @@ const VehicleFields: React.FC<VehicleFieldsProps> = ({
     handleInputChange,
     renderMechanicalSelect,
 }) => {
-    switch (formData.tipoVehiculo) {
-        case "BICYCLE":
-            return (
-                <BicycleFields
-                    formData={formData}
-                    handleInputChange={handleInputChange}
-                    renderMechanicalSelect={renderMechanicalSelect}
-                />
-            )
-
-        case "ELECTRIC_BICYCLE":
-            return (
-                <ElectricBicycleFields
-                    formData={formData}
-                    handleInputChange={handleInputChange}
-                />
-            )
-
-        case "SCOOTER":
-            return (
-                <ScooterFields
-                    formData={formData}
-                    handleInputChange={handleInputChange}
-                    renderMechanicalSelect={renderMechanicalSelect}
-                />
-            )
-
-        case "ELECTRIC_SCOOTER":
-            return (
-                <ElectricScooterFields
-                    formData={formData}
-                    handleInputChange={handleInputChange}
-                />
-            )
-
-        case "CAR_ELECTRIC":
-            return (
-                <CarElectricFields
-                    formData={formData}
-                    handleInputChange={handleInputChange}
-                />
-            )
-
-        case "SKATEBOARD":
-            return (
-                <SkateboardFields
-                    formData={formData}
-                    handleInputChange={handleInputChange}
-                    renderMechanicalSelect={renderMechanicalSelect}
-                />
-            )
-
-        case "ELECTRIC_SKATEBOARD":
-            return (
-                <ElectricSkateboardFields
-                    formData={formData}
-                    handleInputChange={handleInputChange}
-                />
-            )
-
-        default:
-            return null
+    const fieldComponents: Record<
+        string,
+        React.ReactNode
+    > = {
+        BICYCLE: (
+            <BicycleFields
+                formData={formData}
+                handleInputChange={handleInputChange}
+                renderMechanicalSelect={renderMechanicalSelect}
+            />
+        ),
+        ELECTRIC_BICYCLE: (
+            <ElectricBicycleFields
+                formData={formData}
+                handleInputChange={handleInputChange}
+            />
+        ),
+        SCOOTER: (
+            <ScooterFields
+                formData={formData}
+                handleInputChange={handleInputChange}
+                renderMechanicalSelect={renderMechanicalSelect}
+            />
+        ),
+        ELECTRIC_SCOOTER: (
+            <ElectricScooterFields
+                formData={formData}
+                handleInputChange={handleInputChange}
+            />
+        ),
+        CAR_ELECTRIC: (
+            <CarElectricFields
+                formData={formData}
+                handleInputChange={handleInputChange}
+            />
+        ),
+        SKATEBOARD: (
+            <SkateboardFields
+                formData={formData}
+                handleInputChange={handleInputChange}
+                renderMechanicalSelect={renderMechanicalSelect}
+            />
+        ),
+        ELECTRIC_SKATEBOARD: (
+            <ElectricSkateboardFields
+                formData={formData}
+                handleInputChange={handleInputChange}
+            />
+        ),
     }
+
+    return fieldComponents[formData.tipoVehiculo] || null
 }
 
 export default VehicleFields

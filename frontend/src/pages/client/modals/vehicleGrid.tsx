@@ -52,15 +52,15 @@ export default function VehicleGrid({
                                     <CardDescription className="capitalize">{vehicle.type}</CardDescription>
                                 </div>
                             </div>
-                            <div className="text-sm font-medium text-muted-foreground">{vehicle.idStation}</div>
+                            <div className="text-sm font-medium text-muted-foreground">{vehicle.stationId}</div>
                         </div>
                     </CardHeader>
 
                     <CardContent className="space-y-3">
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        {/* <div className="flex items-center gap-2 text-sm text-muted-foreground">
                             <MapPin className="h-4 w-4" />
                             <span>Estación: {vehicle.name}</span>
-                        </div>
+                        </div> */}
 
                         <div className="flex items-center justify-between text-sm">
                             <span className="text-muted-foreground">Costo por minuto:</span>

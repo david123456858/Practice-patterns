@@ -69,10 +69,8 @@ export default function HeaderClient({
                 endStationId: selectedStation[vehicleId],
             })
 
-            // ✅ Guardamos el amount que devuelve el backend
             setAmount(response.amount.toString())
 
-            // abrir modal de pago
             setLoanToPay(reserved.loanId)
             const methods = await getPaymentMethods()
             setPaymentMethods(methods)

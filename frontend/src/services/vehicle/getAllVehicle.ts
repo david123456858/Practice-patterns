@@ -15,7 +15,7 @@ export interface Vehicle {
     idVehicle: string;
     color: string;
     model: string;
-    idStation: string;
+    stationId: string;
     name: string;
     state: "AVAILABLE" | "IN_USE" | "MAINTENANCE" | "OUT_OF_SERVICE";
     type: string;

@@ -1,4 +1,5 @@
 import { VITE_API_URL } from "@/config/api"
+import { getAllVehicles } from "../vehicle/getAllVehicle";
 
 export interface LoanPayload {
     loanId: string;
@@ -7,28 +8,38 @@ export interface LoanPayload {
     startStationId: string;
 }
 
-export const createLoan = async (loanData: Omit<LoanPayload, "userId">) => {
+export const createLoan = async (loanData: Omit<LoanPayload, "userId" | "startStationId">) => {
     try {
+        // ✅ Obtener usuario logueado
         const user = JSON.parse(localStorage.getItem("user") || "{}");
 
         if (!user?.userId) {
             throw new Error("No hay usuario logueado.");
         }
 
+        const vehicles = await getAllVehicles();
+        const selectedVehicle = vehicles.find(v => v.idVehicle === loanData.vehicleId);
+
+        if (!selectedVehicle) {
+            throw new Error("Vehículo no encontrado.");
+        }
+
         const payload: LoanPayload = {
             ...loanData,
             userId: user.userId,
+            startStationId: selectedVehicle.stationId, 
         };
+
+        console.log("📦 Enviando payload al backend:", payload);
 
         const response = await fetch(`${VITE_API_URL}loan`, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
         });
 
         if (!response.ok) {
+            console.error("❌ Error creando la reserva:", response);
             throw new Error("Error creando la reserva");
         }
 
