@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from "react"
-import { getUsers, type ApiUser } from "@/services/user/getUser"
+import { getUsers } from "@/services/user/getUser"
+import type { ApiUser } from "@/interface/user/user"
 
 import { Search, Filter, RefreshCw } from "lucide-react"
 import { Input } from "@/components/ui/input"
@@ -89,7 +90,7 @@ function ManagementUser() {
                     <CardHeader className="pb-4">
                         <CardTitle className="text-lg text-green-800 flex items-center gap-2">
                             <Filter className="h-5 w-5" />
-                            Filtros y Búsqueda
+                            Búsqueda
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
@@ -126,11 +127,11 @@ function ManagementUser() {
                                 <TableHeader>
                                     <TableRow className="border-green-200">
                                         <TableHead className="text-green-700 font-semibold">ID</TableHead>
-                                        <TableHead className="text-green-700 font-semibold">Nombre</TableHead>
-                                        <TableHead className="text-green-700 font-semibold">Apellido</TableHead>
-                                        <TableHead className="text-green-700 font-semibold">Email</TableHead>
-                                        <TableHead className="text-green-700 font-semibold">Rol</TableHead>
-                                        <TableHead className="text-green-700 font-semibold">Creado</TableHead>
+                                        <TableHead className="text-green-700 font-semibold">NOMBRE</TableHead>
+                                        <TableHead className="text-green-700 font-semibold">APELLIDO</TableHead>
+                                        <TableHead className="text-green-700 font-semibold">CORREO</TableHead>
+                                        <TableHead className="text-green-700 font-semibold">ROL</TableHead>
+                                        <TableHead className="text-green-700 font-semibold">FECHA DE REGISTRO</TableHead>
                                     </TableRow>
                                 </TableHeader>
 
@@ -140,7 +141,7 @@ function ManagementUser() {
                                             <TableCell className="font-medium text-green-800">{user.idUser}</TableCell>
                                             <TableCell className="text-green-700">{user.name}</TableCell>
                                             <TableCell className="text-green-700">{user.lastName}</TableCell>
-                                            <TableCell className="text-green-600">{user.email}</TableCell>
+                                            <TableCell className="text-green-700">{user.email}</TableCell>
                                             <TableCell>
                                                 {user.role ? (
                                                     <Badge

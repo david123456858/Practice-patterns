@@ -92,11 +92,11 @@ export function ManagementStation() {
                                 <TableHeader>
                                     <TableRow>
                                         <TableHead className="text-green-700 font-semibold">ID</TableHead>
-                                        <TableHead className="text-green-700 font-semibold">Nombre</TableHead>
-                                        <TableHead className="text-green-700 font-semibold">Dirección</TableHead>
-                                        <TableHead className="text-green-700 font-semibold">Latitud</TableHead>
-                                        <TableHead className="text-green-700 font-semibold">Longitud</TableHead>
-                                        <TableHead className="text-green-700 font-semibold">Creado</TableHead>
+                                        <TableHead className="text-green-700 font-semibold">NOMBRE</TableHead>
+                                        <TableHead className="text-green-700 font-semibold">DIRECCIÓN</TableHead>
+                                        <TableHead className="text-green-700 font-semibold">LATITUD</TableHead>
+                                        <TableHead className="text-green-700 font-semibold">LONGITUD</TableHead>
+                                        <TableHead className="text-green-700 font-semibold">FECHA DE REGISTRO</TableHead>
                                     </TableRow>
                                 </TableHeader>
 

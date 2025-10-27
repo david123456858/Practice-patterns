@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { getAvailableVehicles } from "@/services/vehicle/getVehicleAvailable"
 import { createLoan } from "@/services/loan/loan"
-import { type Vehicle } from "@/services/vehicle/getAllVehicle"
+import { type Vehicle } from "@/interface/vehicle/vehicleInterface"
 import PaymentModal from "./modals/payment"
 import ReservationModal from "./modals/reservation"
 import HeaderClient from "./modals/headerClient"
@@ -51,7 +51,7 @@ export default function ClientPage() {
     const filteredVehicles = vehicles.filter(
         (vehicle) =>
             vehicle.model.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            vehicle.type.toLowerCase().includes(searchTerm.toLowerCase())
+            vehicle.vehicleType.toLowerCase().includes(searchTerm.toLowerCase())
     )
 
     const handleReserveVehicle = async (vehicle: Vehicle) => {
@@ -65,7 +65,7 @@ export default function ClientPage() {
                 loanId: Math.floor(100000 + Math.random() * 900000).toString(),
                 userId: parsedUser.userId,
                 vehicleId: vehicle.idVehicle,
-                startStationId: vehicle.idStation,
+                startStationId: vehicle.station.idStation,
             }
 
             await createLoan(payload)

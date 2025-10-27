@@ -10,7 +10,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Search, Car, Filter, Plus, RefreshCw } from "lucide-react"
 
 import AddVehicleModal from "./modals/modalCreateVehicle"
-import { getAllVehicles, type Vehicle } from "@/services/vehicle/getAllVehicle"
+import { getAllVehicles } from "@/services/vehicle/getAllVehicle"
+import { type Vehicle } from "@/interface/vehicle/vehicleInterface"
 
 function ManagementVehicle() {
     const [searchTerm, setSearchTerm] = useState("")
@@ -42,7 +43,7 @@ function ManagementVehicle() {
             const matchesSearch =
                 vehicle.idVehicle.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 vehicle.model.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                vehicle.idStation.toLowerCase().includes(searchTerm.toLowerCase())
+                vehicle.station.idStation.toLowerCase().includes(searchTerm.toLowerCase())
 
             const matchesStatus = statusFilter === "all" || vehicle.state === statusFilter
 
@@ -192,12 +193,11 @@ function ManagementVehicle() {
                                 <TableHeader>
                                     <TableRow className="border-green-200">
                                         <TableHead className="text-green-700 font-semibold">ID</TableHead>
-                                        <TableHead className="text-green-700 font-semibold">Modelo</TableHead>
-                                        <TableHead className="text-green-700 font-semibold">Color</TableHead>
-                                        <TableHead className="text-green-700 font-semibold">Tipo</TableHead>
-                                        {/* <TableHead className="text-green-700 font-semibold">Estación</TableHead> */}
-                                        <TableHead className="text-green-700 font-semibold">Costo/min</TableHead>
-                                        <TableHead className="text-green-700 font-semibold">Estado</TableHead>
+                                        <TableHead className="text-green-700 font-semibold">MODELO</TableHead>
+                                        <TableHead className="text-green-700 font-semibold">COLOR</TableHead>
+                                        <TableHead className="text-green-700 font-semibold">TIPO</TableHead>
+                                        <TableHead className="text-green-700 font-semibold">COSTO/MIN</TableHead>
+                                        <TableHead className="text-green-700 font-semibold">ESTADO</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -207,7 +207,6 @@ function ManagementVehicle() {
                                             <TableCell className="text-gray-700">{vehicle.model}</TableCell>
                                             <TableCell className="text-gray-700">{vehicle.color}</TableCell>
                                             <TableCell className="text-gray-700 capitalize">{vehicle.type}</TableCell>
-                                            {/* <TableCell className="text-gray-700">{vehicle.name}</TableCell> */}
                                             <TableCell className="text-gray-700">${vehicle.costForMinute.toLocaleString()}</TableCell>
                                             <TableCell>{getStatusBadge(vehicle.state)}</TableCell>
                                         </TableRow>
