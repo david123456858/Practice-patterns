@@ -7,10 +7,8 @@ export const createVehicle = async (vehicle: Vehicle) => {
             throw new Error("Faltan datos obligatorios del vehículo")
         }
 
-        // 🔧 Normalizar tipo de vehículo a minúsculas
         const normalizedType = vehicle.vehicleType.toLowerCase()
 
-        // 🔧 Función para convertir fecha local a formato ISO
         const toIsoTimestamp = (ts: string | Date) => {
             try {
                 if (typeof ts === "string") {
@@ -19,10 +17,9 @@ export const createVehicle = async (vehicle: Vehicle) => {
                 }
                 if (ts instanceof Date) return ts.toISOString()
             } catch { }
-            return new Date().toISOString() // fallback
+            return new Date().toISOString() 
         }
 
-        // 🧩 Armar objeto base
         const baseData: any = {
             idVehicle: vehicle.idVehicle,
             vehicleType: normalizedType,
@@ -105,8 +102,6 @@ export const createVehicle = async (vehicle: Vehicle) => {
             default:
                 throw new Error(`Tipo de vehículo no soportado: ${vehicle.vehicleType}`)
         }
-
-        console.log("🚀 Enviando al backend:", baseData)
 
         const response = await fetch(`${VITE_API_URL}vehicle`, {
             method: "POST",

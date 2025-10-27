@@ -8,7 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Search, Plus, MapPin } from "lucide-react"
 import RegisterStation from "@/pages/admin/station/modals/modalCreateStation"
 import { getStations } from "@/services/station/station"
-import { type Station } from "@/interface/vehicle/vehicleInterface"
+import type { Station } from "@/interface/station/station"
 
 export function ManagementStation() {
     const [stations, setStations] = useState<Station[]>([])
@@ -108,7 +108,8 @@ export function ManagementStation() {
                                             <TableCell className="text-gray-700">{station.address}</TableCell>
                                             <TableCell className="text-gray-700">{station.geoLocation.latitude.toFixed(4)}</TableCell>
                                             <TableCell className="text-gray-700">{station.geoLocation.longitude.toFixed(4)}</TableCell>
-                                            <TableCell className="text-gray-700">{station.geoLocation.timestamp}</TableCell>
+                                            <TableCell className="text-gray-700">{station.geoLocation.timestamp instanceof Date? station.geoLocation.timestamp.toLocaleString(): station.geoLocation.timestamp}
+                                            </TableCell>                                        
                                         </TableRow>
                                     ))}
                                 </TableBody>

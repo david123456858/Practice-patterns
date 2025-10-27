@@ -1,37 +1,5 @@
-import { VITE_API_URL } from "@/config/api"
-
-export interface GeoLocation {
-    latitude: number;
-    longitude: number;
-    timestamp: string;
-}
-
-export interface BatteryInfo {
-    capacity: number;
-    autonomyRange: number;
-}
-
-export interface Vehicle {
-    idVehicle: string;
-    color: string;
-    model: string;
-    stationId: string;
-    name: string;
-    state: "AVAILABLE" | "IN_USE" | "MAINTENANCE" | "OUT_OF_SERVICE";
-    type: string;
-    geoLocation: GeoLocation;
-    maxUserWeight: number;
-    velocityMax: number;
-    costForMinute: number;
-    gears?: number;
-    hasBasket?: boolean;
-    hasSeat?: boolean;
-    batteryInfo?: BatteryInfo;
-}
-
-export interface VehicleResponse {
-    message: Vehicle[];
-}
+import { VITE_API_URL } from "@/config/api";
+import type { Vehicle, VehicleResponse } from "@/interface/vehicle/vehicleInterface";
 
 export const getAllVehicles = async (): Promise<Vehicle[]> => {
     try {
@@ -44,7 +12,7 @@ export const getAllVehicles = async (): Promise<Vehicle[]> => {
         const data: VehicleResponse = await response.json();
         return data.message;
     } catch (error) {
-        console.error('Error fetching vehicles:', error);
+        console.error("Error fetching vehicles:", error);
         throw error;
     }
 };

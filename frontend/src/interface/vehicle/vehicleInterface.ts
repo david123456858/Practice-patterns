@@ -1,129 +1,58 @@
-export interface GeoLocation {
-    latitude: number
-    longitude: number
-    timestamp: string
-}
-
-export interface Station {
-    idStation: string
-    name: string
-    address: string
-    geoLocation: {
-        latitude: number
-        longitude: number
-        timestamp: string
-    }
-}
+import type { Station, GeoLocation } from "@/interface/station/station";
 
 export interface InfoMechanical {
-    driveSystem?: string
-    Type?: string
-    bearingType?: string
+    driveSystem?: string;
+    Type?: string;
+    bearingType?: string;
 }
 
-export interface InfoElectric {
-    driveSystem?: string
-    Type?: string
-    bearingType?: string
-    capacity?: number           // capacidad de batería
-    autonomyRange?: number      // autonomía en km o minutos
+export interface InfoElectric extends InfoMechanical {
+    capacity?: number;
+    autonomyRange?: number;
 }
 
 export interface PropitiesMechanical {
-    gears?: number
-    hasBasket?: boolean
-    hasSeat?: boolean
-    deckSize?: number
-    info?: InfoMechanical
+    gears?: number;
+    hasBasket?: boolean;
+    hasSeat?: boolean;
+    deckSize?: number;
+    info?: InfoMechanical;
 }
 
-export interface PropitiesElectric {
-    gears?: number
-    hasBasket?: boolean
-    hasSeat?: boolean
-    deckSize?: number
-    numberOfDoors?: number       // para autos eléctricos
-    airConditioning?: boolean    // para autos eléctricos
-    capacityBattery?: number     // capacidad total de la batería
-    autonomyRange?: number       // rango de autonomía
-    info?: InfoElectric
+export interface PropitiesElectric extends PropitiesMechanical {
+    numberOfDoors?: number;
+    airConditioning?: boolean;
+    capacityBattery?: number;
+    autonomyRange?: number;
+    info?: InfoElectric;
 }
+
+// 🔹 Base general de vehículo
 export interface VehicleBase {
-    idVehicle: string
-    vehicleType: string
-    color: string
-    model: string
-    station: Station
-    geolocation: GeoLocation
-    maxUserWeight: number
-    velocityMax: number
-    costForMinute: number
+    idVehicle: string;
+    vehicleType: string;
+    color: string;
+    model: string;
+    station: Station;              
+    stationId?: string;             
+    geolocation: GeoLocation;       
+    maxUserWeight: number;
+    velocityMax: number;
+    costForMinute: number;
+    state?: "AVAILABLE" | "IN_USE" | "MAINTENANCE" | "OUT_OF_SERVICE";
+    name?: string;                  
 }
 
 export interface MechanicalVehicle extends VehicleBase {
-    propities: PropitiesMechanical
+    propities: PropitiesMechanical;
 }
 
 export interface ElectricVehicle extends VehicleBase {
-    propities: PropitiesElectric
+    propities: PropitiesElectric;
 }
 
-export type Vehicle = MechanicalVehicle | ElectricVehicle
+export type Vehicle = MechanicalVehicle | ElectricVehicle;
 
-// import type { Station, GeoLocation } from "@/interface/station/station";
-
-// export interface InfoMechanical {
-//     driveSystem?: string;
-//     Type?: string;
-//     bearingType?: string;
-// }
-
-// export interface InfoElectric {
-//     driveSystem?: string;
-//     Type?: string;
-//     bearingType?: string;
-//     capacity?: number;           // capacidad de batería
-//     autonomyRange?: number;      // autonomía en km o minutos
-// }
-
-// export interface PropitiesMechanical {
-//     gears?: number;
-//     hasBasket?: boolean;
-//     hasSeat?: boolean;
-//     deckSize?: number;
-//     info?: InfoMechanical;
-// }
-
-// export interface PropitiesElectric {
-//     gears?: number;
-//     hasBasket?: boolean;
-//     hasSeat?: boolean;
-//     deckSize?: number;
-//     numberOfDoors?: number;       // para autos eléctricos
-//     airConditioning?: boolean;    // para autos eléctricos
-//     capacityBattery?: number;     // capacidad total de la batería
-//     autonomyRange?: number;       // rango de autonomía
-//     info?: InfoElectric;
-// }
-
-// export interface VehicleBase {
-//     idVehicle: string;
-//     vehicleType: string;
-//     color: string;
-//     model: string;
-//     station: Station;       // ahora viene desde stationInterface
-//     geolocation: GeoLocation; // ahora viene desde stationInterface
-//     maxUserWeight: number;
-//     velocityMax: number;
-//     costForMinute: number;
-// }
-
-// export interface MechanicalVehicle extends VehicleBase {
-//     propities: PropitiesMechanical;
-// }
-
-// export interface ElectricVehicle extends VehicleBase {
-//     propities: PropitiesElectric;
-// }
-
-// export type Vehicle = MechanicalVehicle | ElectricVehicle;
+export interface VehicleResponse {
+    message: Vehicle[];
+}

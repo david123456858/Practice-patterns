@@ -2,7 +2,7 @@ export interface LoanBase {
     loanId: string;
     userId: string;
     vehicleId: string;
-    startStationId: string;
+    startStationId: string | undefined;
     endStationId?: string | null;
 }
 
