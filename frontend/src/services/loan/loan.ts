@@ -1,16 +1,9 @@
-import { VITE_API_URL } from "@/config/api"
+import { VITE_API_URL } from "@/config/api";
 import { getAllVehicles } from "../vehicle/getAllVehicle";
-
-export interface LoanPayload {
-    loanId: string;
-    userId: string;
-    vehicleId: string;
-    startStationId: string;
-}
+import type { Loan, LoanPayload } from "@/interface/loan/loan";
 
 export const createLoan = async (loanData: Omit<LoanPayload, "userId" | "startStationId">) => {
     try {
-        // ✅ Obtener usuario logueado
         const user = JSON.parse(localStorage.getItem("user") || "{}");
 
         if (!user?.userId) {
@@ -27,10 +20,9 @@ export const createLoan = async (loanData: Omit<LoanPayload, "userId" | "startSt
         const payload: LoanPayload = {
             ...loanData,
             userId: user.userId,
-            startStationId: selectedVehicle.stationId, 
+            startStationId: selectedVehicle.stationId,
+            loanId: loanData.loanId, // aseguramos consistencia con la interfaz
         };
-
-        console.log("📦 Enviando payload al backend:", payload);
 
         const response = await fetch(`${VITE_API_URL}loan`, {
             method: "POST",
@@ -50,29 +42,19 @@ export const createLoan = async (loanData: Omit<LoanPayload, "userId" | "startSt
     }
 };
 
-export interface Loan {
-    loanId: string
-    userId: string
-    vehicleId: string
-    startTime: string
-    endTime: string
-    startStationId: string
-    endStationId: string | null
-    status: "ACTIVE" | "COMPLETED" | "CANCELED"
-    cost: number
-}
-
 export const getLoans = async (): Promise<Loan[]> => {
     try {
-        const response = await fetch(`${VITE_API_URL}loan`)
-        if (!response.ok) throw new Error("Error al traer préstamos")
-        const data = await response.json()
-        return data.message
+        const response = await fetch(`${VITE_API_URL}loan`);
+        if (!response.ok) throw new Error("Error al traer préstamos");
+
+        const data = await response.json();
+        return data.message as Loan[];
     } catch (error) {
-        console.error("Error en getLoans:", error)
-        throw error
+        console.error("Error en getLoans:", error);
+        throw error;
     }
-}
+};
+
 
 interface ReturnVehiclePayload {
     loanId: string;
