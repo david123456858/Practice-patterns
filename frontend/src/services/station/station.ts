@@ -1,15 +1,25 @@
-import { VITE_API_URL } from "../../config/api";
-import { type Station } from "@/interface/vehicle/vehicleInterface"
+import { VITE_API_URL } from "@/config/api";
+import type { Station } from "@/interface/station/station";
 
 export const createStation = async (stationData: Station): Promise<Station> => {
     try {
+        const payload = {
+            ...stationData,
+            geoLocation: {
+                ...stationData.geoLocation,
+                timestamp: new Date(stationData.geoLocation.timestamp).toISOString(), 
+            },
+        };
+
+        console.log(payload)
+
         const response = await fetch(`${VITE_API_URL}station`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(stationData),
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
         });
+
+        console.log(payload)
 
         if (!response.ok) {
             throw new Error(`Error ${response.status}: ${response.statusText}`);
@@ -18,15 +28,15 @@ export const createStation = async (stationData: Station): Promise<Station> => {
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error('Error creating station:', error);
-        throw new Error('Failed to create station');
+        console.error("Error creating station:", error);
+        throw new Error("Failed to create station");
     }
 };
 
 export const getStations = async (): Promise<Station[]> => {
     try {
-        const response = await fetch(`${VITE_API_URL}station`)
-        const data = await response.json()
+        const response = await fetch(`${VITE_API_URL}station`);
+        const data = await response.json();
 
         const formattedStations: Station[] = data.message.map((station: any) => ({
             idStation: station.idStation,
@@ -40,12 +50,11 @@ export const getStations = async (): Promise<Station[]> => {
                     timeStyle: "short",
                 }),
             },
-        }))
+        }));
 
-        return formattedStations
+        return formattedStations;
     } catch (error) {
-        console.error("Error fetching stations:", error)
-        return []
+        console.error("Error fetching stations:", error);
+        return [];
     }
-}
-
+};

@@ -21,7 +21,7 @@ export const createLoan = async (loanData: Omit<LoanPayload, "userId" | "startSt
             ...loanData,
             userId: user.userId,
             startStationId: selectedVehicle.stationId,
-            loanId: loanData.loanId, // aseguramos consistencia con la interfaz
+            loanId: loanData.loanId, 
         };
 
         const response = await fetch(`${VITE_API_URL}loan`, {

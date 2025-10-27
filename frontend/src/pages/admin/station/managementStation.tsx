@@ -96,7 +96,7 @@ export function ManagementStation() {
                                         <TableHead className="text-green-700 font-semibold">Dirección</TableHead>
                                         <TableHead className="text-green-700 font-semibold">Latitud</TableHead>
                                         <TableHead className="text-green-700 font-semibold">Longitud</TableHead>
-                                        <TableHead className="text-green-700 font-semibold">Actualizado</TableHead>
+                                        <TableHead className="text-green-700 font-semibold">Creado</TableHead>
                                     </TableRow>
                                 </TableHeader>
 

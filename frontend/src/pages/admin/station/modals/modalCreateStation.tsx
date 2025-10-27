@@ -2,12 +2,7 @@ import type React from "react"
 import { useState } from "react"
 import { X, MapPin, Navigation } from "lucide-react"
 import { createStation } from "@/services/station/station"
-
-interface geoLocation {
-    latitude: number;
-    longitude: number;
-    timeStamp: Date;
-}
+import type { GeoLocation } from "@/interface/station/station"
 
 interface RegisterStationModalProps {
     isOpen: boolean
@@ -20,15 +15,16 @@ function RegisterStation({ isOpen, onClose, onSuccess }: RegisterStationModalPro
         name: "",
         address: ""
     })
-    const [geoData, setGeoData] = useState<geoLocation | null>(null)
+
+    const [geoData, setGeoData] = useState<GeoLocation | null>(null)
     const [isGettingLocation, setIsGettingLocation] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
 
     //RAMDONID
     const generateRandomId = (): string => {
-        const min = 100000000; 
-        const max = 999999999; 
+        const min = 100000000;
+        const max = 999999999;
         const randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
         return randomNum.toString();
     }
@@ -51,10 +47,10 @@ function RegisterStation({ isOpen, onClose, onSuccess }: RegisterStationModalPro
                 })
             })
 
-            const geoLocation: geoLocation = {
+            const geoLocation: GeoLocation = {
                 latitude: position.coords.latitude,
                 longitude: position.coords.longitude,
-                timeStamp: new Date()
+                timestamp: new Date()
             }
 
             setGeoData(geoLocation)
@@ -218,7 +214,7 @@ function RegisterStation({ isOpen, onClose, onSuccess }: RegisterStationModalPro
                                         </div>
                                         <div className="col-span-2">
                                             <span className="text-green-600">Fecha:</span>
-                                            <span className="block font-medium">{geoData.timeStamp.toLocaleString()}</span>
+                                            <span className="block font-medium">{geoData.timestamp.toLocaleString()}</span>
                                         </div>
                                     </div>
                                 </div>
