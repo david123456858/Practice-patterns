@@ -40,6 +40,8 @@ export default function ClientPage() {
         const fetchVehicles = async () => {
             try {
                 const data = await getAvailableVehicles()
+                console.log("🚗 Vehículos recibidos:", data) // 👈 agrega esto
+
                 setVehicles(data)
             } catch (err) {
                 console.error(err)

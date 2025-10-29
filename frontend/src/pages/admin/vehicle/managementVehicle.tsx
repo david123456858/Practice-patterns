@@ -187,8 +187,9 @@ function ManagementVehicle() {
                             </CardTitle>
                         </div>
                     </CardHeader>
+
                     <CardContent>
-                        <div className="overflow-x-auto">
+                        <div className="overflow-x-auto max-h-105 overflow-y-scroll">
                             <Table>
                                 <TableHeader>
                                     <TableRow className="border-green-200">

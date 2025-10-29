@@ -3,8 +3,8 @@
 import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Car, Bike, Zap, MapPin, ChevronDown, ChevronUp } from "lucide-react"
-import { type Vehicle } from "@/services/vehicle/getAllVehicle"
+import { Car, Bike, Zap, ChevronDown, ChevronUp } from "lucide-react"
+import { type Vehicle } from "@/interface/vehicle/vehicleInterface"
 
 interface VehicleGridProps {
     vehicles: Vehicle[]
@@ -41,87 +41,113 @@ export default function VehicleGrid({
             {vehicles.map((vehicle) => (
                 <Card
                     key={vehicle.idVehicle}
-                    className="shadow-lg border-border/50 hover:shadow-xl transition-all duration-300 overflow-hidden"
+                    className="group shadow-lg border-border/50 hover:shadow-2xl hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 overflow-hidden bg-card/50 backdrop-blur-sm"
                 >
-                    <CardHeader className="pb-3">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-3">
+                    <div className="relative h-48 w-full bg-gradient-to-br from-muted/50 to-muted flex items-center justify-center overflow-hidden">
+                        {vehicle.image && vehicle.image.length > 0 ? (
+                            <img
+                                src={vehicle.image[0] || "/placeholder.svg"}
+                                alt={vehicle.model}
+                                className="object-contain w-full h-full p-4 group-hover:scale-110 transition-transform duration-500"
+                            />
+                        ) : (
+                            <div className="flex flex-col items-center justify-center text-muted-foreground">
                                 {getVehicleIcon(vehicle.type)}
-                                <div>
-                                    <CardTitle className="text-lg">{vehicle.model}</CardTitle>
-                                    <CardDescription className="capitalize">{vehicle.type}</CardDescription>
+                                <p className="text-xs mt-1">Sin imagen</p>
+                            </div>
+                        )}
+                        <div className="absolute top-3 right-3 bg-primary/90 backdrop-blur-sm text-primary-foreground px-3 py-1 rounded-full text-xs font-semibold shadow-lg animate-fade-in">
+                            {vehicle.stationId}
+                        </div>
+                    </div>
+
+                    <CardHeader className="pb-3 space-y-2">
+                        <div className="flex items-start justify-between gap-3">
+                            <div className="flex items-center gap-3 flex-1">
+                                <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors duration-300">
+                                    {getVehicleIcon(vehicle.type)}
+                                </div>
+                                <div className="flex-1">
+                                    <CardTitle className="text-lg group-hover:text-primary transition-colors duration-300">
+                                        {vehicle.model}
+                                    </CardTitle>
+                                    <CardDescription className="capitalize text-sm">{vehicle.type}</CardDescription>
                                 </div>
                             </div>
-                            <div className="text-sm font-medium text-muted-foreground">{vehicle.stationId}</div>
                         </div>
                     </CardHeader>
 
                     <CardContent className="space-y-3">
-                        {/* <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <MapPin className="h-4 w-4" />
-                            <span>Estación: {vehicle.name}</span>
-                        </div> */}
-
-                        <div className="flex items-center justify-between text-sm">
-                            <span className="text-muted-foreground">Costo por minuto:</span>
-                            <span className="font-semibold text-primary">{vehicle.costForMinute}</span>
+                        <div className="flex items-center justify-between p-3 bg-primary/5 rounded-lg border border-primary/10">
+                            <span className="text-sm text-muted-foreground">Costo por minuto:</span>
+                            <span className="font-bold text-lg text-primary">{vehicle.costForMinute}</span>
                         </div>
 
                         <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => toggleCardExpansion(vehicle.idVehicle)}
-                            className="w-full justify-between p-2 h-8"
+                            className="w-full justify-between p-3 h-auto hover:bg-primary/10 transition-all duration-300"
                         >
-                            <span className="text-xs">Ver detalles</span>
+                            <span className="text-sm font-medium">Ver detalles</span>
                             {expandedCard === vehicle.idVehicle ? (
-                                <ChevronUp className="h-3 w-3" />
+                                <ChevronUp className="h-4 w-4 transition-transform duration-300" />
                             ) : (
-                                <ChevronDown className="h-3 w-3" />
+                                <ChevronDown className="h-4 w-4 transition-transform duration-300" />
                             )}
                         </Button>
 
                         {expandedCard === vehicle.idVehicle && (
-                            <div className="space-y-2 pt-2 border-t border-border/50">
+                            <div className="space-y-3 pt-3 border-t border-border/50 animate-fade-in">
                                 {vehicle.type === "bicycle" && (
                                     <>
-                                        <div className="flex items-center justify-between text-sm">
-                                            <span className="text-muted-foreground">Engranajes:</span>
-                                            <span className="font-medium">{vehicle.gears ?? "N/A"}</span>
+                                        <div className="flex items-center justify-between p-2 rounded-md hover:bg-muted/50 transition-colors duration-200">
+                                            <span className="text-sm text-muted-foreground">Engranajes:</span>
+                                            <span className="font-semibold text-foreground">{vehicle.propities.gears ?? "N/A"}</span>
                                         </div>
-                                        <div className="flex items-center justify-between text-sm">
-                                            <span className="text-muted-foreground">Canasta:</span>
-                                            <span className="font-medium">{vehicle.hasBasket ? "Sí" : "No"}</span>
+                                        <div className="flex items-center justify-between p-2 rounded-md hover:bg-muted/50 transition-colors duration-200">
+                                            <span className="text-sm text-muted-foreground">Canasta:</span>
+                                            <span className="font-semibold text-foreground">{vehicle.propities.hasBasket ? "Sí" : "No"}</span>
                                         </div>
                                     </>
                                 )}
 
                                 {vehicle.type === "electric_scooter" && (
                                     <>
-                                        <div className="flex items-center justify-between text-sm">
-                                            <span className="text-muted-foreground">Asiento:</span>
-                                            <span className="font-medium">{vehicle.hasSeat ? "Sí" : "No"}</span>
+                                        <div className="flex items-center justify-between p-2 rounded-md hover:bg-muted/50 transition-colors duration-200">
+                                            <span className="text-sm text-muted-foreground">Asiento:</span>
+                                            <span className="font-semibold text-foreground">{vehicle.propities.hasSeat ? "Sí" : "No"}</span>
                                         </div>
-                                        <div className="flex items-center justify-between text-sm">
-                                            <span className="text-muted-foreground">Capacidad batería:</span>
-                                            <span className="font-medium">{vehicle.batteryInfo?.capacity ?? "N/A"}</span>
+                                        <div className="flex items-center justify-between p-2 rounded-md hover:bg-muted/50 transition-colors duration-200">
+                                            <span className="text-sm text-muted-foreground">Capacidad batería:</span>
+                                            <span className="font-semibold text-foreground">
+                                                {" "}
+                                                {vehicle.propities?.info && "capacity" in vehicle.propities.info
+                                                    ? vehicle.propities.info.capacity
+                                                    : "N/A"}
+                                            </span>
                                         </div>
-                                        <div className="flex items-center justify-between text-sm">
-                                            <span className="text-muted-foreground">Autonomía:</span>
-                                            <span className="font-medium">{vehicle.batteryInfo?.autonomyRange ?? "N/A"}</span>
+                                        <div className="flex items-center justify-between p-2 rounded-md hover:bg-muted/50 transition-colors duration-200">
+                                            <span className="text-sm text-muted-foreground">Autonomía:</span>
+                                            <span className="font-semibold text-foreground">
+                                                {" "}
+                                                {vehicle.propities?.info && "autonomyRange" in vehicle.propities.info
+                                                    ? vehicle.propities.info.autonomyRange
+                                                    : "N/A"}
+                                            </span>
                                         </div>
                                     </>
                                 )}
 
-                                {!reservedVehicles.some(r => r.vehicleId === vehicle.idVehicle) ? (
+                                {!reservedVehicles.some((r) => r.vehicleId === vehicle.idVehicle) ? (
                                     <Button
-                                        className="w-full mt-3 bg-primary hover:bg-primary/90"
+                                        className="w-full mt-3 bg-primary hover:bg-primary/90 hover:scale-[1.02] transition-all duration-300 shadow-md hover:shadow-lg"
                                         onClick={() => onReserve(vehicle)}
                                     >
                                         Reservar Vehículo
                                     </Button>
                                 ) : (
-                                    <div className="w-full mt-3 p-2 bg-primary/10 text-primary text-center rounded-md text-sm font-medium">
+                                    <div className="w-full mt-3 p-3 bg-primary/10 text-primary text-center rounded-lg text-sm font-semibold border-2 border-primary/20 animate-pulse">
                                         Vehículo Reservado
                                     </div>
                                 )}

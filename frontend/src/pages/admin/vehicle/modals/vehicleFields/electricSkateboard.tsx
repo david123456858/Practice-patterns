@@ -15,6 +15,22 @@ const ElectricSkateboardFields: React.FC<ElectricSkateboardFieldsProps> = ({
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            {/* Tamaño de la cubierta */}
+            <div>
+                <Label htmlFor="tamanoCubierta" className="text-green-700 block mb-3">
+                    Tamaño de la Cubierta (inches / cm)
+                </Label>
+                <Input
+                    id="tamanoCubierta"
+                    type="number"
+                    value={formData.tamanoCubierta || ""}
+                    onChange={(e) => handleInputChange("tamanoCubierta", e.target.value)}
+                    className="border-green-200 focus:border-green-500"
+                    placeholder="Ej: 32"
+                />
+            </div>
+            
             {/* Capacidad de la batería */}
             <div>
                 <Label htmlFor="capacidadBateria" className="text-green-700 block mb-3">

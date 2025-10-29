@@ -43,7 +43,7 @@ export default function AddVehicleModal({ isOpen, onClose }: Props) {
 
     const [formData, setFormData] = useState(initialFormData)
     const [vehicleTypes, setVehicleTypes] = useState<Record<string, string>>({})
-    const [selectedImage, setSelectedImage] = useState(null) // 📸 NUEVO estado
+    const [selectedImage, setSelectedImage] = useState<File | null>(null)
     const [mechanicalTypes, setMechanicalTypes] = useState<{
         drive: Record<string, string>
         bearing: Record<string, string>
@@ -54,7 +54,6 @@ export default function AddVehicleModal({ isOpen, onClose }: Props) {
         brake: {},
     })
     const [estaciones, setEstaciones] = useState<Station[]>([])
-
 
     const loadStations = async () => {
         try {
@@ -112,14 +111,14 @@ export default function AddVehicleModal({ isOpen, onClose }: Props) {
                 hasBasket: formData.tieneCesta === "true" || formData.tieneCesta === true,
                 deckSize: parseFloat(formData.tamanoCubierta || "0"),
                 hasSeat: formData.tieneAsiento === "true" || formData.tieneAsiento === true,
-                capacityBattery: parseFloat(formData.capacidadBateria || "0"),
-                autonomyRange: parseFloat(formData.autonomiaRango || "0"),
                 numberOfDoors: parseInt(formData.numeroPuertas || "0"),
                 airConditioning: formData.tieneAireAcondicionado === "true" || formData.tieneAireAcondicionado === true,
                 info: {
                     driveSystem: formData.drive,
                     Type: formData.brake,
                     bearingType: formData.bearing,
+                    capacity: parseFloat(formData.capacidadBateria || "0"),
+                    autonomyRange: parseFloat(formData.autonomiaRango || "0"),
                 },
             },
         }
@@ -200,7 +199,10 @@ export default function AddVehicleModal({ isOpen, onClose }: Props) {
                             id="vehicleImage"
                             type="file"
                             accept="image/*"
-                            onChange={(e) => setSelectedImage(e.target.files[0])}
+                            onChange={(e) => {
+                                const file = e.target.files?.[0] || null
+                                setSelectedImage(file)
+                            }}
                             className="border-green-200 focus:border-green-500 cursor-pointer"
                         />
 

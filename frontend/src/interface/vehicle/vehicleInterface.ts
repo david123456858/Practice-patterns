@@ -30,7 +30,7 @@ export interface PropitiesElectric extends PropitiesMechanical {
 // 🔹 Base general de vehículo
 export interface VehicleBase {
     idVehicle: string;
-    vehicleType: string;
+    type: string;
     color: string;
     model: string;
     station: Station;              
@@ -41,6 +41,7 @@ export interface VehicleBase {
     costForMinute: number;
     state?: "AVAILABLE" | "IN_USE" | "MAINTENANCE" | "OUT_OF_SERVICE";
     name?: string;                  
+    image?: string[];
 }
 
 export interface MechanicalVehicle extends VehicleBase {
