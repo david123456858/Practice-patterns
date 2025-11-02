@@ -57,11 +57,13 @@ export class VehicleService implements IServicesOperations {
       // Validar si el vehículo ya existe
       const existingVehicleResult = await this.vehicleRepository.findById(data.idVehicle)
 
-      if (existingVehicleResult.length > 1) return FailureProccess('Vehicle already exists', 400)
+      if (existingVehicleResult.length > 0) return FailureProccess('Vehicle already exists', 400)
 
       const factory = this.providerFactory.getFactory(data.getVehicleType())
 
-      const vehicle = factory.createVehicleMecacnic(data)
+      const isElectric = data.getVehicleType().includes('ELECTRIC')
+
+      const vehicle = factory.createVehicle(data, isElectric)
 
       await this.vehicleRepository.save(vehicle)
 
@@ -102,7 +104,11 @@ export class VehicleService implements IServicesOperations {
   async getAvailable (): Promise<ISuccessProcess<any> | IFailureProcess<any>> {
     try {
       const result = await this.vehicleRepository.findByAvailable()
-      return SuccessProcess(result, 200)
+      const infoComplete = await Promise.all(result.map(async (vehicle) => {
+        const image = await this.fetchImageUrl(vehicle.idVehicle)
+        return { ...vehicle, image }
+      }))
+      return SuccessProcess(infoComplete, 200)
     } catch (error) {
       return FailureProccess('Error internal server', 500)
     }
@@ -114,7 +120,11 @@ export class VehicleService implements IServicesOperations {
     try {
       const result = await this.vehicleRepository.findByStationAvailable(stationId)
       const available = result.filter(v => v.state === StatusVehicle.AVAILABLE)
-      return SuccessProcess(available, 200)
+      const infoComplete = await Promise.all(available.map(async (vehicle) => {
+        const image = await this.fetchImageUrl(vehicle.idVehicle)
+        return { ...vehicle, image }
+      }))
+      return SuccessProcess(infoComplete, 200)
     } catch (error) {
       return FailureProccess('Error internal server', 500)
     }

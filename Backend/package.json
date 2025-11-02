@@ -17,14 +17,11 @@
     "class-validator": "^0.14.2",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
+    "drizzle-kit": "^0.31.5",
     "drizzle-orm": "^0.44.6",
     "express": "^5.1.0",
     "morgan": "^1.10.1",
-<<<<<<< HEAD
     "pg": "^8.16.3",
-=======
-    "pnpm": "^10.19.0",
->>>>>>> eee1dc14a35291af96f14bfac4512f9b5d5520c7
     "reflect-metadata": "^0.2.2",
     "ts-standard": "^12.0.2",
     "typescript": "^5.9.2"
@@ -34,7 +31,6 @@
     "@types/express": "^5.0.3",
     "@types/morgan": "^1.9.10",
     "@types/pg": "^8.15.5",
-    "drizzle-kit": "^0.31.5",
     "ts-node-dev": "^2.0.0"
   },
   "eslintConfig": {

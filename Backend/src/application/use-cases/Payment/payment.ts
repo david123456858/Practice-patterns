@@ -32,7 +32,9 @@ export class ServicePayment {
         onlypayment.paymentMethod,
         new Date()
       )
+
       const paymentProccessor = this.factoryPayment.createPaymentMehod(payment.method)
+      // lewno de la clase que se va a utilizar
       const paymentUpdated = await paymentProccessor.doPay(paymentInstance)
 
       await this.repositoryPayment.update(paymentUpdated)

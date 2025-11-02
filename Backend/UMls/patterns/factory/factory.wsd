@@ -118,8 +118,9 @@ enum brakeType {
 
 
 abstract class FactoryVehicles {
-    + createVehicleElectric(Vehicle vehicleElectric)
-    + createVehicleMecanic(Vehicle vehicleMecanical )
+    + {abstract} createVehicleElectric(Vehicle vehicleElectric)
+    + {abstract} createVehicleMecanic(Vehicle vehicleMecanical )
+    + createVehicle (vehicle: any, isElectric: boolean)   
 }
 
 class FactoryScooter extends FactoryVehicles{
