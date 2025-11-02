@@ -44,8 +44,8 @@ COPY --from=deps --chown=${APP_USER}:${APP_USER} /app/node_modules ./node_module
 
 # Copiar package.json (necesario para que node encuentre módulos)
 COPY --chown=${APP_USER}:${APP_USER} package.json ./
-COPY --chown=${APP_USER}:${APP_USER} drizzle ./drizzle
 COPY --chown=${APP_USER}:${APP_USER} src/build ./build
+COPY --chown=${APP_USER}:${APP_USER} drizzle ./build/drizzle
 # Cambiar a usuario no-root
 USER ${APP_USER}
 

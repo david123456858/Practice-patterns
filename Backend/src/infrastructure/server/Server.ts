@@ -14,11 +14,11 @@ import { paymentRoute } from '../../presentation/routes/payment/payment'
 export class Server {
   private static instance: Server
   private readonly app: Application
-  private readonly port: number
+  private readonly port: string
 
   private constructor () {
     this.app = express()
-    this.port = config.port
+    this.port = '3001'
 
     // Middlewares
     this.middlewares()
@@ -51,7 +51,7 @@ export class Server {
   }
 
   public listen (): void {
-    this.app.listen('3001', () => {
+    this.app.listen(this.port, () => {
       console.log(`Servidor corriendo en puerto http://localhost:${this.port}`)
     })
   }
