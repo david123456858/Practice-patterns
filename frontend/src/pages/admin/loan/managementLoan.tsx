@@ -1,6 +1,6 @@
 "use client"
 
-import { Search, Filter, RefreshCcw, FileWarning } from "lucide-react"
+import { Search, RefreshCcw, FileWarning, FileText } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -61,7 +61,9 @@ export default function ManagementLoan() {
                 {/* Header */}
                 <div className="flex items-center justify-between mb-8">
                     <div>
-                        <h1 className="text-3xl font-bold text-green-800 mb-2">Gestión de Préstamos</h1>
+                        <h1 className="text-3xl font-bold text-green-800 flex items-center gap-2">
+                            <FileText className="h-8 w-8" />
+                            Gestión de Préstamos</h1>
                         <p className="text-green-600">Visualiza todos los préstamos registrados</p>
                     </div>
 

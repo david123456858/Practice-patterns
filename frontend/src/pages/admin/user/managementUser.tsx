@@ -1,4 +1,4 @@
-import { Search, Filter, RefreshCw } from "lucide-react"
+import { Search, Filter, RefreshCw, Users } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -49,7 +49,9 @@ function ManagementUser() {
                 {/* Header */}
                 <div className="flex items-center justify-between mb-8">
                     <div>
-                        <h1 className="text-3xl font-bold text-green-800 mb-2">Gestión de Usuarios</h1>
+                        <h1 className="text-3xl font-bold text-green-800 flex items-center gap-2">
+                            <Users className="h-8 w-8" />
+                            Gestión de Usuarios</h1>
                         <p className="text-green-600">Administra y supervisa todos los usuarios registrados en EcoMove</p>
                     </div>
 

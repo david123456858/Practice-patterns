@@ -58,7 +58,9 @@ function ManagementVehicle() {
                 {/* Header */}
                 <div className="flex items-center justify-between mb-8">
                     <div>
-                        <h1 className="text-3xl font-bold text-green-800">Gestión de Vehículos</h1>
+                        <h1 className="text-3xl font-bold text-green-800 flex items-center gap-2">
+                            <Car className="h-8 w-8" />
+                            Gestión de Vehículos</h1>
                         <p className="text-green-600 mt-1">Administra la flota de vehículos eléctricos</p>
                     </div>
 
@@ -139,7 +141,7 @@ function ManagementVehicle() {
                     </CardHeader>
 
                     <CardContent>
-                        <div className="overflow-x-auto max-h-105 overflow-y-scroll">
+                        <div className="overflow-x-auto max-h-105 overflow-y-auto">
                             <Table>
                                 <TableHeader>
                                     <TableRow className="border-green-200">
