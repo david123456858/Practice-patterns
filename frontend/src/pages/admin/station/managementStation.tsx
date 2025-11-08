@@ -67,11 +67,12 @@ export function ManagementStation() {
                     </div>
 
                     <Button
-                        onClick={() => setIsModalOpen(true)}
-                        className="bg-green-600 hover:bg-green-700 text-white"
+                        onClick={fetchStations}
+                        variant="outline"
+                        className="border-green-300 text-green-700"
                     >
-                        <Plus className="h-4 w-4 mr-2" />
-                        Agregar Estación
+                        <RefreshCw className="h-4 w-4 mr-2" />
+                        Actualizar
                     </Button>
                 </div>
 
@@ -85,17 +86,33 @@ export function ManagementStation() {
                     </CardHeader>
 
                     <CardContent>
-                        <div className="space-y-4">
-                            <label className="block text-sm font-medium text-green-700 mb-2">
-                                Buscar Estación
-                            </label>
+                        <div className="flex flex-col md:flex-row gap-4">
+                            {/* Search */}
+                            <div className="flex-1">
+                                <label className="block text-sm font-medium text-green-700 mb-2">
+                                    Buscar Estación
+                                </label>
+                                <div className="relative">
+                                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-green-500 h-4 w-4" />
+                                    <Input
+                                        placeholder="Buscar por ID, nombre o dirección..."
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                        className="pl-10 border-green-200"
+                                    />
+                                </div>
+                            </div>
 
-                            <Input
-                                placeholder="Buscar por ID, nombre o dirección..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="border-green-200 focus:border-green-500"
-                            />
+                            {/* Botón Agregar */}
+                            <div className="w-full md:w-auto flex items-end">
+                                <Button
+                                    onClick={() => setIsModalOpen(true)}
+                                    className="bg-green-600 hover:bg-green-700 text-white w-full md:w-auto"
+                                >
+                                    <Plus className="h-4 w-4 mr-2" />
+                                    Agregar Estación
+                                </Button>
+                            </div>
                         </div>
                     </CardContent>
                 </Card>

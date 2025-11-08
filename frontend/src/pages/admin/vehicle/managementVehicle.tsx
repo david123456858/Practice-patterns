@@ -83,7 +83,6 @@ function ManagementVehicle() {
 
                     <CardContent>
                         <div className="flex flex-col md:flex-row gap-4">
-
                             {/* Search */}
                             <div className="flex-1">
                                 <label className="block text-sm font-medium text-green-700 mb-2">Buscar Vehículo</label>
@@ -125,7 +124,6 @@ function ManagementVehicle() {
                                     Agregar Vehículo
                                 </Button>
                             </div>
-
                         </div>
                     </CardContent>
                 </Card>

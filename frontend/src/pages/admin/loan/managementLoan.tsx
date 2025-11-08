@@ -76,27 +76,31 @@ export default function ManagementLoan() {
                     </Button>
                 </div>
 
-                {/* Filtros */}
-                <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-                    <div className="flex items-center gap-2 mb-4">
-                        <Filter className="h-5 w-5 text-green-600" />
-                        <h2 className="text-lg font-semibold text-green-800">Filtros y Búsqueda</h2>
-                    </div>
+                {/* Filtros y búsqueda */}
+                <Card className="mb-6">
+                    <CardHeader>
+                        <CardTitle className="text-green-800 flex items-center gap-2">
+                            <Search className="h-5 w-5" />
+                            Filtros y búsqueda
+                        </CardTitle>
+                    </CardHeader>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Buscar Préstamo</label>
-                            <div className="relative">
-                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4" />
+                        <CardContent>
+                            <div className="space-y-4">
+                                <label className="block text-sm font-medium text-green-700 mb-2">
+                                    Buscar Préstamo
+                                </label>
+
                                 <Input
                                     type="text"
                                     placeholder="Buscar por ID, usuario o vehículo..."
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="pl-10 border-green-200"
+                                    className="pl-4 border-green-200"
                                 />
                             </div>
-                        </div>
+                        </CardContent>
 
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">Estado</label>
@@ -113,7 +117,7 @@ export default function ManagementLoan() {
                             </Select>
                         </div>
                     </div>
-                </div>
+                </Card>
 
                 {/* Tabla de Préstamos */}
                 <Card className="border-green-200 shadow-sm">
