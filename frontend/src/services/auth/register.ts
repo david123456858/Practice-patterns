@@ -13,6 +13,7 @@ export const register = async (userData: RegisterUserData): Promise<User> => {
 
         const data = await response.json();
         return data as User;
+
     } catch (error) {
         console.error("Error creating user:", error);
         throw new Error("Failed to create user");

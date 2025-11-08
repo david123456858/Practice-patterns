@@ -12,6 +12,7 @@ import { getStations } from "@/services/station/station"
 import VehicleFields from "./vehicleFields/vehicle"
 import { type Station } from "@/interface/station/station"
 import { uploadVehicleImage } from "@/services/vehicle/images/createImage"
+import { toast} from "sonner"
 
 interface Props {
     isOpen: boolean
@@ -134,11 +135,11 @@ export default function AddVehicleModal({ isOpen, onClose }: Props) {
                 await uploadVehicleImage(selectedImage, formData.id)
             }
 
-            alert("Vehículo creado con éxito ✅")
+            toast.success("Vehículo creado con éxito ✅")
             onClose()
         } catch (err) {
             console.error(err)
-            alert("Error creando vehículo")
+            toast.error("Error creando vehículo")
         }
     }
 
