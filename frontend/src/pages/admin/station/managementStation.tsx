@@ -1,50 +1,61 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Search, Plus, MapPin } from "lucide-react"
+import { Search, Plus, MapPin, RefreshCw } from "lucide-react"
 import RegisterStation from "@/pages/admin/station/modals/modalCreateStation"
-import { getStations } from "@/services/station/station"
-import type { Station } from "@/interface/station/station"
+import { useManagementStation } from "@/hooks/station/useManagementStation"
 
 export function ManagementStation() {
-    const [stations, setStations] = useState<Station[]>([])
-    const [searchTerm, setSearchTerm] = useState("")
-    const [isModalOpen, setIsModalOpen] = useState(false)
-    const [refreshTrigger, setRefreshTrigger] = useState(0)
+    const {
+        filteredStations,
+        searchTerm,
+        setSearchTerm,
+        isModalOpen,
+        setIsModalOpen,
+        handleStationCreated,
+        loading,
+        error,
+        fetchStations,
+    } = useManagementStation()
 
-    useEffect(() => {
-        const fetchStations = async () => {
-            const data = await getStations()
-            setStations(data)
-        }
-        fetchStations()
-    }, [refreshTrigger])
-
-    const filteredStations = useMemo(() => {
-        if (!searchTerm) return stations
-        return stations.filter(
-            (station) =>
-                station.idStation.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                station.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                station.address.toLowerCase().includes(searchTerm.toLowerCase()),
+    if (loading) {
+        return (
+            <div className="flex-1 p-8 bg-gray-50 flex items-center justify-center">
+                <div className="text-center">
+                    <MapPin className="h-12 w-12 text-green-500 animate-pulse mx-auto mb-4" />
+                    <p className="text-green-600">Cargando estaciones...</p>
+                </div>
+            </div>
         )
-    }, [searchTerm, stations])
+    }
 
-    const handleAddStation = () => setIsModalOpen(true)
-    const handleModalClose = () => setIsModalOpen(false)
+    if (error) {
+        return (
+            <div className="flex-1 p-8 bg-gray-50 flex items-center justify-center">
+                <div className="text-center">
+                    <MapPin className="h-12 w-12 text-red-500 mx-auto mb-4" />
+                    <p className="text-red-600 mb-2">Error al cargar las estaciones</p>
+                    <p className="text-red-500 text-sm mb-4">{error}</p>
 
-    const handleStationCreated = () => {
-        setIsModalOpen(false)
-        setRefreshTrigger(prev => prev + 1)
+                    <Button
+                        onClick={fetchStations}
+                        className="bg-green-600 hover:bg-green-700 text-white"
+                    >
+                        <RefreshCw className="h-4 w-4 mr-2" />
+                        Reintentar
+                    </Button>
+                </div>
+            </div>
+        )
     }
 
     return (
         <div className="flex-1 p-8 bg-gray-50">
             <div className="max-w-7xl mx-auto">
+
                 {/* Header */}
                 <div className="flex items-center justify-between mb-8">
                     <div>
@@ -54,7 +65,11 @@ export function ManagementStation() {
                         </h1>
                         <p className="text-green-600 mt-2">Administra las estaciones de EcoMove en toda la ciudad</p>
                     </div>
-                    <Button onClick={handleAddStation} className="bg-green-600 hover:bg-green-700 text-white">
+
+                    <Button
+                        onClick={() => setIsModalOpen(true)}
+                        className="bg-green-600 hover:bg-green-700 text-white"
+                    >
                         <Plus className="h-4 w-4 mr-2" />
                         Agregar Estación
                     </Button>
@@ -68,9 +83,13 @@ export function ManagementStation() {
                             Búsqueda
                         </CardTitle>
                     </CardHeader>
+
                     <CardContent>
                         <div className="space-y-4">
-                            <label className="block text-sm font-medium text-green-700 mb-2">Buscar Estación</label>
+                            <label className="block text-sm font-medium text-green-700 mb-2">
+                                Buscar Estación
+                            </label>
+
                             <Input
                                 placeholder="Buscar por ID, nombre o dirección..."
                                 value={searchTerm}
@@ -108,8 +127,8 @@ export function ManagementStation() {
                                             <TableCell className="text-gray-700">{station.address}</TableCell>
                                             <TableCell className="text-gray-700">{station.geoLocation.latitude.toFixed(4)}</TableCell>
                                             <TableCell className="text-gray-700">{station.geoLocation.longitude.toFixed(4)}</TableCell>
-                                            <TableCell className="text-gray-700">{station.geoLocation.timestamp instanceof Date? station.geoLocation.timestamp.toLocaleString(): station.geoLocation.timestamp}
-                                            </TableCell>                                        
+                                            <TableCell className="text-gray-700">{station.geoLocation.timestamp instanceof Date ? station.geoLocation.timestamp.toLocaleString() : station.geoLocation.timestamp}
+                                            </TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
@@ -127,7 +146,7 @@ export function ManagementStation() {
                 {/* Modal */}
                 <RegisterStation
                     isOpen={isModalOpen}
-                    onClose={handleModalClose}
+                    onClose={() => setIsModalOpen(false)}
                     onSuccess={handleStationCreated}
                 />
             </div>
