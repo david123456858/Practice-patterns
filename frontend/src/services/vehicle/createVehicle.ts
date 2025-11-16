@@ -1,4 +1,4 @@
-import { VITE_API_URL } from "@/config/api"
+
 import { type Vehicle } from "@/interface/vehicle/vehicleInterface"
 
 export const createVehicle = async (vehicle: Vehicle) => {
@@ -103,7 +103,7 @@ export const createVehicle = async (vehicle: Vehicle) => {
                 throw new Error(`Tipo de vehículo no soportado: ${vehicle.vehicleType}`)
         }
 
-        const response = await fetch(`${VITE_API_URL}vehicle`, {
+        const response = await fetch(`/api/v1/vehicle`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(baseData),

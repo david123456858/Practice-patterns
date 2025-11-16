@@ -1,10 +1,10 @@
 // services/vehicle/vehicleService.ts
-import { VITE_API_URL } from "../../config/api";
+
 import { type Vehicle } from "@/interface/vehicle/vehicleInterface";
 
 export const getAvailableVehicles = async (): Promise<Vehicle[]> => {
     try {
-        const response = await fetch(`${VITE_API_URL}vehicle/available`);
+        const response = await fetch(`/api/v1/vehicle/available`);
         if (!response.ok) {
             throw new Error(`${response.status}: ${response.statusText}`);
         }

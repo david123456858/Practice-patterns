@@ -1,4 +1,4 @@
-import { VITE_API_URL } from "@/config/api";
+
 
 export interface VehicleMechanicalTypes {
     drive: Record<string, string>;
@@ -8,7 +8,7 @@ export interface VehicleMechanicalTypes {
 
 export const getVehicleMechanicalTypes = async (): Promise<VehicleMechanicalTypes> => {
     try {
-        const response = await fetch(`${VITE_API_URL}vehicle/typesMechanical`);
+        const response = await fetch(`/api/v1/vehicle/typesMechanical`);
         if (!response.ok) {
             throw new Error(`Error ${response.status}: ${response.statusText}`);
         }

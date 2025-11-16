@@ -1,0 +1,43 @@
+trigger:
+    - main ## -> en que rama se ejecuta el pipeline
+    - Develop
+pool:
+    name: agent-test ## -> nombre del pool agente donde se ejecuta el pipeline
+variables:
+  frontVersion: '1.0'
+
+stages:
+  - stage: Build
+    displayName: 'Build Stage'
+    jobs:
+      - job: BuildJob
+        displayName: 'Build Job'
+        steps:
+          - task: Docker@2
+            displayName: 'Docker'
+            inputs:
+              containerRegistry: 'DockerKadir' ##Mi container register
+              repository: 'keduardoquintero/eco-frontend' ##Nombre de mi imagen
+              command: 'build'
+              Dockerfile: 'frontend/Dockerfile'
+              arguments: '--build-arg ENVIRONMENT=$(Build.SourceBranchName)'
+              tags: |
+                $(frontVersion)
+          - task: Docker@2
+            displayName: 'Push Image'
+            inputs:
+              containerRegistry: 'DockerKadir' ##Mi container Register
+              repository: 'keduardoquintero/eco-frontend' ##Nombre de mi imagen
+              command: 'push'
+              tags: |
+                $(frontVersion)
+          - task: Bash@3
+            displayName: 'Display Image Info'
+            inputs:
+              targetType: 'inline'
+              script: |
+                docker stop container-images || true
+                docker rm container-images || true
+                docker run -d --name container-images -p 80:80 keduardoquintero/eco-frontend:$(frontVersion)
+
+                docker image prune -f

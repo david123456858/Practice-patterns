@@ -1,9 +1,9 @@
-import { VITE_API_URL } from "@/config/api";
+
 import type { Vehicle, VehicleResponse } from "@/interface/vehicle/vehicleInterface";
 
 export const getAllVehicles = async (): Promise<Vehicle[]> => {
     try {
-        const response = await fetch(`${VITE_API_URL}vehicle`);
+        const response = await fetch(`/api/v1/vehicle`);
 
         if (!response.ok) {
             throw new Error(`Error al obtener vehículos: ${response.status} ${response.statusText}`);

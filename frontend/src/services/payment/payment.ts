@@ -1,8 +1,8 @@
-import { VITE_API_URL } from "../../config/api";
+
 
 export const createPayment = async (payload: { loanId: string; amount: number; method: string }) => {
     try {
-        const res = await fetch(`${VITE_API_URL}payment`, {
+        const res = await fetch(`/api/v1/payment`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
@@ -18,7 +18,7 @@ export const createPayment = async (payload: { loanId: string; amount: number; m
 
 export const getPaymentMethods = async () => {
     try {
-        const res = await fetch(`${VITE_API_URL}payment`);
+        const res = await fetch(`/api/v1/payment`);
         if (!res.ok) throw new Error("Error al obtener métodos de pago");
         const data = await res.json();
         return Object.values(data.message);

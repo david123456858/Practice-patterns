@@ -1,0 +1,43 @@
+services:
+  vault:
+    image: vault:1.13.3
+    container_name: vault
+    cap_add:
+      - IPC_LOCK
+    ports:
+      - "8200:8200"
+    volumes:
+      - voult-data:/vault/data
+
+    environment:
+      VAULT_ADDR: "http://127.0.0.1:8200"
+      VAULT_LOCAL_CONFIG: |
+        ui = true
+
+        storage "raft" {
+          path = "/vault/data"
+          node_id = "vault-node-1"
+        }
+
+        listener "tcp" {
+          address     = "0.0.0.0:8200"
+          tls_disable = 1
+        }
+
+        api_addr = "http://127.0.0.1:8200"
+        cluster_addr = "https://127.0.0.1:8201"
+        disable_mlock = true
+
+      SKIP_SETCAP: "true"
+    command: server
+    networks:
+      - vault_nt
+
+networks:
+  vault_nt:
+    driver: bridge
+
+volumes:
+  voult-data:
+    name: vault-data
+    external: true
