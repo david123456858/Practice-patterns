@@ -22,7 +22,11 @@ export class Server {
   }
 
   private Middlwares (): void {
-    this.app.use(cors())
+    this.app.use(cors({
+      origin: '*',
+      credentials: true,
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS']
+    }))
     this.app.use(express.json())
     this.app.use(express.urlencoded({ extended: true }))
     this.app.use(morgan('dev'))

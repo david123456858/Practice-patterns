@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
@@ -10,7 +10,9 @@ import { getVehicleTypes } from "@/services/vehicle/getTypeVehicle"
 import { getVehicleMechanicalTypes } from "@/services/vehicle/getVehicleMechanicalTypes"
 import { getStations } from "@/services/station/station"
 import VehicleFields from "./vehicleFields/vehicle"
-import { type Station } from "@/interface/vehicle/vehicleInterface"
+import { type Station } from "@/interface/station/station"
+import { uploadVehicleImage } from "@/services/vehicle/images/createImage"
+import { toast} from "sonner"
 
 interface Props {
     isOpen: boolean
@@ -42,6 +44,7 @@ export default function AddVehicleModal({ isOpen, onClose }: Props) {
 
     const [formData, setFormData] = useState(initialFormData)
     const [vehicleTypes, setVehicleTypes] = useState<Record<string, string>>({})
+    const [selectedImage, setSelectedImage] = useState<File | null>(null)
     const [mechanicalTypes, setMechanicalTypes] = useState<{
         drive: Record<string, string>
         bearing: Record<string, string>
@@ -52,7 +55,6 @@ export default function AddVehicleModal({ isOpen, onClose }: Props) {
         brake: {},
     })
     const [estaciones, setEstaciones] = useState<Station[]>([])
-
 
     const loadStations = async () => {
         try {
@@ -110,30 +112,34 @@ export default function AddVehicleModal({ isOpen, onClose }: Props) {
                 hasBasket: formData.tieneCesta === "true" || formData.tieneCesta === true,
                 deckSize: parseFloat(formData.tamanoCubierta || "0"),
                 hasSeat: formData.tieneAsiento === "true" || formData.tieneAsiento === true,
-                capacityBattery: parseFloat(formData.capacidadBateria || "0"),
-                autonomyRange: parseFloat(formData.autonomiaRango || "0"),
                 numberOfDoors: parseInt(formData.numeroPuertas || "0"),
                 airConditioning: formData.tieneAireAcondicionado === "true" || formData.tieneAireAcondicionado === true,
                 info: {
                     driveSystem: formData.drive,
                     Type: formData.brake,
                     bearingType: formData.bearing,
+                    capacity: parseFloat(formData.capacidadBateria || "0"),
+                    autonomyRange: parseFloat(formData.autonomiaRango || "0"),
                 },
             },
         }
     }
 
-    const handleSubmit = async (e: React.FormEvent) => {
-
-        console.log("modal", formData)
+    const handleSubmit = async (e: any) => {
         e.preventDefault()
         try {
             const vehicleData = mapFormDataToVehicle(formData)
             await createVehicle(vehicleData)
-            alert("Vehículo creado con éxito ✅")
+
+            if (selectedImage) {
+                await uploadVehicleImage(selectedImage, formData.id)
+            }
+
+            toast.success("Vehículo creado con éxito ✅")
             onClose()
         } catch (err) {
-            alert("Error creando vehículo")
+            console.error(err)
+            toast.error("Error creando vehículo")
         }
     }
 
@@ -185,6 +191,23 @@ export default function AddVehicleModal({ isOpen, onClose }: Props) {
                 </DialogHeader>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
+
+                    <div className="border-t border-green-200 pt-6">
+                        <Label htmlFor="vehicleImage" className="text-green-700 block mb-3">
+                            Imagen del Vehículo
+                        </Label>
+                        <Input
+                            id="vehicleImage"
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => {
+                                const file = e.target.files?.[0] || null
+                                setSelectedImage(file)
+                            }}
+                            className="border-green-200 focus:border-green-500 cursor-pointer"
+                        />
+
+                    </div>
                     {/* Campos básicos */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>

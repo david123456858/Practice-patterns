@@ -30,7 +30,11 @@ export class Server {
   }
 
   private middlewares (): void {
-    this.app.use(cors())
+    this.app.use(cors({
+      origin: '*',
+      credentials: true,
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS']
+    }))
     this.app.use(express.json())
     this.app.use(express.urlencoded({ extended: true }))
     this.app.use(morgan('dev'))
@@ -39,7 +43,7 @@ export class Server {
 
   private async routes (): Promise<void> {
     this.app.get('/', (_req: Request, res: Response) => {
-      res.status(200).json({ message: 'I life' })
+      res.status(200).json({ message: 'Soy el servicio de vehiculos' })
     })
 
     this.app.use(config.routeBase, routeAuth('/auth'))

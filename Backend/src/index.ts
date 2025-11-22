@@ -4,7 +4,6 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 
 import "reflect-metadata"
-import 'dotenv/config'
 import { Server } from './infrastructure/server/Server'
 import { DatabaseConnection } from "./infrastructure/database/conection"
 import { UserRepository } from "./infrastructure/repositories/User/repository"

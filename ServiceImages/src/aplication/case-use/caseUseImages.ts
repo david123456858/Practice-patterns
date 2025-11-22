@@ -9,7 +9,7 @@ import { repositoryImages } from '../../infrestructure/repositorys/imagesReposit
 import { JwtUrlSigner } from '../../presentation/middleware/jwt/jwt.js'
 import fs from 'fs'
 
-export class ServiceImages {
+export class ServiceImages { 
   private readonly builderImages: ConcreteBuilderImagesVehicles
   private readonly jwtURLs: JwtUrlSigner
   constructor (private readonly repository: repositoryImages) {

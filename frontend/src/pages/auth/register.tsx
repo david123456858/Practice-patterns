@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Leaf, Zap, CheckCircle } from "lucide-react"
 import { register } from "@/services/auth/register"
+import { toast } from "sonner"
 
 export default function RegisterPage() {
     const [formData, setFormData] = useState({
@@ -64,13 +65,13 @@ export default function RegisterPage() {
                 const newUser = await register(userData)
                 console.log("Usuario creado exitosamente:", newUser)
 
-                alert(`El usuario: ${userData.name} ${userData.lastName} ha sido creado exitosamente.`);
+                toast.success(`El usuario: ${userData.name} ${userData.lastName} ha sido creado exitosamente.`);
 
                 navigate("/login");
 
             } catch (error) {
                 console.error("Error al registrar usuario:", error)
-                setErrors({ submit: "Error al registrar el usuario. Inténtalo de nuevo." })
+                toast.error("Error al registrar el usuario. Inténtalo de nuevo.")
             } finally {
                 setIsLoading(false)
             }
