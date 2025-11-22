@@ -35,7 +35,7 @@ export class Server {
 
   private routes (): void {
     this.app.get('/', (_req: Request, res: Response) => {
-      res.status(200).json({ message: 'Soy el servicio de imagenes' })
+      res.status(200).json({ message: 'I life' })
     })
     this.app.use('/api', this.router.router)
   }

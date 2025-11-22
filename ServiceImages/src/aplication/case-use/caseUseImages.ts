@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
- 
+
 import { FailureProccess, SuccessProcess } from './../../utils/result.js'
 import { IFailureProcess } from './../../domain/interfaces/Result.js'
 import { ISuccessProcess } from '../../domain/interfaces/Result.js'

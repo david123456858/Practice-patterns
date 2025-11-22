@@ -8,7 +8,7 @@
     "dev": "tsx watch src/index.ts ",
     "start": "node ./src/build/index.js",
     "build": "tsc",
-    "stop": "kill $(lsof -t -i:3000) || true"
+    "stop" : "kill $(lsof -t -i:3000) || true"
   },
   "keywords": [],
   "author": "",
@@ -19,7 +19,6 @@
     "class-validator": "^0.14.2",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
-    "drizzle-kit": "^0.31.6",
     "drizzle-orm": "^0.44.6",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
@@ -39,6 +38,7 @@
     "@types/morgan": "^1.9.10",
     "@types/multer": "^2.0.0",
     "@types/pg": "^8.15.5",
+    "drizzle-kit": "^0.31.5",
     "tsx": "^4.20.6"
   },
   "eslintConfig": {
