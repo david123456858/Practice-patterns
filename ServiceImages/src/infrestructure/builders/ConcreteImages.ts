@@ -1,5 +1,5 @@
-import { Images } from '../../domain/entities/Images'
-import { BuilderImages } from '../../domain/interfaces/builderImages'
+import { Images } from '../../domain/entities/Images.js'
+import { BuilderImages } from '../../domain/interfaces/builderImages.js'
 
 export class ConcreteBuilderImages implements BuilderImages {
   idImages!: string

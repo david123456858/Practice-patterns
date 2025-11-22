@@ -1,4 +1,4 @@
-import { IFailureProcess, ISuccessProcess } from '../domain/interfaces/Result'
+import { IFailureProcess, ISuccessProcess } from '../domain/interfaces/Result.js'
 
 export const FailureProccess = <T>(
   error: T,

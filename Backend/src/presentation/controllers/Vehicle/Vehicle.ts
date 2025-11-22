@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from 'express'
 import { VehicleService } from '../../../application/use-cases/Vehicle/VehicleService'
 import { VehicleType } from '../../../domain/types/Vehicule/VehiculeEnum'
+import { bearingType, DriveSystem } from '../../../domain/types/Vehicule/DriveSystemEnum'
+import { BrakeType } from '../../../domain/types/Vehicule/BrakeTypeEnum'
 
 export class VehicleController {
   private readonly Service: VehicleService
@@ -13,6 +15,7 @@ export class VehicleController {
     this.getVehicleById = this.getVehicleById.bind(this)
     this.getVehicleAvaibleByStation = this.getVehicleAvaibleByStation.bind(this)
     this.getVehicleAvaible = this.getVehicleAvaible.bind(this)
+    this.getTypesMechanical = this.getTypesMechanical.bind(this)
   }
 
   async create (req: Request, res: Response, Next: NextFunction): Promise<void> {
@@ -50,6 +53,14 @@ export class VehicleController {
     const result = VehicleType
 
     res.status(200).json({ message: result })
+  }
+
+  async getTypesMechanical (req: Request, res: Response, Next: NextFunction): Promise<void> {
+    res.status(200).json({
+      drive: DriveSystem,
+      bearing: bearingType,
+      brake: BrakeType
+    })
   }
 
   async getVehicleAvaibleByStation (req: Request, res: Response, Next: NextFunction): Promise<void> {

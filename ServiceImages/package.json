@@ -5,7 +5,10 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsx watch src/index.ts "
+    "dev": "tsx watch src/index.ts ",
+    "start": "node ./src/build/index.js",
+    "build": "tsc",
+    "stop": "kill $(lsof -t -i:3000) || true"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +19,8 @@
     "class-validator": "^0.14.2",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
+    "drizzle-kit": "^0.31.6",
+    "drizzle-orm": "^0.44.6",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mime-types": "^3.0.1",

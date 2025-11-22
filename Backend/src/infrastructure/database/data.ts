@@ -1,65 +1,27 @@
-import { Battery } from '../../domain/entities/Battery/Battery'
-import { GeoLocation } from '../../domain/entities/GeoLocation/GeoLocation'
-import { Bicycle } from '../../domain/entities/Vehicule/Bicycle'
-import { ElectricScooter } from '../../domain/entities/Vehicule/ElectricScooter'
-import { StatusVehicle, VehicleType } from '../../domain/types/Vehicule/VehiculeEnum'
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 
-const geoLocation = new GeoLocation(10.47412, -73.25129)
-const BatteryInfo = new Battery(160, 5)
-const BatteryInfo2 = new Battery(200, 10)
-export const bici1 = new Bicycle(
-  'BIC001',
-  'Rojo',
-  'Mountain Pro',
-  '1',
-  StatusVehicle.AVAILABLE,
-  geoLocation,
-  VehicleType.BICYCLE,
-  120,
-  25,
-  1000,
-  4,
-  true
-)
-export const bici2 = new Bicycle(
-  'BIC002',
-  'Amarrilla',
-  'Mountain',
-  '1',
-  StatusVehicle.AVAILABLE,
-  geoLocation,
-  VehicleType.BICYCLE,
-  120,
-  25,
-  50,
-  4,
-  true
-)
+import { drizzle, NodePgDatabase } from 'drizzle-orm/node-postgres'
+import { Pool } from 'pg'
+import dotenv from "dotenv";
+dotenv.config({ path: "/vault/secrets/config.env" });
 
-export const scooter1 = new ElectricScooter('SCO001',
-  'Negro oro',
-  'Electric Pro',
-  '1',
-  StatusVehicle.AVAILABLE,
-  VehicleType.ELECTRIC_SCOOTER,
-  geoLocation,
-  120,
-  25,
-  1500,
-  true,
-  BatteryInfo
-)
+export class DatabaseSql {
+  private static instance: DatabaseSql
+  private readonly db: NodePgDatabase<Record<string, never>> & { $client: Pool }
 
-export const scooter2 = new ElectricScooter('SCO002',
-  'Negro',
-  'Electric Pro',
-  '1',
-  StatusVehicle.AVAILABLE,
-  VehicleType.ELECTRIC_SCOOTER,
-  geoLocation,
-  120,
-  25,
-  1200,
-  true,
-  BatteryInfo2
-)
+  private constructor () {
+    this.db = drizzle(process.env.DATABASE_URL!)
+  }
+
+  public static getInstacne (): DatabaseSql {
+    if (!this.instance) {
+      this.instance = new DatabaseSql()
+    }
+    return this.instance
+  }
+
+  public getDb (): NodePgDatabase<Record<string, never>> & { $client: Pool } {
+    return this.db
+  }
+}

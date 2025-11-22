@@ -1,0 +1,196 @@
+{
+  "idVehicle": "BIKE001",
+  "vehicleType": "bicycle",
+  "color": "red",
+  "model": "Mountain Bike 2025",
+  "station": {
+    "idStation": "STATION001",
+    "name": "Central Park Station",
+    "address": "Calle Principal 123",
+    "geoLocation": {
+      "latitude": 40.416775,
+      "longitude": -3.703790,
+      "timestamp": "2025-10-18T03:04:49.681Z"
+    }
+  },
+  "geolocation": {
+    "latitude": 40.416775,
+    "longitude": -3.703790,
+    "timestamp": "2025-10-18T03:04:49.681Z"
+  },
+  "maxUserWeight": 120,
+  "velocityMax": 25.5,
+  "costForMinute": 0.15,
+  "propities": {
+    "gears": 21,
+    "hasBasket": true,
+    "info": {
+      "driveSystem": "CHAIN",
+      "Type": "DISC",
+      "bearingType": "sealed"
+    }
+  }
+}
+
+{
+  "idVehicle": "EBIKE001",
+  "vehicleType": "electric_bicycle",
+  "color": "negro",
+  "model": "E-Bike Pro 2025",
+  "station": {
+    "idStation": "STATION002",
+    "name": "Estación Tech Hub",
+    "address": "Avenida Innovación 45",
+    "geoLocation": {
+      "latitude": 40.417875,
+      "longitude": -3.704890,
+      "timestamp": "2025-10-18T03:04:49.681Z"
+    }
+  },
+  "geolocation": {
+    "latitude": 40.417875,
+    "longitude": -3.704890,
+    "timestamp": "2025-10-18T03:04:49.681Z"
+  },
+  "maxUserWeight": 130,
+  "velocityMax": 25,
+  "costForMinute": 0.25,
+  "propities": {
+    "gears": 7,
+    "hasBasket": true,
+    "info": {
+      "capacity": 500,
+      "autonomyRange": 50
+    }
+  }
+}
+
+{
+  "idVehicle": "SCOOT001",
+  "vehicleType": "scooter",
+  "color": "plateado",
+  "model": "Urban Scooter 2025",
+  "station": {
+    "idStation": "STATION003",
+    "name": "Estación Centro",
+    "address": "Plaza Mayor 78",
+    "geoLocation": {
+      "latitude": 40.418975,
+      "longitude": -3.705990,
+      "timestamp": "2025-10-18T03:04:49.681Z"
+    }
+  },
+  "geolocation": {
+    "latitude": 40.418975,
+    "longitude": -3.705990,
+    "timestamp": "2025-10-18T03:04:49.681Z"
+  },
+  "maxUserWeight": 100,
+  "velocityMax": 20,
+  "costForMinute": 0.12,
+  "propities": {
+    "hasSeat": true,
+    "info": {
+      "driveSystem": "DIRECT",
+      "Type": "FOOT",
+      "bearingType": "standard"
+    }
+  }
+}
+
+{
+  "idVehicle": "ESCOOT001",
+  "vehicleType": "electric_scooter",
+  "color": "blanco",
+  "model": "E-Scooter Pro 2025",
+  "station": {
+    "idStation": "STATION004",
+    "name": "Estación Empresarial",
+    "address": "Calle Negocios 90",
+    "geoLocation": {
+      "latitude": 40.419075,
+      "longitude": -3.706090,
+      "timestamp": "2025-10-18T03:04:49.681Z"
+    }
+  },
+  "geolocation": {
+    "latitude": 40.419075,
+    "longitude": -3.706090,
+    "timestamp": "2025-10-18T03:04:49.681Z"
+  },
+  "maxUserWeight": 120,
+  "velocityMax": 25,
+  "costForMinute": 0.20,
+  "propities": {
+    "hasSeat": false,
+    "info": {
+      "capacity": 300,
+      "autonomyRange": 30
+    }
+  }
+}
+
+{
+  "idVehicle": "SKATE001",
+  "vehicleType": "skateboard",
+  "color": "madera",
+  "model": "Street Deck 2025",
+  "station": {
+    "idStation": "STATION005",
+    "name": "Estación Skate Park",
+    "address": "Parque Extremo 34",
+    "geoLocation": {
+      "latitude": 40.420175,
+      "longitude": -3.707190,
+      "timestamp": "2025-10-18T03:04:49.681Z"
+    }
+  },
+  "geolocation": {
+    "latitude": 40.420175,
+    "longitude": -3.707190,
+    "timestamp": "2025-10-18T03:04:49.681Z"
+  },
+  "maxUserWeight": 90,
+  "velocityMax": 15,
+  "costForMinute": 0.10,
+  "propities": {
+    "deckSize": 32,
+    "info": {
+      "driveSystem": "BELT",
+      "Type": "FOOT",
+      "bearingType": "ceramic"
+    }
+  }
+}
+
+{
+  "idVehicle": "ESKATE001",
+  "vehicleType": "electric_skateboard",
+  "color": "negro",
+  "model": "E-Board Pro 2025",
+  "station": {
+    "idStation": "STATION006",
+    "name": "Estación Deportiva",
+    "address": "Avenida del Deporte 56",
+    "geoLocation": {
+      "latitude": 40.421275,
+      "longitude": -3.708290,
+      "timestamp": "2025-10-18T03:04:49.681Z"
+    }
+  },
+  "geolocation": {
+    "latitude": 40.421275,
+    "longitude": -3.708290,
+    "timestamp": "2025-10-18T03:04:49.681Z"
+  },
+  "maxUserWeight": 95,
+  "velocityMax": 25,
+  "costForMinute": 0.18,
+  "propities": {
+    "deckSize": 35,
+    "info": {
+      "capacity": 200,
+      "autonomyRange": 20
+    }
+  }
+}

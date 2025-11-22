@@ -9,6 +9,7 @@ export class UserController {
 
     this.getUsers = this.getUsers.bind(this)
     this.getUsersId = this.getUsersId.bind(this)
+    this.registerAdmin = this.registerAdmin.bind(this)
   }
 
   async getUsers (req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -28,5 +29,16 @@ export class UserController {
       return
     }
     res.status(result.status).json({ message: result.value })
+  }
+
+  async registerAdmin (req: Request, res: Response, next: NextFunction): Promise<void> {
+    const response = await this.userService.createAdmin()
+
+    if (!response.success) {
+      res.status(response.status).json({ error: response.error })
+      return
+    }
+
+    res.status(response.status).json({ message: response.value })
   }
 }

@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import { ServiceImages } from '../../../aplication/case-use/caseUseImages'
+import { ServiceImages } from '../../../aplication/case-use/caseUseImages.js'
 import path from 'path'
 
 export class ImagesController {
@@ -14,7 +14,8 @@ export class ImagesController {
 
   async upload (req: Request, res: Response, next: NextFunction): Promise<void> {
     const detalisFile = req.file
-    const result = await this.service.upload(detalisFile)
+    const idVehicle = req.body
+    const result = await this.service.upload(detalisFile, idVehicle.idVehicle)
 
     if (!result.success) {
       console.log(result.error)

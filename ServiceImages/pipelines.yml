@@ -1,0 +1,45 @@
+trigger:
+    - main ## -> en que rama se ejecuta el pipeline
+    - Develop
+pool:
+    name: agent-test ## -> nombre del pool agente donde se ejecuta el pipeline
+ 
+variables:
+  backendImagesVersion: '0.0.2'
+
+stages:
+  - stage: Build
+    displayName: 'Build Stage'
+    jobs:
+      - job: BuildJob
+        displayName: 'Build Job'
+        steps:
+          - task: Docker@2
+            displayName: 'Docker'
+            inputs:
+              containerRegistry: 'DockerTest'
+              repository: 'jdavidperalta/backend-pipeline-images'
+              command: 'build'
+              Dockerfile: 'ServiceImages/DockerFile'
+              buildContext: 'ServiceImages'
+              arguments: '--build-arg ENVIRONMENT=$(Build.SourceBranchName)'
+              tags: |
+                $(backendImagesVersion)
+          - task: Docker@2
+            displayName: 'Push Image'
+            inputs:
+              containerRegistry: 'DockerTest'
+              repository: 'jdavidperalta/backend-pipeline-images'
+              command: 'push'
+              tags: |
+                $(backendImagesVersion)
+          - task: Bash@3
+            displayName: 'Display Image Info'
+            inputs:
+              targetType: 'inline'
+              script: |
+                docker stop container-images || true
+                docker rm container-images || true
+                docker run -d --name container-images -p 3000:3000 jdavidperalta/backend-pipeline-images:$(backendImagesVersion)
+
+                docker image prune -f

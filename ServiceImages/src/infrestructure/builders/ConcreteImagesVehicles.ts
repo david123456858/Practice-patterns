@@ -1,6 +1,6 @@
 
-import { ImagesVehicle } from '../../domain/entities/ImagesVehicle'
-import { BuilderImages } from '../../domain/interfaces/builderImages'
+import { ImagesVehicle } from '../../domain/entities/ImagesVehicle.js'
+import { BuilderImages } from '../../domain/interfaces/builderImages.js'
 
 export class ConcreteBuilderImagesVehicles implements BuilderImages {
   private idVehicle!: string

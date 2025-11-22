@@ -1,4 +1,4 @@
-import { Images } from '../entities/Images'
+import { Images } from '../entities/Images.js'
 
 export interface BuilderImages {
   setIdImages: (id: string) => void

@@ -1,5 +1,6 @@
-import { IsNotEmpty, IsString } from 'class-validator'
-import { GeoLocation } from '../../entities/GeoLocation/GeoLocation'
+import { IsNotEmpty, IsString, ValidateNested } from 'class-validator'
+import { Type } from 'class-transformer'
+import { GeoLocationDto } from '../Vehicle/classDto'
 
 export class createStationDto {
   @IsString()
@@ -15,5 +16,7 @@ export class createStationDto {
     address!: string
 
   @IsNotEmpty()
-    geoLocation!: GeoLocation
+  @ValidateNested()
+  @Type(() => GeoLocationDto)
+    geoLocation!: GeoLocationDto
 }

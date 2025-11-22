@@ -1,9 +1,9 @@
 import { Router } from 'express'
-import { ImagesController } from '../../controller/Images/Images'
-import { MulterManagament } from '../../middleware/multer/multer'
-import { repositoryImages } from '../../../infrestructure/repositorys/imagesRepository'
-import { ServiceImages } from '../../../aplication/case-use/caseUseImages'
-import { JwtUrlSigner } from '../../middleware/jwt/jwt'
+import { ImagesController } from '../../controller/Images/Images.js'
+import { MulterManagament } from '../../middleware/multer/multer.js'
+import { repositoryImages } from '../../../infrestructure/repositorys/imagesRepository.js'
+import { ServiceImages } from '../../../aplication/case-use/caseUseImages.js'
+import { JwtUrlSigner } from '../../middleware/jwt/jwt.js'
 
 export class ImagesRoutes {
   public router: Router
