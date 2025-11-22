@@ -8,8 +8,6 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Leaf, Zap } from "lucide-react"
 import { login } from "@/services/auth/login"
-import { VITE_API_URL } from "@/config/api"
-import { VITE_IMAGE_API_URL } from "@/config/api"
 
 export default function LoginPage() {
     const [email, setEmail] = useState("")
@@ -18,11 +16,7 @@ export default function LoginPage() {
     const [error, setError] = useState<string>("")
     const navigate = useNavigate()
 
-    const handleSubmit = async (e: React.FormEvent) => {
-
-        console.log("BACKEND: " + VITE_API_URL)
-        console.log("IMAGES: " + VITE_IMAGE_API_URL)
-
+    const handleSubmit = async (e: React.FormEvent) => {    
         e.preventDefault();
         setError("");
         setIsLoading(true);

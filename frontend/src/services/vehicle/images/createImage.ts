@@ -1,3 +1,4 @@
+import { VITE_IMAGE_API_URL } from "@/config/api";
 
 export const uploadVehicleImage = async (file: File, idVehicle: string) => {
     try {
@@ -5,7 +6,7 @@ export const uploadVehicleImage = async (file: File, idVehicle: string) => {
         formData.append("file", file);
         formData.append("idVehicle", idVehicle);
 
-        const response = await fetch(`/api/images`, {
+        const response = await fetch(`${VITE_IMAGE_API_URL}images`, {
             method: "POST",
             body: formData,
         });

@@ -2,38 +2,33 @@
 FROM node:18-alpine AS builder
 WORKDIR /app
 
-# Instalar dependencias del sistema
+# Instalar dependencias del sistema necesarias (opcional)
 RUN apk add --no-cache bash git
 
-# Copiar package.json y package-lock
+# Copiar package.json y package-lock para aprovechar cache de Docker
 COPY package*.json ./
 
-# Instalar dependencias
+# Instalar dependencias (usar npm ci si tiene package-lock.json)
 RUN npm ci --silent
 
 # Copiar el resto del proyecto
 COPY . .
 
-# Construir la app SIN variables de entorno hardcodeadas
+# Construir la app (asume script "build" en package.json)
 RUN npm run build
 
 # ---------- STAGE 2: serve con nginx ----------
 FROM nginx:stable-alpine AS production
 
-# Eliminar el default.conf de nginx
+# Eliminar el default.conf de nginx y copiar uno propio
 RUN rm /etc/nginx/conf.d/default.conf
-COPY default.conf.template /etc/nginx/conf.d/default.conf.template 
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Copiar los archivos construidos
+# Copiar los archivos construidos al directorio público de nginx
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Copiar script para inyectar variables en runtime
-COPY docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
-
-# Exponer puerto
+# Exponer puerto (80 por defecto)
 EXPOSE 80
 
-# Usar el script de entrypoint
-ENTRYPOINT ["/docker-entrypoint.sh"]
+# Comando por defecto ya viene en la imagen nginx
 CMD ["nginx", "-g", "daemon off;"]
