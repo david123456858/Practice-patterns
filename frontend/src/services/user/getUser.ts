@@ -1,9 +1,9 @@
-import { VITE_API_URL } from "@/config/api"
+
 import type { ApiUser, ApiResponse } from "@/interface/user/user";
 
 export const getUsers = async (): Promise<ApiUser[]> => {
     try {
-        const response = await fetch(`${VITE_API_URL}user`, {
+        const response = await fetch(`/api/v1/user`, {
             headers: { "Accept": "application/json" },
         })
 

@@ -1,0 +1,24 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.routeVehicle = void 0;
+const config_1 = require("../../../infrastructure/config/config");
+const validate_1 = require("../../middlewares/ValidateDto/validate");
+const create_1 = require("../../../domain/dtos/Vehicle/create");
+const vehicule_1 = require("../../../infrastructure/repositories/Vehicule/vehicule");
+const VehicleService_1 = require("../../../application/use-cases/Vehicle/VehicleService");
+const Vehicle_1 = require("../../controllers/Vehicle/Vehicle");
+const station_1 = require("../../../infrastructure/repositories/Station/station");
+const routeVehicle = (prefix) => {
+    const repositoryVehicle = new vehicule_1.RepositoryVehicule();
+    const repostoryStation = new station_1.RepositoryStation();
+    const service = new VehicleService_1.VehicleService(repositoryVehicle, repostoryStation);
+    const controller = new Vehicle_1.VehicleController(service);
+    config_1.route.post(`${prefix}/`, (0, validate_1.validateDto)(create_1.VehicleDtoEspefic), controller.create);
+    config_1.route.get(`${prefix}`, controller.getVehicle);
+    config_1.route.get(`${prefix}/available`, controller.getVehicleAvaible);
+    config_1.route.get(`${prefix}/types`, controller.getVehicleTypes);
+    config_1.route.get(`${prefix}/typesMechanical`, controller.getTypesMechanical);
+    config_1.route.get(`${prefix}/station/:id/available`, controller.getVehicleAvaibleByStation);
+    return config_1.route;
+};
+exports.routeVehicle = routeVehicle;

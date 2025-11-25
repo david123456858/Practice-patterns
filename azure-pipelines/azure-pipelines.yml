@@ -1,0 +1,117 @@
+trigger:
+  - main
+  - Develop
+
+pr:
+  - main
+  - Develop
+
+pool:
+  name: agent-test
+
+variables:
+  buildConfiguration: 'Release'
+  dotnetVersion: '8.0.x'
+  SONAR_ORG: 'ecomove'  # -> Nuestra organizacion
+
+stages:
+  - stage: SonarCloudAnalysis
+    displayName: '🔍 Análisis SonarCloud'
+    jobs:
+      - job: AnalyzeFrontend
+        displayName: 'Analizar Frontend'
+        steps:
+          - template: templates/sonarcloud-analysis.yml 
+            parameters:
+              projectKey: '$(SONAR_ORG)_front'
+              projectName: 'front'
+              workingDirectory: 'frontend'
+
+      - job: AnalyzeBackend1
+        displayName: 'Analizar Backend'
+        dependsOn: AnalyzeFrontend
+        condition: succeeded()
+        steps:
+          - template: templates/sonarcloud-analysis.yml  
+            parameters:
+              projectKey: '$(SONAR_ORG)_backend'
+              projectName: 'backend'
+              workingDirectory: 'Backend'
+
+      - job: AnalyzeBackend2
+        displayName: 'Analizar Service Images'
+        dependsOn: AnalyzeBackend1
+        condition: succeeded()
+        steps:
+          - template: templates/sonarcloud-analysis.yml 
+            parameters:
+              projectKey: '$(SONAR_ORG)_service-images'
+              projectName: 'service-images'
+              workingDirectory: 'ServiceImages'
+
+  - stage: BuildAndDeploy                      
+    displayName: 'Build y Deploy'            
+    dependsOn: SonarCloudAnalysis               
+    condition: succeeded()                     
+    jobs:
+      - job: BuildFrontend                             
+        displayName: 'Compilar Frontend'     
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '18.x'
+            displayName: 'Instalar Node.js'
+
+          - script: |
+              cd frontend
+              npm ci
+              npm run build
+            displayName: 'Build Frontend'
+
+          - task: PublishBuildArtifacts@1        
+            inputs:
+              pathToPublish: 'frontend/build'
+              artifactName: 'frontend-drop'                              
+            displayName: 'Publicar Artefactos Frontend'
+
+      - job: BuildBackend                             
+        displayName: 'Compilar Backend'     
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '18.x'
+            displayName: 'Instalar Node.js'
+
+          - script: |
+              cd Backend
+              npm ci
+              npm run build
+            displayName: 'Build Backend'
+
+          - task: PublishBuildArtifacts@1        
+            inputs:
+              pathToPublish: 'Backend/dist'
+              artifactName: 'backend-drop'                              
+            displayName: 'Publicar Artefactos Backend'
+
+      - job: BuildServiceImages                             
+        displayName: 'Compilar Service Images'     
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '18.x'
+            displayName: 'Instalar Node.js'
+
+          - script: |
+              cd ServiceImages
+              npm ci
+              npm run build
+            displayName: 'Build Service Images'
+
+          - task: PublishBuildArtifacts@1        
+            inputs:
+              pathToPublish: 'ServiceImages/dist'
+              artifactName: 'service-images-drop'                              
+            displayName: 'Publicar Artefactos Service Images'  
+
+## HOLAAAAAAA

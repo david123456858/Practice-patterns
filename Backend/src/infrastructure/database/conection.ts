@@ -2,7 +2,8 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 // Backend/src/infrastructure/database/connection.ts
 import { Pool } from 'pg'
-import 'dotenv/config'
+import dotenv from "dotenv";
+dotenv.config({ path: "/vault/secrets/config.env" });
 
 export class DatabaseConnection {
   private static instance: DatabaseConnection

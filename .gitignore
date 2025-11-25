@@ -43,7 +43,6 @@ node_modules/
 jspm_packages/
 
 # pnpm
-pnpm-lock.yaml
 .pnpm-store/
 .pnpm-debug.log*
 
@@ -89,7 +88,7 @@ out
 dist
 
 # Build directories
-build/
+
 dist/
 
 # Gatsby files

@@ -8,7 +8,8 @@ import { RepositoryStation } from '../../../infrastructure/repositories/Station/
 import { VehicleDtoEspefic } from '../../../domain/dtos/Vehicle/create'
 import { ProviderVehicle } from '../../../domain/factories/providers/Vehicle'
 import { StatusVehicle } from '../../../domain/types/Vehicule/VehiculeEnum'
-import 'dotenv/config'
+import dotenv from "dotenv";
+dotenv.config({ path: "/vault/secrets/config.env" });
 
 export class VehicleService implements IServicesOperations {
   private readonly providerFactory: ProviderVehicle

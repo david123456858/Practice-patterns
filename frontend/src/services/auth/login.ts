@@ -1,11 +1,11 @@
-import { VITE_API_URL } from "@/config/api";
+
 import type { AuthenticatedUser } from "@/interface/user/user";
 
 export const login = async (
     credentials: { email: string; password: string }
 ): Promise<AuthenticatedUser> => {
     try {
-        const response = await fetch(`${VITE_API_URL}auth`, {
+        const response = await fetch(`/api/v1/auth`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(credentials),

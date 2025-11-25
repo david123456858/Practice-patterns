@@ -1,0 +1,74 @@
+parameters:
+  - name: projectKey
+    type: string
+  - name: projectName
+    type: string
+  - name: workingDirectory
+    type: string
+
+steps:
+  # 1. Instalar Node.js
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '18.x'
+    displayName: '🟢 Instalar Node.js 18.x'
+
+  # 2. Instalar SonarScanner
+  - task: Bash@3
+    inputs:
+      targetType: 'inline'
+      script: |
+        npm install -g sonar-scanner
+    displayName: 'Instalar SonarScanner'
+
+  # 3. Instalar dependencias del proyecto
+  - script: |
+      cd ${{ parameters.workingDirectory }}
+      npm ci
+    displayName: '📦 Instalar dependencias'
+
+  # 4. Compilar proyecto (opcional)
+  - script: |
+      cd ${{ parameters.workingDirectory }}
+      npm run build
+    displayName: '🔨 Compilar proyecto'
+    continueOnError: true
+
+  # 5. Ejecutar pruebas (en caso de tenerlas)
+  - script: |
+      cd ${{ parameters.workingDirectory }}
+      npm run test -- --coverage --watchAll=false 2>/dev/null || true
+    displayName: '✅ Ejecutar pruebas'
+    continueOnError: true
+
+  # 6. Ejecutar análisis SonarCloud
+  - task: Bash@3
+    inputs:
+      targetType: 'inline'
+      script: |
+        cd ${{ parameters.workingDirectory }}
+        
+        sonar-scanner \
+          -Dsonar.projectKey="${{ parameters.projectKey }}" \
+          -Dsonar.projectName="${{ parameters.projectName }}" \
+          -Dsonar.sources=. \
+          -Dsonar.exclusions=node_modules/**,dist/**,build/**,*.test.ts,*.test.tsx \
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.organization=$(SONAR_ORG) \
+          -Dsonar.token=ffff2838777f975e6c879041a93c6afac5c600bd
+    displayName: '🔍 Ejecutar análisis SonarCloud'
+    env:
+      SONAR_ORG: $(SONAR_ORG)
+      SONAR_CLOUD_TOKEN: ffff2838777f975e6c879041a93c6afac5c600bd
+
+  # 7. Confirmar envío
+  - task: Bash@3
+    inputs:
+      targetType: 'inline'
+      script: |
+        echo "✅ Análisis enviado a SonarCloud"
+        echo "📊 Proyecto: ${{ parameters.projectName }}"
+        echo "🔗 https://sonarcloud.io/projects"
+        sleep 3
+    displayName: 'Confirmar envío a SonarCloud'
+    continueOnError: true

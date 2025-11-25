@@ -1,4 +1,4 @@
-import { VITE_API_URL } from "@/config/api";
+
 import type { Station } from "@/interface/station/station";
 
 export const createStation = async (stationData: Station): Promise<Station> => {
@@ -13,7 +13,7 @@ export const createStation = async (stationData: Station): Promise<Station> => {
 
         console.log(payload)
 
-        const response = await fetch(`${VITE_API_URL}station`, {
+        const response = await fetch(`/api/v1/station`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
@@ -35,7 +35,7 @@ export const createStation = async (stationData: Station): Promise<Station> => {
 
 export const getStations = async (): Promise<Station[]> => {
     try {
-        const response = await fetch(`${VITE_API_URL}station`);
+        const response = await fetch(`/api/v1/station`);
         const data = await response.json();
 
         const formattedStations: Station[] = data.message.map((station: any) => ({

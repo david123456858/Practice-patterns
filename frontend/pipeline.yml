@@ -4,8 +4,9 @@ trigger:
 pool:
     name: agent-test ## -> nombre del pool agente donde se ejecuta el pipeline
 variables:
-  frontVersion: 'v0.4'
+  frontVersion: '1.0'
 
+##
 stages:
   - stage: Build
     displayName: 'Build Stage'

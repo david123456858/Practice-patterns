@@ -1,9 +1,9 @@
-import { VITE_API_URL } from "@/config/api";
+
 import type { User, RegisterUserData } from "@/interface/user/user";
 
 export const register = async (userData: RegisterUserData): Promise<User> => {
     try {
-        const response = await fetch(`${VITE_API_URL}auth/register`, {
+        const response = await fetch(`/api/v1/auth/register`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(userData),

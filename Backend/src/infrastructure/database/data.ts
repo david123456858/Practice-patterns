@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import 'dotenv/config'
+
 import { drizzle, NodePgDatabase } from 'drizzle-orm/node-postgres'
 import { Pool } from 'pg'
+import dotenv from "dotenv";
+dotenv.config({ path: "/vault/secrets/config.env" });
 
 export class DatabaseSql {
   private static instance: DatabaseSql

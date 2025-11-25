@@ -4,6 +4,9 @@ import 'reflect-metadata'
 
 import { Server } from './infrestructure/Server/Server.js'
 import { DatabaseConnection } from './infrestructure/database/connection.js'
+import dotenv from "dotenv";
+dotenv.config({ path: "/vault/secrets/images.env" });
+
 
 async function main (): Promise<void> {
   try {

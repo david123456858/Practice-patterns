@@ -13,7 +13,7 @@ WORKDIR /app
 
 # Copiar SOLO archivos de dependencias (mejor caché)
 COPY package.json pnpm-lock.yaml ./
-
+ 
 # Instalar dependencias de producción
 RUN pnpm install --prod --frozen-lockfile
 

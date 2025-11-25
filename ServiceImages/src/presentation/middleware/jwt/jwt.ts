@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import jwt from 'jsonwebtoken'
-import 'dotenv/config'
+import dotenv from "dotenv";
+dotenv.config({ path: "/vault/secrets/images.env" });
+
 import { NextFunction, Request, Response } from 'express'
 export class JwtUrlSigner {
   private readonly secret: string

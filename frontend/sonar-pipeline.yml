@@ -1,0 +1,114 @@
+name: SonarQube Analysis - Frontend # ->  Definimos el nombre del pipeline que veremos Azure DevOps.
+
+trigger: # -> Definimos que se ejecute el pipeline cuando hacemos push a una de estas ramas. 
+  branches: # -> Nuestras ramas activadoras son main y Develop
+    include:
+      - main
+      - Develop
+  paths: # -> El pipeline solo se ejecuta si los cambios afectan archivos en estas rutas.
+    include:
+      - frontend/src/**
+      - frontend/sonar-project.properties
+
+pr: # -> Definimos cuándo se ejecuta el pipeline en Pull Requests (antes de hacer merge).
+  branches:
+    include: # -> El pipeline se ejecuta cuando creamos una PR hacia main o Develop (nuestras ramas principales).
+      - main
+      - Develop
+  paths: # -> El pipeline solo se ejecuta si los cambios afectan archivos en estas rutas.
+    include:
+      - frontend/src/**
+      - frontend/sonar-project.properties
+
+pool: # -> Definimos el agente en el que se ejecutara el pipeline
+  name: agent-test
+
+variables: # -> Definimos que variables usaremos en el pipeline (lo vemos en azureDevops).
+  - group: SonarQube
+
+stages: # -> Etapas de nuestro pipeline
+  - stage: CodeAnalysis
+    displayName: '🔍 SonarQube Code Analysis'
+    jobs: # -> Los trabajos que va a realizar
+      - job: AnalyzeCode
+        displayName: 'Analyze Frontend Code Quality'
+        steps:
+          # -> Descargamos el código del repositorio a la máquina del agente.
+          - checkout: self
+            clean: true
+            displayName: '📥 Checkout Repository'
+
+          # Instalamos nodeJs en su version 18
+          - task: NodeTool@0
+            displayName: '🟢 Install Node.js 18.x'
+            inputs:
+              versionSpec: '18.x'
+
+          # Instalamos las dependencias de nuestro proyecto
+          - script: |
+              cd frontend
+              echo "📦 Installing dependencies..."
+              npm ci --silent
+              echo "✅ Dependencies installed successfully"
+            displayName: '📦 Install Dependencies'
+
+          # Ejecutamos el analisis de Sonnar
+          - script: |
+              cd frontend
+              echo "════════════════════════════════════════"
+              echo "🔍 Starting SonarQube Analysis"
+              echo "════════════════════════════════════════"
+              echo "📊 Project: ecomove-frontend"
+              echo "🌐 Server: $(SONAR_HOST_URL)"
+              echo "════════════════════════════════════════"
+              
+              sonar-scanner \
+                -Dsonar.projectKey=ecomove-frontend \ 
+                -Dsonar.sources=src \
+                -Dsonar.host.url=$(SONAR_HOST_URL) \
+                -Dsonar.token=$(SONAR_TOKEN) \
+                -Dsonar.scm.provider=git \
+                -Dsonar.verbose=false
+              
+              echo "════════════════════════════════════════"
+              echo "✅ SonarQube Analysis Completed"
+              echo "════════════════════════════════════════"
+              echo "📊 View results at: $(SONAR_HOST_URL)/dashboard?id=ecomove-frontend"
+            displayName: '🔍 Run SonarQube Scanner'
+            env:
+              SONAR_TOKEN: $(SONAR_TOKEN)
+
+          # Verifica si nuestro código cumple con los estándares de calidad definidos en SonarQube.
+          - script: |
+              echo "⏳ Waiting for SonarQube to process results..."
+              sleep 15
+              
+              echo "🔍 Checking Quality Gate status..."
+              RESPONSE=$(curl -s -u $(SONAR_TOKEN): \
+                "$(SONAR_HOST_URL)/api/qualitygates/project_status?projectKey=ecomove-frontend")
+              
+              echo "Response: $RESPONSE"
+              
+              if echo "$RESPONSE" | grep -q '"status":"OK"'; then
+                echo "✅ Quality Gate PASSED"
+                exit 0
+              elif echo "$RESPONSE" | grep -q '"status":"ERROR"'; then
+                echo "❌ Quality Gate FAILED"
+                echo "🔗 Check details at: $(SONAR_HOST_URL)/dashboard?id=ecomove-frontend"
+                exit 1
+              else
+                echo "⚠️  Quality Gate status unclear, continuing..."
+                exit 0
+              fi
+            displayName: '✅ Verify Quality Gate'
+            condition: succeededOrFailed()
+            continueOnError: true 
+
+          # Guarda los resultados del análisis como un artefacto descargable en Azure DevOps.
+          - task: PublishBuildArtifacts@1
+            displayName: '📤 Publish Analysis Report'
+            condition: always()
+            inputs:
+              PathtoPublish: 'frontend/.scannerwork'
+              ArtifactName: 'sonar-analysis-report'
+              publishLocation: 'Container'

@@ -8,6 +8,9 @@ import { Server } from './infrastructure/server/Server'
 import { DatabaseConnection } from "./infrastructure/database/conection"
 import { UserRepository } from "./infrastructure/repositories/User/repository"
 import { AdminSeeder } from "./infrastructure/seeders/adminSeeders"
+import dotenv from "dotenv";
+dotenv.config({ path: "/vault/secrets/config.env" });
+
 
 async function main (): Promise<void> {
   try {

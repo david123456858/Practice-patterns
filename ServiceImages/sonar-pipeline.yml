@@ -1,0 +1,112 @@
+name: SonarQube Analysis - ServiceImages Backend
+
+trigger:
+  branches:
+    include:
+      - main
+      - Develop
+  paths:
+    include:
+      - ServiceImages/**
+
+pr:
+  branches:
+    include:
+      - main
+      - Develop
+  paths:
+    include:
+      - ServiceImages/**
+
+pool:
+  name: agent-test
+
+variables:
+  - group: SonarQube
+
+stages:
+  - stage: CodeAnalysis
+    displayName: '🔍 SonarQube Code Analysis'
+    jobs:
+      - job: AnalyzeCode
+        displayName: 'Analyze Backend Code Quality'
+        steps:
+          # Checkout del repositorio
+          - checkout: self
+            clean: true
+            displayName: '📥 Checkout Repository'
+
+          # Instalar Node.js
+          - task: NodeTool@0
+            displayName: '🟢 Install Node.js 24.x'
+            inputs:
+              versionSpec: '24.x'
+
+          # Instalar dependencias (opcional)
+          - script: |
+              cd ServiceImages
+              echo "📦 Installing dependencies..."
+              npm ci --silent || echo "⚠️  Dependencies installation skipped"
+            displayName: '📦 Install Dependencies'
+            continueOnError: true
+
+          # Ejecutar análisis de SonarQube
+          - script: |
+              cd ServiceImages
+              echo "════════════════════════════════════════"
+              echo "🔍 Starting SonarQube Analysis"
+              echo "════════════════════════════════════════"
+              echo "📊 Project: serviceimages-backend"
+              echo "🌐 Server: $(SONAR_HOST_URL)"
+              echo "════════════════════════════════════════"
+              
+              sonar-scanner \
+                -Dsonar.projectKey=serviceimages-backend \
+                -Dsonar.sources=src \
+                -Dsonar.host.url=$(SONAR_HOST_URL) \
+                -Dsonar.token=$(SONAR_TOKEN_IMAGES) \
+                -Dsonar.scm.provider=git \
+                -Dsonar.verbose=false
+              
+              echo "════════════════════════════════════════"
+              echo "✅ SonarQube Analysis Completed"
+              echo "════════════════════════════════════════"
+              echo "📊 View results at: $(SONAR_HOST_URL)/dashboard?id=serviceimages-backend"
+            displayName: '🔍 Run SonarQube Scanner'
+            env:
+              SONAR_TOKEN_IMAGES: $(SONAR_TOKEN_IMAGES)
+
+          # Verificar Quality Gate
+          - script: |
+              echo "⏳ Waiting for SonarQube to process results..."
+              sleep 15
+              
+              echo "🔍 Checking Quality Gate status..."
+              RESPONSE=$(curl -s -u $(SONAR_TOKEN_IMAGES): \
+                "$(SONAR_HOST_URL)/api/qualitygates/project_status?projectKey=serviceimages-backend")
+              
+              echo "Response: $RESPONSE"
+              
+              if echo "$RESPONSE" | grep -q '"status":"OK"'; then
+                echo "✅ Quality Gate PASSED"
+                exit 0
+              elif echo "$RESPONSE" | grep -q '"status":"ERROR"'; then
+                echo "❌ Quality Gate FAILED"
+                echo "🔗 Check details at: $(SONAR_HOST_URL)/dashboard?id=serviceimages-backend"
+                exit 1
+              else
+                echo "⚠️  Quality Gate status unclear, continuing..."
+                exit 0
+              fi
+            displayName: '✅ Verify Quality Gate'
+            condition: succeededOrFailed()
+            continueOnError: true
+
+          # Publicar resultados como artefacto
+          - task: PublishBuildArtifacts@1
+            displayName: '📤 Publish Analysis Report'
+            condition: always()
+            inputs:
+              PathtoPublish: 'ServiceImages/.scannerwork'
+              ArtifactName: 'sonar-analysis-report'
+              publishLocation: 'Container'

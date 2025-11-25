@@ -18,7 +18,7 @@ export class Server {
 
   private constructor () {
     this.app = express()
-    this.port = '3001'
+    this.port = '3000'
 
     // Middlewares
     this.middlewares()

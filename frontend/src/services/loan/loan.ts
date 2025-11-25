@@ -1,4 +1,4 @@
-import { VITE_API_URL } from "@/config/api";
+
 import { getAllVehicles } from "../vehicle/getAllVehicle";
 import type { Loan, LoanPayload } from "@/interface/loan/loan";
 
@@ -21,10 +21,10 @@ export const createLoan = async (loanData: Omit<LoanPayload, "userId" | "startSt
             ...loanData,
             userId: user.userId,
             startStationId: selectedVehicle.stationId,
-            loanId: loanData.loanId, 
+            loanId: loanData.loanId,
         };
 
-        const response = await fetch(`${VITE_API_URL}loan`, {
+        const response = await fetch(`/api/v1/loan`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
@@ -44,7 +44,7 @@ export const createLoan = async (loanData: Omit<LoanPayload, "userId" | "startSt
 
 export const getLoans = async (): Promise<Loan[]> => {
     try {
-        const response = await fetch(`${VITE_API_URL}loan`);
+        const response = await fetch(`/api/v1/loan`);
         if (!response.ok) throw new Error("Error al traer préstamos");
 
         const data = await response.json();
@@ -63,7 +63,7 @@ interface ReturnVehiclePayload {
 
 export const returnVehicle = async (payload: ReturnVehiclePayload) => {
     try {
-        const response = await fetch(`${VITE_API_URL}loan`, {
+        const response = await fetch(`/api/v1/loan`, {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
